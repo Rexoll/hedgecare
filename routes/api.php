@@ -14,6 +14,6 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::prefix("v1/user")->group(function () {
+Route::prefix("user")->group(function () {
     Route::post('/register', [UserController::class, "register"]);
 });
