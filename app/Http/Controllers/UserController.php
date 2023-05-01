@@ -19,6 +19,7 @@ class UserController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                "message" => "please fill form completely",
                 "errors" => $validator->errors()
             ], 400);
         }
@@ -29,6 +30,7 @@ class UserController extends Controller
             ]
         );
         return response()->json([
+            "message" => "register for email " . $user->email . " successfully",
             "data" => $user,
         ], 201);
     }
