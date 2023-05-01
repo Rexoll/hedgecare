@@ -9,7 +9,7 @@ class HousekeepingAdditionalServiceController extends Controller
 {
     public function index()
     {
-        $housekeeping_additional_services = HousekeepingAdditionalService::all();
+        $housekeeping_additional_services = HousekeepingAdditionalService::with("category")->get();
         if ($housekeeping_additional_services->isEmpty()) {
             return response()->json([
                 "message" => "housekeeping addtional service is empty"
