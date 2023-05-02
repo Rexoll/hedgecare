@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\housekeeping;
 
+use App\Http\Controllers\Controller;
 use App\Models\HousekeepingCategory;
 use Illuminate\Http\Request;
 

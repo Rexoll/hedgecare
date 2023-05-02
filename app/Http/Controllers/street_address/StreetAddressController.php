@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\street_address;
 
+use App\Http\Controllers\Controller;
 use App\Models\StreetAddress;
 use Illuminate\Http\Request;
 use Validator;
