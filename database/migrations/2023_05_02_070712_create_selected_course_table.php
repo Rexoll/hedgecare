@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('course', function (Blueprint $table) {
+        Schema::create('selected_course', function (Blueprint $table) {
             $table->id();
-            $table->float('price');
-            $table->string('course');
+            $table->unsignedBigInteger('tutoring_id');
+            $table->unsignedBigInteger('course');
             $table->softDeletes();
             $table->timestamps();
 
+            $table->foreign('tutoring_id')->references('id')->on('tutoring');
         });
     }
 
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('course');
+        Schema::dropIfExists('selected_course');
     }
 };

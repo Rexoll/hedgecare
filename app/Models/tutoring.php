@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,10 +22,10 @@ class tutoring extends Model
     /**
      * Get the class associated with the tutoring
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function course(): HasOne
+    public function course(): HasMany
     {
-        return $this->hasOne(course::class, 'id', 'course');
+        return $this->hasMany(selected_course::class, 'tutoring_id', 'id');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\tutoring;
 
 use App\Http\Controllers\Controller;
+use App\Models\selected_course;
 use App\Models\tutoring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -36,10 +37,10 @@ class tutoringController extends Controller
     {
         try {
             $validate = Validator::make($request->all(), [
-                'registration_type' => 'required',
-                'course' => 'required',
-                'date' => 'required',
-                'hours' => 'required',
+                '.*.registration_type' => 'required',
+                '.*.course' => 'required',
+                '.*.date' => 'required',
+                '.*.hours' => 'required',
             ]);
             if ($validate->fails()) {
                 return response()->json([
@@ -50,10 +51,18 @@ class tutoringController extends Controller
                     'registration_type' => $request->registration_type,
                     'date' => $request->date,
                     'hours' => $request->hours,
-                    'course' => $request->course,
                 ]);
+                foreach ($request['tutoring'] as $value) {
+                    $tutorings = new selected_course();
+                    $tutorings->tutoring_id = $create->id;
+                    $tutorings->course = $value['course'];
+                    $tutorings->save();
+                }
+                $result = tutoring::where('id', $create->id)
+                    ->with('course')
+                    ->get();
                 return response()->json([
-                    'data' => $create,
+                    'data' => $result,
                 ], 201);
             }
         } catch (\Exception $e) {
