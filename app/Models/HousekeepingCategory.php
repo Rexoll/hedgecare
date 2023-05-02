@@ -10,6 +10,9 @@ class HousekeepingCategory extends Model
 {
     use HasFactory;
 
+    protected $table = 'housekeeping_categories';
+
+
     protected $fillable = [
         'name',
         'thumbnail',
