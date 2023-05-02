@@ -3,6 +3,8 @@
 use App\Http\Controllers\course\courseController;
 use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
+use App\Http\Controllers\Provider\ProviderController;
+use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\street_address\StreetAddressController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\user\UserController;
@@ -50,4 +52,11 @@ Route::prefix("course")->group(function () {
     Route::post('/', [courseController::class, 'store']);
     Route::put('/{id}', [courseController::class, 'update']);
     Route::delete('/{id}', [courseController::class, 'destroy']);
+});
+
+Route::prefix("providers")->group(function () {
+    Route::get("/", [ProviderController::class, "index"]);
+});
+Route::prefix("skills")->group(function () {
+    Route::get("/", [SkillController::class, "index"]);
 });

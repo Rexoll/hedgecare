@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             HousekeepingCategorySeeder::class,
             HousekeepingAdditionalServiceSeeder::class,
             course::class,
+            ProviderSeeder::class,
+            SkillSeeder::class,
+            ProviderSkillSeeder::class,
         ]);
     }
 }
