@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HousekeepingCategoryController;
 use App\Http\Controllers\HousekeepingAdditionalServiceController;
+use App\Http\Controllers\StreetAddressController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,8 @@ Route::prefix("housekeeping")->group(function () {
     Route::prefix("services")->group(function () {
         Route::get("/", [HousekeepingAdditionalServiceController::class, "index"]);
     });
+});
+
+Route::prefix("addresses")->group(function () {
+    Route::middleware('cache.headers:public;max_age=2628000;etag')->get("/", [StreetAddressController::class, "index"]);
 });
