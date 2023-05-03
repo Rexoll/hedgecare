@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('thumbnail');
             $table->string('about');
             $table->unsignedDouble('price');

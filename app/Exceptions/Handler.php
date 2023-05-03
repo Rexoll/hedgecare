@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -45,6 +48,18 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+        $this->renderable(function (Request $request, Exception $e) {
+            $error = $this->convertExceptionToResponse($e);
+            $response = [];
+            if ($error->getStatusCode() == 500) {
+                $response['error'] = $e->getMessage();
+                if (Config::get('app.debug')) {
+                    $response['trace'] = $e->getTraceAsString();
+                    $response['code'] = $e->getCode();
+                }
+            }
+            return response()->json($response, $error->getStatusCode());
         });
     }
 }

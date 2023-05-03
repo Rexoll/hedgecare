@@ -17,9 +17,7 @@ class SkillController extends Controller
             ])->get();
             return response()->json([
                 "message" => "success get skills",
-                "data" => array_map(function (array $value) {
-                    return [...$value, "thumbnail" => env("APP_URL") . $value["thumbnail"]];
-                }, $skills->toArray()),
+                "data" => $skills,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);

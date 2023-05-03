@@ -16,11 +16,11 @@ class HousekeepingCategorySeeder extends Seeder
         \App\Models\HousekeepingCategory::insert([
             [
                 "name" => "Housekeeping",
-                "thumbnail" => "/storage/images/dummy_housekeeping_category.svg",
+                "thumbnail" => env("APP_URL") . "/storage/images/dummy_housekeeping_category.svg",
             ],
             [
                 "name" => "Groundkeeping",
-                "thumbnail" => "/storage/images/dummy_housekeeping_category.svg",
+                "thumbnail" => env("APP_URL") . "/storage/images/dummy_housekeeping_category.svg",
             ],
         ]);
     }

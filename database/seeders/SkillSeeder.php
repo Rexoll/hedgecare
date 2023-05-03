@@ -18,15 +18,15 @@ class SkillSeeder extends Seeder
         DB::table('skills')->insert([
             [
                 'name' => 'French',
-                'thumbnail' => '/storage/images/dummy_skill_french.png',
+                'thumbnail' => env("APP_URL") . '/storage/images/dummy_skill_french.png',
             ],
             [
                 'name' => 'Physics',
-                'thumbnail' => '/storage/images/dummy_skill_physics.svg',
+                'thumbnail' => env("APP_URL") . '/storage/images/dummy_skill_physics.svg',
             ],
             [
                 'name' => 'Math',
-                'thumbnail' => '/storage/images/dummy_skill_math.svg',
+                'thumbnail' => env("APP_URL") . '/storage/images/dummy_skill_math.svg',
             ],
         ]);
     }

@@ -18,9 +18,7 @@ class HousekeepingCategoryController extends Controller
         }
         return response()->json([
             "message" => "success get housekeeping categories",
-            "data" => array_map(function (array $value) {
-                return [...$value, "thumbnail" => env("APP_URL") . $value["thumbnail"]];
-            }, $housekeeping_categories->toArray()),
+            "data" => $housekeeping_categories,
         ], 200);
     }
 }

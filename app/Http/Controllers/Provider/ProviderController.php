@@ -15,12 +15,12 @@ class ProviderController extends Controller
             $validator_query = Validator::make($request->query->all(), [
                 "category" => "in:tutoring,housekeeping,rentafriend,other|nullable",
                 "search" => "nullable",
+                "sortBy" => "in:name,rating,review,price|nullable",
             ]);
-
 
             if ($validator_query->fails()) {
                 return response()->json([
-                    "message" => "Bad request url query",
+                    "message" => "Bad request query url",
                     "errors" => $validator_query->errors()
                 ], 400);
             }
@@ -31,8 +31,8 @@ class ProviderController extends Controller
                 whereHas(
                     "user",
                     function ($q) use ($validate_query) {
-                        $q->where("first_name", "LIKE", "%" . ($validate_query["search"] ?? "") . "%");
-                        $q->orWhere("last_name", "LIKE", "%" . ($validate_query["search"] ?? "") . "%");
+                        $q->where("first_name", "LIKE", "%" . ($validate_query["search"] ?? "") . "%")
+                            ->orWhere("last_name", "LIKE", "%" . ($validate_query["search"] ?? "") . "%");
                     }
                 )
                 ->where([
@@ -41,11 +41,23 @@ class ProviderController extends Controller
                 ->with(["user", "skills"])
                 ->get();
 
+            $providers = collect($providers);
+            if (($validate_query["sortBy"] ?? null) == "name") {
+                $providers = $providers->sortBy([
+                    function ($a, $b) {
+                        return strcmp(strtolower($a->user->first_name), strtolower($b->user->first_name));
+                    },
+                    function ($a, $b) {
+                        return strcmp(strtolower($a->user->last_name), strtolower($b->user->last_name));
+                    },
+                ]);
+            } else if (($validate_query["sortBy"] ?? null) != null) {
+                $providers = $providers->sortByDesc($validate_query["sortBy"]);
+            }
+
             return response()->json([
                 "message" => "success get providers",
-                "data" => array_map(function (array $value) {
-                    return [...$value, "thumbnail" => env("APP_URL") . $value["thumbnail"]];
-                }, $providers->toArray()),
+                "data" => $providers->values(),
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
