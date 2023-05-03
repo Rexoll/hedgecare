@@ -9,6 +9,8 @@ class StreetAddress extends Model
 {
     use HasFactory;
 
+    protected $table = 'street_addresses';
+
     protected $fillable = [
         'name',
         'state_code',
@@ -16,7 +18,6 @@ class StreetAddress extends Model
     ];
 
     protected $hidden = [
-        'id',
         'state_id',
         'country_id',
         'latitude',

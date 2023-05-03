@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Provider;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 
 class ProviderController extends Controller
 {

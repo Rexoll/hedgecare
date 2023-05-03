@@ -3,6 +3,7 @@
 use App\Http\Controllers\course\courseController;
 use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
+use App\Http\Controllers\housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\street_address\StreetAddressController;
@@ -32,6 +33,9 @@ Route::prefix("housekeeping")->group(function () {
     Route::prefix("services")->group(function () {
         Route::get("/", [HousekeepingAdditionalServiceController::class, "index"]);
     });
+    Route::prefix("orders")->group(function () {
+        Route::post("/", [HousekeepingOrderController::class, "store"]);
+    });
 });
 
 Route::prefix("addresses")->group(function () {
@@ -57,6 +61,7 @@ Route::prefix("course")->group(function () {
 Route::prefix("providers")->group(function () {
     Route::middleware('cache.headers:public;max_age=2628000;etag')->get("/", [ProviderController::class, "index"]);
 });
+
 Route::prefix("skills")->group(function () {
     Route::get("/", [SkillController::class, "index"]);
 });

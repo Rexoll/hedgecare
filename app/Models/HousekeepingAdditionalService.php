@@ -20,6 +20,7 @@ class HousekeepingAdditionalService extends Model
 
     protected $hidden = [
         'category_id',
+        'pivot',
     ];
 
     public function category(): BelongsTo
