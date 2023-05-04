@@ -22,6 +22,8 @@ return new class extends Migration {
             $table->text('detail_service');
             $table->unsignedBigInteger('provider_id');
             $table->timestamp('start_date');
+            $table->string('pay_with_paypal')->nullable();
+            $table->string('pay_with_card')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

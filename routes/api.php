@@ -35,6 +35,7 @@ Route::prefix("housekeeping")->group(function () {
     });
     Route::prefix("orders")->group(function () {
         Route::post("/", [HousekeepingOrderController::class, "store"]);
+        Route::post("/{order_id}/payWithCard", [HousekeepingOrderController::class, "payWithCard"]);
     });
 });
 
