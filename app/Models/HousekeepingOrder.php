@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class HousekeepingOrder extends Model
 {
@@ -30,6 +29,13 @@ class HousekeepingOrder extends Model
         'category_id',
         'street_address_id',
         'provider_id'
+    ];
+
+    protected $casts = [
+        'category_id' => 'integer',
+        'street_address_id' => 'integer',
+        'provider_id' => 'integer',
+        'start_date' => 'datetime',
     ];
 
     public function services(): BelongsToMany

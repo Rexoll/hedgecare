@@ -23,6 +23,10 @@ class HousekeepingAdditionalService extends Model
         'pivot',
     ];
 
+    protected $casts = [
+        'category_id' => 'integer',
+    ];
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(HousekeepingCategory::class, 'category_id', 'id');

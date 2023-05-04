@@ -27,4 +27,11 @@ class StreetAddress extends Model
         'flag',
         'wikiDataId',
     ];
+
+    protected $casts = [
+        'state_id' => 'integer',
+        'country_id' => 'integer',
+        'latitude' => 'double',
+        'longitude' => 'double',
+    ];
 }

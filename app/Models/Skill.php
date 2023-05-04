@@ -20,6 +20,7 @@ class Skill extends Model
     protected $hidden = [
         'pivot'
     ];
+
     public function Providers(): BelongsToMany
     {
         return $this->belongsToMany(Provider::class);

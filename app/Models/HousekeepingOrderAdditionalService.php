@@ -17,6 +17,11 @@ class HousekeepingOrderAdditionalService extends Model
         'service_id',
     ];
 
+    protected $casts = [
+        'order_id' => 'integer',
+        'service_id' => 'integer',
+    ];
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(HousekeepingOrder::class, 'order_id', 'id');

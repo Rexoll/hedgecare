@@ -32,6 +32,17 @@ class Provider extends Model
         'pivot'
     ];
 
+    protected $casts = [
+        'price' => 'double',
+        'rating' => 'double',
+        'review' => 'integer',
+        'user_id' => 'integer',
+        'latitude' => 'double',
+        'longitude' => 'double',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
