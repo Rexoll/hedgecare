@@ -18,10 +18,10 @@ return new class extends Migration {
             $table->string('thumbnail');
             $table->string('about');
             $table->unsignedDouble('price');
-            $table->unsignedDouble('rating');
+            $table->unsignedDouble('rating', 5);
             $table->unsignedBigInteger('review');
-            $table->smallInteger('start_time_available')->nullable();
-            $table->smallInteger('end_time_available')->nullable();
+            $table->unsignedSmallInteger('start_time_available')->nullable();
+            $table->unsignedSmallInteger('end_time_available')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->enum('category', ['tutoring', 'housekeeping', 'rentafriend', 'other']);

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
 
@@ -121,7 +120,7 @@ class HousekeepingOrderController extends Controller
             $housekeeping_order->save();
 
             return response()->json(["message" => "payment succeeded"], 200);
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
 
