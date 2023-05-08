@@ -17,7 +17,7 @@ class HousekeepingOrderController extends Controller
             $validator = Validator::make($request->all(), [
                 "category_id" => "integer|required",
                 "order_type" => "in:individual,business|required",
-                "street_address_id" => "integer|required",
+                "street_address" => "string|required",
                 "detail_address" => "string|nullable",
                 "service_hours" => "string|required",
                 "detail_service" => "string|required",
@@ -47,7 +47,7 @@ class HousekeepingOrderController extends Controller
                 }, $validate["services"]),
             );
 
-            $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "address", "provider",])->first();
+            $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider",])->first();
 
             return response()->json([
                 "message" => "success create housekeeping order",
@@ -85,7 +85,7 @@ class HousekeepingOrderController extends Controller
                 return response()->json(["message" => "order not found"], 404);
             }
 
-            if ($housekeeping_order->pay_with_card != null) {
+            if ($housekeeping_order->pay_with_card != null && $housekeeping_order->pay_with_paypal != null) {
                 return response()->json(["message" => "this order already pay"], 409);
             }
 
@@ -123,7 +123,5 @@ class HousekeepingOrderController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
-
-
     }
 }

@@ -18,7 +18,7 @@ class Skill extends Model
     ];
 
     protected $hidden = [
-        'pivot'
+        'pivot',
     ];
 
     public function Providers(): BelongsToMany

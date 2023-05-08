@@ -6,7 +6,6 @@ use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\Skill\SkillController;
-use App\Http\Controllers\street_address\StreetAddressController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\user\UserController;
 use Illuminate\Support\Facades\Route;
@@ -37,10 +36,6 @@ Route::prefix("housekeeping")->group(function () {
         Route::post("/", [HousekeepingOrderController::class, "store"]);
         Route::post("/{order_id}/payWithCard", [HousekeepingOrderController::class, "payWithCard"]);
     });
-});
-
-Route::prefix("addresses")->group(function () {
-    Route::middleware('cache.headers:public;max_age=2628000;etag')->get("/", [StreetAddressController::class, "index"]);
 });
 
 Route::prefix("tutoring")->group(function () {

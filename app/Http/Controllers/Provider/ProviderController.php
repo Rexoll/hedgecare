@@ -16,6 +16,8 @@ class ProviderController extends Controller
                 "category" => "in:tutoring,housekeeping,rentafriend,other|nullable",
                 "search" => "nullable",
                 "sortBy" => "in:name,rating,review,price|nullable",
+                "services" => "regex:/^[\d,]+$/|nullable",
+                "skills" => "regex:/^[\d,]+$/|nullable",
             ]);
 
             if ($validator_query->fails()) {
@@ -28,17 +30,47 @@ class ProviderController extends Controller
             $validate_query = $validator_query->validate();
 
             $providers = Provider::
-                whereHas(
+                whereHas("skills", function ($q) use ($validate_query) {
+                    if ($validate_query["skills"] ?? null != null) {
+                        $i = 0;
+                        foreach (explode(',', $validate_query["skills"]) as $skill) {
+                            if ($i == 0) {
+                                $q->Where("skills.id", "=", $skill);
+                            } else {
+                                $q->orWhere("skills.id", "=", $skill);
+                            }
+                            $i++;
+                        }
+                    }
+                })
+                ->whereHas(
                     "user",
                     function ($q) use ($validate_query) {
-                        $q->where("first_name", "LIKE", "%" . ($validate_query["search"] ?? "") . "%")
-                            ->orWhere("last_name", "LIKE", "%" . ($validate_query["search"] ?? "") . "%");
+                        if ($validate_query["search"] ?? null != null) {
+                            $q->where("first_name", "LIKE", "%" . ($validate_query["search"]) . "%")
+                                ->orWhere("last_name", "LIKE", "%" . ($validate_query["search"]) . "%");
+                        }
                     }
                 )
                 ->where([
                     ["category", "LIKE", "%" . ($validate_query["category"] ?? "") . "%"],
                 ])
-                ->with(["user", "skills"])
+                ->whereHas("services", function ($q) use ($validate_query) {
+                    if ($validate_query["services"] ?? null != null) {
+                        $i = 0;
+                        foreach (explode(',', $validate_query["services"]) as $service) {
+                            $q->whereHas("service", function ($q) use ($service, $i) {
+                                if ($i == 0) {
+                                    $q->Where("id", "=", $service);
+                                } else {
+                                    $q->orWhere("id", "=", $service);
+                                }
+                            });
+                            $i++;
+                        }
+                    }
+                })
+                ->with(["user", "skills", "services"])
                 ->get();
 
             $providers = collect($providers);

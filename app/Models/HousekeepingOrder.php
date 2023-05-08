@@ -16,7 +16,7 @@ class HousekeepingOrder extends Model
     protected $fillable = [
         'category_id',
         'order_type',
-        'street_address_id',
+        'street_address',
         'detail_address',
         'service_hours',
         'detail_service',
@@ -27,7 +27,6 @@ class HousekeepingOrder extends Model
     protected $hidden = [
         'pivot',
         'category_id',
-        'street_address_id',
         'provider_id',
         'pay_with_paypal',
         'pay_with_card',
@@ -35,7 +34,6 @@ class HousekeepingOrder extends Model
 
     protected $casts = [
         'category_id' => 'integer',
-        'street_address_id' => 'integer',
         'provider_id' => 'integer',
         'start_date' => 'datetime',
     ];
@@ -48,11 +46,6 @@ class HousekeepingOrder extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(HousekeepingCategory::class, 'category_id', 'id');
-    }
-
-    public function address(): BelongsTo
-    {
-        return $this->belongsTo(StreetAddress::class, 'street_address_id', 'id');
     }
 
     public function provider(): BelongsTo

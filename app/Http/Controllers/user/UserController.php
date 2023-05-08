@@ -15,7 +15,7 @@ class UserController extends Controller
             "first_name" => "required",
             "last_name" => "required",
             "email" => "required|email|unique:App\Models\User,email",
-            "phone_number" => "required|unique:App\Models\User,phone_number",
+            "phone_number" => "required|unique:App\Models\User,phone_number|regex:/^\+[1-9]{1}[0-9]{3,14}$/",
         ]);
 
         if ($validator->fails()) {

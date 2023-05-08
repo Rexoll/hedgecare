@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ProviderSeeder::class,
             SkillSeeder::class,
             ProviderSkillSeeder::class,
+            HousekeepingAdditionalServicePriceSeeder::class,
         ]);
     }
 }

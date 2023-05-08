@@ -10,7 +10,7 @@ class HousekeepingCategoryController extends Controller
 {
     public function index()
     {
-        $housekeeping_categories = HousekeepingCategory::with("services")->get();
+        $housekeeping_categories = HousekeepingCategory::with(["services"])->get();
         if ($housekeeping_categories->isEmpty()) {
             return response()->json([
                 "message" => "housekeeping categories is empty"

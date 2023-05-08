@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('category_id');
             $table->enum('order_type', ['individual', 'business']);
-            $table->unsignedMediumInteger('street_address_id');
+            $table->string('street_address');
             $table->string('detail_address')->nullable();
             $table->string('service_hours');
             $table->text('detail_service');
@@ -28,7 +28,6 @@ return new class extends Migration {
             $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('category_id')->references('id')->on('housekeeping_categories');
-            $table->foreign('street_address_id')->references('id')->on('street_addresses');
             $table->foreign('provider_id')->references('id')->on('providers');
         });
     }

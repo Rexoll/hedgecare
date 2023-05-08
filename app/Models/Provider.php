@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Provider extends Model
 {
@@ -29,7 +30,7 @@ class Provider extends Model
         'end_time_available',
         'latitude',
         'longitude',
-        'pivot'
+        'pivot',
     ];
 
     protected $casts = [
@@ -52,4 +53,10 @@ class Provider extends Model
     {
         return $this->belongsToMany(Skill::class);
     }
+
+    public function services(): HasMany
+    {
+        return $this->hasMany(HousekeepingAdditionalServicePrices::class, 'provider_id', 'id')->with('service');
+    }
+
 }
