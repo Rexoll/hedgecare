@@ -48,6 +48,6 @@ class tutoringOrder extends Model
 
     public function provider(): BelongsTo
     {
-        return $this->belongsTo(provider::class, 'provider_id', 'id');
+        return $this->belongsTo(Provider::class, 'provider_id', 'id');
     }
 }
