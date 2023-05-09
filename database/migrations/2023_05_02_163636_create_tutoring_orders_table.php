@@ -17,8 +17,6 @@ return new class extends Migration
             $table->id();
             $table->enum('order_type', ['individual', 'business']);
             $table->enum('environment', ['individual', 'group_lessons']);
-            $table->string('street_address');
-            $table->string('detail_address')->nullable();
             $table->string('session');
             $table->date('start_date');
             $table->string('tutoring_hours');

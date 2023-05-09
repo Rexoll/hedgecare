@@ -33,8 +33,6 @@ class tutoringOrderController extends Controller
             $validator = Validator::make($request->all(), [
                 'order_type' => 'in:individual,business|required',
                 'environment' => 'in:individual,group_lessons|required',
-                'street_address' => 'required|required',
-                'detail_address' => 'string|nullable',
                 'session' => 'integer|required',
                 'start_date' => 'date|required',
                 'tutoring_hours' => 'string|required',

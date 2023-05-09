@@ -15,8 +15,6 @@ class tutoringOrder extends Model
     protected $fillable = [
         'order_type',
         'environment',
-        'street_address',
-        'detail_address',
         'session',
         'start_date',
         'tutoring_hours',
