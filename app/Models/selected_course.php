@@ -13,8 +13,8 @@ class selected_course extends Model
     use HasFactory,SoftDeletes;
     protected $table = 'selected_course';
     protected $fillable = [
-        'tutoring_id',
-        'course'
+        'tutoring_order_id',
+        'skills_id'
     ];
 
     /**
@@ -24,6 +24,6 @@ class selected_course extends Model
      */
     public function tutoring(): BelongsTo
     {
-        return $this->belongsTo(tutoring::class, 'tutoring_id', 'id');
+        return $this->belongsTo(tutoringOrder::class, 'tutoring_order_id', 'id');
     }
 }

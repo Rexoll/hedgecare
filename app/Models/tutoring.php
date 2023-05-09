@@ -12,10 +12,9 @@ class tutoring extends Model
     use HasFactory, SoftDeletes;
     protected $table = 'tutoring';
     protected $fillable = [
-        'registration_type',
-        'course',
-        'date',
-        'hours',
+        'order_type',
+        'environment',
+        'duration',
     ];
 
     /**
@@ -23,7 +22,7 @@ class tutoring extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function course(): HasMany
+    public function skills(): HasMany
     {
         return $this->hasMany(selected_course::class, 'tutoring_id', 'id');
     }
