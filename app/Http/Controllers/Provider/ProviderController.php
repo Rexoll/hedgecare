@@ -18,7 +18,9 @@ class ProviderController extends Controller
                 "sortBy" => "in:name,rating,review,price|nullable",
                 "services" => "regex:/^[\d,]+$/|nullable",
                 "skills" => "regex:/^[\d,]+$/|nullable",
+                "choosedDate" => "date|nullable"
             ]);
+
 
             if ($validator_query->fails()) {
                 return response()->json([
@@ -43,6 +45,19 @@ class ProviderController extends Controller
                         }
                     }
                 })
+                ->whereHas("skills", function ($q) use ($validate_query) {
+                    if ($validate_query["skills"] ?? null != null) {
+                        $i = 0;
+                        foreach (explode(',', $validate_query["skills"]) as $skill) {
+                            if ($i == 0) {
+                                $q->Where("skills.id", "=", $skill);
+                            } else {
+                                $q->orWhere("skills.id", "=", $skill);
+                            }
+                            $i++;
+                        }
+                    }
+                })
                 ->whereHas(
                     "user",
                     function ($q) use ($validate_query) {
@@ -54,6 +69,7 @@ class ProviderController extends Controller
                 )
                 ->where([
                     ["category", "LIKE", "%" . ($validate_query["category"] ?? "") . "%"],
+                    ["active_days", "LIKE", "%" . (($validate_query["choosedDate"] ?? null) == null ? "" : date('l', strtotime($validate_query["choosedDate"]))) . "%"],
                 ])
                 ->whereHas("services", function ($q) use ($validate_query) {
                     if ($validate_query["services"] ?? null != null) {

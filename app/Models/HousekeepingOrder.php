@@ -30,6 +30,7 @@ class HousekeepingOrder extends Model
         'provider_id',
         'pay_with_paypal',
         'pay_with_card',
+        'pivot',
     ];
 
     protected $casts = [

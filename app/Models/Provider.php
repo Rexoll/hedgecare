@@ -22,6 +22,7 @@ class Provider extends Model
         'rating',
         'review',
         'category',
+        'active_days',
     ];
 
     protected $hidden = [
