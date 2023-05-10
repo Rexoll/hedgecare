@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\course\courseController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\housekeeping\HousekeepingOrderController;
@@ -60,4 +61,9 @@ Route::prefix("providers")->group(function () {
 
 Route::prefix("skills")->group(function () {
     Route::get("/", [SkillController::class, "index"]);
+});
+
+Route::prefix("email")->group(function () {
+    Route::post("/send", [EmailController::class, "send"]);
+    Route::get("/test", [EmailController::class, "test"]);
 });

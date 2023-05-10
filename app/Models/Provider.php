@@ -21,6 +21,7 @@ class Provider extends Model
         'price',
         'rating',
         'review',
+        'address',
         'category',
         'active_days',
     ];

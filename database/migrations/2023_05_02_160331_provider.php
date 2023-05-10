@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->unsignedSmallInteger('end_time_available')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
+            $table->string('address');
             $table->string('active_days');
             $table->enum('category', ['tutoring', 'housekeeping', 'rentafriend', 'other']);
             $table->timestamp('created_at')->useCurrent();

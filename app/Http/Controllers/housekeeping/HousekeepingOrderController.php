@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\housekeeping;
 
 use App\Http\Controllers\Controller;
+use App\Mail\InvoiceHousekeepingOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
+use App\Models\Provider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
 
@@ -37,7 +40,9 @@ class HousekeepingOrderController extends Controller
 
             $validate = $validator->validate();
 
-            $housekeeping_order = HousekeepingOrder::create($validate);
+            $provider = Provider::where("id", $validate["provider_id"])->first();
+
+            $housekeeping_order = HousekeepingOrder::create([...$validate, "sub_total" => $provider->price]);
             HousekeepingOrderAdditionalService::insert(
                 array_map(function ($value) use ($housekeeping_order) {
                     return [
@@ -47,7 +52,7 @@ class HousekeepingOrderController extends Controller
                 }, $validate["services"]),
             );
 
-            $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider",])->first();
+            $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
 
             return response()->json([
                 "message" => "success create housekeeping order",
@@ -116,8 +121,18 @@ class HousekeepingOrderController extends Controller
                 return response()->json(["message" => "payment pending"], 202);
             }
 
+            $housekeeping_order->tax = 2.50;
+            $housekeeping_order->first_name = $validate["first_name"];
+            $housekeeping_order->last_name = $validate["last_name"];
+            $housekeeping_order->phone_number = $validate["phone_number"];
+            $housekeeping_order->email = $validate["email"];
             $housekeeping_order->pay_with_card = $charge["id"];
             $housekeeping_order->save();
+
+            $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order->id)->with(["category", "provider"])->first();
+
+
+            Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order));
 
             return response()->json(["message" => "payment succeeded"], 200);
         } catch (\Exception $e) {
