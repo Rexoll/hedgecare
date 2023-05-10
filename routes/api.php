@@ -8,6 +8,7 @@ use App\Http\Controllers\housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
+use App\Http\Controllers\tutoring\tutoringOrderController;
 use App\Http\Controllers\user\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,7 +42,8 @@ Route::prefix("housekeeping")->group(function () {
 
 Route::prefix("tutoring")->group(function () {
     Route::get('/', [tutoringController::class, 'index']);
-    Route::post('/', [tutoringController::class, 'store']);
+    Route::post('/', [tutoringOrderController::class, 'store']);
+    Route::post('/payWithCard/{order_id}', [tutoringOrderController::class, 'payWithCard']);
     Route::get('/show/{id}', [tutoringController::class, 'show']);
     Route::put('/{id}', [tutoringController::class, 'update']);
     Route::delete('/{id}', [tutoringController::class, 'destroy']);

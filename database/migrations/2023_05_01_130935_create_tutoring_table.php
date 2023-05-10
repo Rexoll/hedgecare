@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('tutoring', function (Blueprint $table) {
             $table->id();
-            $table->enum('registration_type', ['individual', 'business']);
-            $table->date('date');
-            $table->time('hours')->nullable();
+            $table->enum('order_type', ['individual', 'business']);
+            $table->enum('environment', ['individual', 'group_lessons']);
+            $table->dateTime('duration');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -37,10 +37,11 @@ class tutoringController extends Controller
     {
         try {
             $validate = Validator::make($request->all(), [
-                '.*.registration_type' => 'required',
-                '.*.course' => 'required',
-                '.*.date' => 'required',
-                '.*.hours' => 'required',
+                '.*.order_type' => 'required',
+                '.*.environment' => 'required|in:individual,group_lessons',
+                '.*.skill_id' => 'required',
+                '.*.provider_id' => 'required',
+                '.*.duration' => 'required',
             ]);
             if ($validate->fails()) {
                 return response()->json([
@@ -48,18 +49,19 @@ class tutoringController extends Controller
                 ], 400);
             } else {
                 $create = tutoring::create([
-                    'registration_type' => $request->registration_type,
-                    'date' => $request->date,
-                    'hours' => $request->hours,
+                    'order_type' => $request->order_type,
+                    'environment' => $request->environment,
+                    'duration' => $request->duration,
                 ]);
                 foreach ($request['tutoring'] as $value) {
                     $tutorings = new selected_course();
                     $tutorings->tutoring_id = $create->id;
-                    $tutorings->course = $value['course'];
+                    $tutorings->provider_id = $value['provider_id'];
+                    $tutorings->skill_id = $value['skill_id'];
                     $tutorings->save();
                 }
                 $result = tutoring::where('id', $create->id)
-                    ->with('course')
+                    ->with('skill')
                     ->get();
                 return response()->json([
                     'data' => $result,
