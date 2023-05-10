@@ -22,7 +22,6 @@ class InvoiceHousekeepingOrder extends Mailable
     public function __construct(
         public HousekeepingOrder $order,
     ) {
-        print($order);
     }
 
     /**
