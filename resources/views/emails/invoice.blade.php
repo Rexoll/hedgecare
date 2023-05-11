@@ -621,7 +621,7 @@
                                                                     <div
                                                                         style="font-size:15px; text-align:left; padding: 10px 20px; @media(max-width: 320px){font-size:12px;}">
                                                                         <img
-                                                                            src="{{ asset('storage/images/icon-credit-card.svg') }}">
+                                                                            src="{{ asset('storage/images/icon-credit-card.png') }}">
                                                                         <strong>Credit Card</strong> (1423) </img>
                                                                     </div>
                                                                 </div>
