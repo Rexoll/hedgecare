@@ -27,10 +27,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix("user")->group(function () {
-    Route::post('/register', [UserController::class, "register"]);
-});
-
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
@@ -88,7 +84,8 @@ Route::prefix("custom")->group(function () {
         Route::post("/{order_id}/payWithCard", [CustomOrderController::class, "payWithCard"]);
     });
 });
-Route::prefix('Auth')->group(function () {
+
+Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 });

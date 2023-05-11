@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\UserVerifyNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -24,11 +25,10 @@ class AuthController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request)
     {
-
         try {
             $validate = Validator::make($request->all(), [
                 'email' => 'email|required|min:6',
@@ -49,6 +49,8 @@ class AuthController extends Controller
                     'last_name' => $request->last_name,
                     'password' => Hash::make($request->password),
                 ]);
+
+                $register->notify(new UserVerifyNotification());
 
                 $token = $register->createToken('register_token')->plainTextToken;
                 return response()->json([
