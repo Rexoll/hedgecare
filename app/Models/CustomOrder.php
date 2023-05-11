@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class HousekeepingOrder extends Model
+class CustomOrder extends Model
 {
     use HasFactory;
 
-    protected $table = 'housekeeping_orders';
+    protected $table = 'custom_orders';
 
     protected $fillable = [
-        'category_id',
-        'order_type',
         'street_address',
         'detail_address',
         'service_hours',
@@ -26,7 +23,6 @@ class HousekeepingOrder extends Model
     ];
 
     protected $hidden = [
-        'category_id',
         'provider_id',
         'pay_with_paypal',
         'pay_with_card',
@@ -34,20 +30,9 @@ class HousekeepingOrder extends Model
     ];
 
     protected $casts = [
-        'category_id' => 'integer',
         'provider_id' => 'integer',
         'start_date' => 'datetime',
     ];
-
-    public function services(): BelongsToMany
-    {
-        return $this->belongsToMany(HousekeepingAdditionalService::class, "housekeeping_orders_additional_services", 'order_id', 'service_id');
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(HousekeepingCategory::class, 'category_id', 'id');
-    }
 
     public function provider(): BelongsTo
     {
