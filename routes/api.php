@@ -6,6 +6,7 @@ use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Provider\ProviderController;
+use App\Http\Controllers\rentAfriend\rentAfriendCategoryController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
@@ -49,12 +50,11 @@ Route::prefix("tutoring")->group(function () {
     Route::delete('/{id}', [tutoringController::class, 'destroy']);
 });
 
-Route::prefix("course")->group(function () {
-    Route::get('/', [courseController::class, 'index']);
-    Route::get('/show/{id}', [courseController::class, 'show']);
-    Route::post('/', [courseController::class, 'store']);
-    Route::put('/{id}', [courseController::class, 'update']);
-    Route::delete('/{id}', [courseController::class, 'destroy']);
+Route::prefix("rentAfriend")->group(function () {
+    Route::get('/', [rentAfriendCategoryController::class, 'index']);
+    Route::prefix("categories")->group(function () {
+        Route::get('/', [rentAfriendCategoryController::class, 'index']);
+    });
 });
 
 Route::prefix("providers")->group(function () {

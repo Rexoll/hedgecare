@@ -2,14 +2,15 @@
 
 namespace App\Mail;
 
-use App\Models\HousekeepingOrder;
+use App\Models\rentAfriendOrder;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InvoiceHousekeepingOrder extends Mailable
+class InvoiceRentAfriendOrder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,8 +19,9 @@ class InvoiceHousekeepingOrder extends Mailable
      *
      * @return void
      */
-    public function __construct(public HousekeepingOrder $order)
+    public function __construct( public rentAfriendOrder $order)
     {
+
     }
 
     /**
@@ -30,7 +32,7 @@ class InvoiceHousekeepingOrder extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject:'Invoice Order Testing',
+            subject: 'Invoice Rent A friend Order',
         );
     }
 

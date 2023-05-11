@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tutoring_orders', function (Blueprint $table) {
+        Schema::create('rentAfriend_orders', function (Blueprint $table) {
             $table->id();
-            $table->enum('order_type', ['individual', 'business']);
-            $table->enum('environment', ['individual', 'group_lessons']);
-            $table->string('tutoring_hours');
-            $table->string('session');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('socialmedia_contact');
+            $table->string('service_hours');
+            $table->text('detail_service');
             $table->unsignedBigInteger('provider_id');
-            $table->date('start_date');
+            $table->dateTime('start_date');
             $table->double('sub_total')->nullable();
             $table->double('tax')->nullable();
             $table->string('first_name')->nullable();
@@ -32,7 +32,9 @@ return new class extends Migration
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
+            $table->foreign('category_id')->references('id')->on('rentAfriend_categories');
             $table->foreign('provider_id')->references('id')->on('providers');
+            $table->foreign('socialmedia_contact')->references('id')->on('rentAfriend_contacts');
         });
     }
 
@@ -43,6 +45,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tutoring_orders');
+        Schema::dropIfExists('rentAfriend_order');
     }
 };

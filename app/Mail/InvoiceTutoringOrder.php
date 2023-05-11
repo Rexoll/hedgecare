@@ -2,14 +2,15 @@
 
 namespace App\Mail;
 
-use App\Models\HousekeepingOrder;
+use App\Models\tutoringOrder;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InvoiceHousekeepingOrder extends Mailable
+class InvoiceTutoringOrder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,7 +19,7 @@ class InvoiceHousekeepingOrder extends Mailable
      *
      * @return void
      */
-    public function __construct(public HousekeepingOrder $order)
+    public function __construct(public tutoringOrder $order)
     {
     }
 
@@ -30,7 +31,7 @@ class InvoiceHousekeepingOrder extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject:'Invoice Order Testing',
+            subject: 'Invoice Tutoring Order',
         );
     }
 
@@ -46,7 +47,7 @@ class InvoiceHousekeepingOrder extends Mailable
             with:[
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
-                "order_category" => $this->order->category->name,
+                "order_category" => 'tutoring',
                 "order_hours" => $this->order->service_hours,
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
