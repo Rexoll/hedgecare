@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\course\courseController;
 use App\Http\Controllers\Custom\CustomOrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
@@ -12,7 +11,6 @@ use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
-use App\Http\Controllers\user\UserController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
@@ -85,7 +83,14 @@ Route::prefix("custom")->group(function () {
     });
 });
 
+
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::prefix('users')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+    });
+    Route::prefix('providers')->group(function () {
+        Route::post('/register', [AuthController::class, 'provider_register']);
+        Route::post('/login', [AuthController::class, 'provider_login']);
+    });
 });
