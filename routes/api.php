@@ -1,11 +1,8 @@
 <?php
 
-<<<<<<< Updated upstream
 use App\Http\Controllers\course\courseController;
 use App\Http\Controllers\Custom\CustomOrderController;
-=======
 use App\Http\Controllers\AuthController;
->>>>>>> Stashed changes
 use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\housekeeping\HousekeepingOrderController;
@@ -85,16 +82,13 @@ Route::prefix("skills")->group(function () {
     Route::get("/", [SkillController::class, "index"]);
 });
 
-<<<<<<< Updated upstream
 Route::prefix("custom")->group(function () {
     Route::prefix("orders")->group(function () {
         Route::post("/", [CustomOrderController::class, "store"]);
         Route::post("/{order_id}/payWithCard", [CustomOrderController::class, "payWithCard"]);
     });
 });
-=======
 Route::prefix('Auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
 });
->>>>>>> Stashed changes
