@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\UserVerifyNotification;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
@@ -30,6 +32,9 @@ class UserController extends Controller
                 "role" => "user",
             ]
         );
+
+        $user->notify(new UserVerifyNotification());
+
         return response()->json([
             "message" => "register for email " . $user->email . " successfully",
             "data" => $user,

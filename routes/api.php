@@ -12,6 +12,7 @@ use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
 use App\Http\Controllers\user\UserController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,6 +29,16 @@ use Illuminate\Support\Facades\Route;
 Route::prefix("user")->group(function () {
     Route::post('/register', [UserController::class, "register"]);
 });
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+
+    return redirect('https://hedgecare.ca');
+})->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::prefix("housekeeping")->group(function () {
     Route::prefix("categories")->group(function () {
