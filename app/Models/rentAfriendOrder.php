@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class rentAfriendOrder extends Model
 {
     use HasFactory;
-    protected $table = 'rentAfriend_order';
+    protected $table = 'rentAfriend_orders';
 
     protected $fillable = [
         'category_id',
@@ -44,11 +45,17 @@ class rentAfriendOrder extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(HousekeepingCategory::class, 'category_id', 'id');
+        return $this->belongsTo(rentAfriendCategory::class, 'category_id', 'id');
     }
 
     public function provider(): BelongsTo
     {
         return $this->belongsTo(Provider::class, 'provider_id', 'id');
     }
+
+    public function socialmedia(): HasMany
+    {
+        return $this->hasMany(rentAfriendSocialMedia::class, 'order_id', 'id');
+    }
+
 }

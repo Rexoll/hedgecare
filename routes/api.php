@@ -7,6 +7,7 @@ use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\rentAfriend\rentAfriendCategoryController;
+use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
@@ -52,6 +53,10 @@ Route::prefix("tutoring")->group(function () {
 
 Route::prefix("rentAfriend")->group(function () {
     Route::get('/', [rentAfriendCategoryController::class, 'index']);
+    Route::prefix("orders")->group(function () {
+        Route::post('/', [rentAfriendOrderController::class, 'store']); //create order
+        Route::post('/payWithCard/{order_id}', [rentAfriendOrderController::class, 'payWithCard']); //pay with card
+    });
     Route::prefix("categories")->group(function () {
         Route::get('/', [rentAfriendCategoryController::class, 'index']);
     });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\tutoring;
 
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceTutoringOrder;
+use App\Models\Provider;
 use App\Models\selected_course;
 use App\Models\tutoringOrder;
 use Illuminate\Http\Request;
@@ -46,14 +47,16 @@ class tutoringOrderController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     "message" => "Bad send body data",
-                    "errors" => $validator->errors(),
+                    "errors" => $validator->errors()
                 ], 400);
             }
             ;
 
             $validate = $validator->validate();
 
-            $tutoring_order = tutoringOrder::create($validate);
+            $provider = Provider::where("id", $validate["provider_id"])->first();
+
+            $tutoring_order = tutoringOrder::create([...$validate, "sub_total" => $provider->price]);
             selected_course::insert(
                 array_map(function ($value) use ($tutoring_order) {
                     return [
@@ -63,10 +66,10 @@ class tutoringOrderController extends Controller
                 }, $validate["skills"]),
             );
 
-            $tutoring_order = tutoringOrder::where("id", $tutoring_order["id"])->with(['skills', 'provider'])->first();
+            $tutoring_order = tutoringOrder::where("id", $tutoring_order["id"])->with(["skills", "provider"])->first();
 
             return response()->json([
-                "message" => "success create tutoring order",
+                "message" => "success create housekeeping order",
                 "data" => $tutoring_order,
             ], 201);
         } catch (\Exception $e) {
@@ -174,7 +177,7 @@ class tutoringOrderController extends Controller
             $tutoring_order->pay_with_card = $charge["id"];
             $tutoring_order->save();
 
-            $tutoring_order = tutoringOrder::where("id", $tutoring_order->id)->with(["category", "provider"])->first();
+            $tutoring_order = tutoringOrder::where("id", $tutoring_order->id)->with("provider")->first();
 
 
             Mail::to($validate["email"])->send(new InvoiceTutoringOrder($tutoring_order));

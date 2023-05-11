@@ -21,11 +21,11 @@ class tutoringOrder extends Model
         'provider_id',
         'created_at',
         'updated_at',
+        'sub_total',
     ];
 
     protected $hidden = [
         'pivot',
-        'category_id',
         'provider_id',
         'pay_with_paypal',
         'pay_with_card',

@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rentAfriend_orders_additional_services', function (Blueprint $table) {
+        Schema::create('rentAfriend_social_media', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
-            $table->unsignedBigInteger('service_id');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent();
+            $table->string('platform');
+            $table->string('username');
+            $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('rentAfriend_orders');
-            $table->foreign('service_id')->references('id')->on('rentAfriend_additional_services');
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rent_a_friend_orders_additional_services');
+        Schema::dropIfExists('rentAfriend_social_media');
     }
 };
