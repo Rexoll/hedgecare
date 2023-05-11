@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('rentAfriend_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('socialmedia_contact');
             $table->string('service_hours');
             $table->text('detail_service');
             $table->unsignedBigInteger('provider_id');
@@ -34,7 +33,6 @@ return new class extends Migration
 
             $table->foreign('category_id')->references('id')->on('rentAfriend_categories');
             $table->foreign('provider_id')->references('id')->on('providers');
-            $table->foreign('socialmedia_contact')->references('id')->on('rentAfriend_contacts');
         });
     }
 

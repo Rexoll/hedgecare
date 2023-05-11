@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\course\courseController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\rentAfriend\rentAfriendCategoryController;
+use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
 Route::prefix("user")->group(function () {
     Route::post('/register', [UserController::class, "register"]);
@@ -50,10 +50,13 @@ Route::prefix("tutoring")->group(function () {
     Route::delete('/{id}', [tutoringController::class, 'destroy']);
 });
 
-Route::prefix("rentAfriend")->group( function(){
-    Route::get('/',[rentAfriendCategoryController::class, 'index']);
-    Route::prefix("categories")->group(function(){
-        Route::get('/',[rentAfriendCategoryController::class, 'index']);
+Route::prefix("rentAfriend")->group(function () {
+    Route::prefix("orders")->group(function () {
+        Route::post('/', [rentAfriendOrderController::class, 'store']); //create order
+        Route::post('/payWithCard/{order_id}', [rentAfriendOrderController::class, 'payWithCard']); //pay with card
+    });
+    Route::prefix("categories")->group(function () {
+        Route::get('/', [rentAfriendCategoryController::class, 'index']);
     });
 });
 
@@ -63,9 +66,4 @@ Route::prefix("providers")->group(function () {
 
 Route::prefix("skills")->group(function () {
     Route::get("/", [SkillController::class, "index"]);
-});
-
-Route::prefix("email")->group(function () {
-    Route::post("/send", [EmailController::class, "send"]);
-    Route::get("/test", [EmailController::class, "test"]);
 });

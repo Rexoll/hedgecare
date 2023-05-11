@@ -5,9 +5,9 @@ namespace App\Http\Controllers\rentAfriend;
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceRentAfriendOrder;
 use App\Models\Provider;
-use App\Models\rentAfriendAdditionalService;
 use App\Models\rentAfriendOrder;
 use App\Models\rentAfriendOrderAdditionalService;
+use App\Models\rentAfriendSocialMedia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -40,20 +40,21 @@ class rentAfriendOrderController extends Controller
                 "detail_service" => "string|required",
                 "provider_id" => "integer|required",
                 "start_date" => "date|required",
+                "socialmedia_contact" => "array|required",
+                "socialmedia_contact.*.platform" => "string|required",
+                "socialmedia_contact.*.username" => "string|required",
                 "services" => "array|required",
-                "services.*" => "integer|required"
+                "services.*" => "integer|required",
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     "message" => "Bad send body data",
-                    "errors" => $validator->errors()
+                    "errors" => $validator->errors(),
                 ], 400);
-            }
-            ;
+            };
 
             $validate = $validator->validate();
-
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $rentAfriend_order = rentAfriendOrder::create([...$validate, "sub_total" => $provider->price]);
@@ -66,7 +67,17 @@ class rentAfriendOrderController extends Controller
                 }, $validate["services"]),
             );
 
-            $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider"])->first();
+            rentAfriendSocialMedia::insert(
+                array_map(function ($value) use ($rentAfriend_order) {
+                    return [
+                        "order_id" => $rentAfriend_order["id"],
+                        "platform" => $value["platform"],
+                        "username" => $value["username"],
+                    ];
+                }, $validate["socialmedia_contact"]),
+            );
+
+            $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider","socialmedia"])->first();
 
             return response()->json([
                 "message" => "success create rent a friend order",
@@ -149,7 +160,7 @@ class rentAfriendOrderController extends Controller
                     "exp_month" => $validate["exp_month"],
                     "exp_year" => $validate["exp_year"],
                     "cvc" => $validate["cvc"],
-                ]
+                ],
             ]);
 
             if (!isset($token["id"])) {
@@ -178,7 +189,6 @@ class rentAfriendOrderController extends Controller
             $rentAfriend_order->save();
 
             $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order->id)->with(["category", "provider"])->first();
-
 
             Mail::to($validate["email"])->send(new InvoiceRentAfriendOrder($rentAfriend_order));
 

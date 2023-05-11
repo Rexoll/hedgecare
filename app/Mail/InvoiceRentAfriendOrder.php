@@ -48,7 +48,7 @@ class InvoiceRentAfriendOrder extends Mailable
             with:[
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
-                "order_category" => $this->order->category->name,
+                "order_category" => 'Rent a friend',
                 "order_hours" => $this->order->service_hours,
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
