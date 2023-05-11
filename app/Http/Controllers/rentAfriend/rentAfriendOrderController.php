@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\tutoring;
+namespace App\Http\Controllers\rentAfriend;
 
 use App\Http\Controllers\Controller;
-use App\Mail\InvoiceTutoringOrder;
-use App\Models\selected_course;
-use App\Models\tutoringOrder;
+use App\Mail\InvoiceRentAfriendOrder;
+use App\Models\Provider;
+use App\Models\rentAfriendAdditionalService;
+use App\Models\rentAfriendOrder;
+use App\Models\rentAfriendOrderAdditionalService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
 
-class tutoringOrderController extends Controller
+class rentAfriendOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,41 +35,42 @@ class tutoringOrderController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'order_type' => 'in:individual,business|required',
-                'environment' => 'in:individual,group_lessons|required',
-                'session' => 'integer|required',
-                'start_date' => 'date|required',
-                'tutoring_hours' => 'string|required',
-                'provider_id' => 'integer|required',
-                'skills' => 'array|required',
-                'skills.*' => 'integer|required',
+                "category_id" => "integer|required",
+                "service_hours" => "string|required",
+                "detail_service" => "string|required",
+                "provider_id" => "integer|required",
+                "start_date" => "date|required",
+                "services" => "array|required",
+                "services.*" => "integer|required"
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     "message" => "Bad send body data",
-                    "errors" => $validator->errors(),
+                    "errors" => $validator->errors()
                 ], 400);
             }
             ;
 
             $validate = $validator->validate();
 
-            $tutoring_order = tutoringOrder::create($validate);
-            selected_course::insert(
-                array_map(function ($value) use ($tutoring_order) {
+            $provider = Provider::where("id", $validate["provider_id"])->first();
+
+            $rentAfriend_order = rentAfriendOrder::create([...$validate, "sub_total" => $provider->price]);
+            rentAfriendOrderAdditionalService::insert(
+                array_map(function ($value) use ($rentAfriend_order) {
                     return [
-                        "tutoring_order_id" => $tutoring_order["id"],
-                        "skill_id" => $value,
+                        "order_id" => $rentAfriend_order["id"],
+                        "service_id" => $value,
                     ];
-                }, $validate["skills"]),
+                }, $validate["services"]),
             );
 
-            $tutoring_order = tutoringOrder::where("id", $tutoring_order["id"])->with(['skills', 'provider'])->first();
+            $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider"])->first();
 
             return response()->json([
-                "message" => "success create tutoring order",
-                "data" => $tutoring_order,
+                "message" => "success create rent a friend order",
+                "data" => $rentAfriend_order,
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
@@ -78,10 +81,10 @@ class tutoringOrderController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\tutoringOrder  $tutoringOrder
+     * @param  \App\Models\rentAfriendOrder  $rentAfriendOrder
      * @return \Illuminate\Http\Response
      */
-    public function show(tutoringOrder $tutoringOrder)
+    public function show(rentAfriendOrder $rentAfriendOrder)
     {
         //
     }
@@ -90,10 +93,10 @@ class tutoringOrderController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\tutoringOrder  $tutoringOrder
+     * @param  \App\Models\rentAfriendOrder  $rentAfriendOrder
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, tutoringOrder $tutoringOrder)
+    public function update(Request $request, rentAfriendOrder $rentAfriendOrder)
     {
         //
     }
@@ -101,10 +104,10 @@ class tutoringOrderController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\tutoringOrder  $tutoringOrder
+     * @param  \App\Models\rentAfriendOrder  $rentAfriendOrder
      * @return \Illuminate\Http\Response
      */
-    public function destroy(tutoringOrder $tutoringOrder)
+    public function destroy(rentAfriendOrder $rentAfriendOrder)
     {
         //
     }
@@ -129,13 +132,13 @@ class tutoringOrderController extends Controller
 
             $validate = $validator->validate();
 
-            $tutoring_order = tutoringOrder::where("id", $order_id)->first();
+            $rentAfriend_order = rentAfriendOrder::where("id", $order_id)->first();
 
-            if ($tutoring_order == null) {
+            if ($rentAfriend_order == null) {
                 return response()->json(["message" => "order not found"], 404);
             }
 
-            if ($tutoring_order->pay_with_card != null && $tutoring_order->pay_with_paypal != null) {
+            if ($rentAfriend_order->pay_with_card != null && $rentAfriend_order->pay_with_paypal != null) {
                 return response()->json(["message" => "this order already paid"], 409);
             }
 
@@ -157,7 +160,7 @@ class tutoringOrderController extends Controller
                 "card" => $token["id"],
                 "currency" => "USD",
                 "amount" => 20 * 100,
-                "description" => "Pay tutoring Order",
+                "description" => "Pay rent a friend Order",
             ]);
 
             if ($charge["status"] == "failed") {
@@ -166,18 +169,18 @@ class tutoringOrderController extends Controller
                 return response()->json(["message" => "payment pending"], 202);
             }
 
-            $tutoring_order->tax = 2.50;
-            $tutoring_order->first_name = $validate["first_name"];
-            $tutoring_order->last_name = $validate["last_name"];
-            $tutoring_order->phone_number = $validate["phone_number"];
-            $tutoring_order->email = $validate["email"];
-            $tutoring_order->pay_with_card = $charge["id"];
-            $tutoring_order->save();
+            $rentAfriend_order->tax = 2.50;
+            $rentAfriend_order->first_name = $validate["first_name"];
+            $rentAfriend_order->last_name = $validate["last_name"];
+            $rentAfriend_order->phone_number = $validate["phone_number"];
+            $rentAfriend_order->email = $validate["email"];
+            $rentAfriend_order->pay_with_card = $charge["id"];
+            $rentAfriend_order->save();
 
-            $tutoring_order = tutoringOrder::where("id", $tutoring_order->id)->with(["category", "provider"])->first();
+            $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order->id)->with(["category", "provider"])->first();
 
 
-            Mail::to($validate["email"])->send(new InvoiceTutoringOrder($tutoring_order));
+            Mail::to($validate["email"])->send(new InvoiceRentAfriendOrder($rentAfriend_order));
 
             return response()->json(["message" => "payment succeeded"], 200);
         } catch (\Exception $e) {

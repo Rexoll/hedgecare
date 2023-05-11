@@ -6,21 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class tutoringOrder extends Model
+class rentAfriendOrder extends Model
 {
     use HasFactory;
-    protected $table = 'tutoring_orders';
+    protected $table = 'rentAfriend_order';
+
     protected $fillable = [
+        'category_id',
         'order_type',
-        'environment',
-        'session',
-        'start_date',
-        'tutoring_hours',
+        'service_hours',
+        'detail_service',
         'provider_id',
-        'created_at',
-        'updated_at',
+        'start_date',
+        'sub_total',
     ];
 
     protected $hidden = [
@@ -33,18 +32,19 @@ class tutoringOrder extends Model
     ];
 
     protected $casts = [
+        'category_id' => 'integer',
         'provider_id' => 'integer',
         'start_date' => 'datetime',
     ];
 
-    /**
-     * Get the class associated with the tutoring
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function skills(): BelongsToMany
+    public function services(): BelongsToMany
     {
-        return $this->belongsToMany(Skill::class, 'selected_course', 'tutoring_order_id', 'skill_id');
+        return $this->belongsToMany(rentAfriendAdditionalService::class, "rentAfriend_orders_additional_services", 'order_id', 'service_id');
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(HousekeepingCategory::class, 'category_id', 'id');
     }
 
     public function provider(): BelongsTo

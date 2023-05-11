@@ -15,7 +15,6 @@ class HousekeepingOrder extends Model
 
     protected $fillable = [
         'category_id',
-        'order_type',
         'street_address',
         'detail_address',
         'service_hours',
