@@ -162,7 +162,7 @@
                                                                 style="padding-bottom:15px;padding-top:15px;width:100%;padding-right:0px;padding-left:0px;">
                                                                 <div align="center" class="alignment"
                                                                     style="line-height:10px"><img
-                                                                        src="images/logo-hedge-care.png"
+                                                                        src="{{ asset('storage/images/logo-hedge-care.png') }}"
                                                                         style="display: block; height: auto; border: 0; width: 192px; max-width: 100%;"
                                                                         width="192" /></div>
                                                             </td>
@@ -257,7 +257,7 @@
                                                                             style="padding-left:15px;padding-right:15px;font-size:15px;display:inline-block;letter-spacing:normal;"><a
                                                                                 href="{{ $actionUrl }}"
                                                                                 dir="ltr"
-                                                                                style="margin: 0; word-break: break-word; line-height: 30px;">Verify
+                                                                                style="color:#ffffff !important; margin: 0; word-break: break-word; line-height: 30px;">Verify
                                                                                 my account</a></span>
                                                                     </div>
                                                                     <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->
