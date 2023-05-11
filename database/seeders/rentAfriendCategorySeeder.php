@@ -14,7 +14,7 @@ class rentAfriendCategorySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('rentafriend_categories')->insert([
+        DB::table('rentAfriend_categories')->insert([
             [
                 "name" => "Local friend",
                 "thumbnail" => env("APP_URL") . "/storage/images/dummy_housekeeping_category.svg",
