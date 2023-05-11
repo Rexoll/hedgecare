@@ -47,7 +47,7 @@ class InvoiceTutoringOrder extends Mailable
             with:[
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
-                "order_category" => 'tutoring',
+                "order_category" => 'Tutoring',
                 "order_hours" => $this->order->service_hours,
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
