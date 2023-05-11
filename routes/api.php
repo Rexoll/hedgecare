@@ -89,6 +89,12 @@ Route::prefix("custom")->group(function () {
     });
 });
 Route::prefix('Auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::prefix('user')->group(function(){
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+    });
+    Route::prefix('providers')->group(function(){
+        Route::post('/register', [AuthController::class, 'provider_register']);
+        Route::post('/login', [AuthController::class, 'provider_login']);
+    });
 });
