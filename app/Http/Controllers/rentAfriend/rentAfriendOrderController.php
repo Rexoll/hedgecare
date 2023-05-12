@@ -29,7 +29,7 @@ class rentAfriendOrderController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -52,7 +52,8 @@ class rentAfriendOrderController extends Controller
                     "message" => "Bad send body data",
                     "errors" => $validator->errors(),
                 ], 400);
-            };
+            }
+            ;
 
             $validate = $validator->validate();
             $provider = Provider::where("id", $validate["provider_id"])->first();
@@ -77,7 +78,7 @@ class rentAfriendOrderController extends Controller
                 }, $validate["socialmedia_contact"]),
             );
 
-            $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider","socialmedia"])->first();
+            $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider", "socialmedia"])->first();
 
             return response()->json([
                 "message" => "success create rent a friend order",

@@ -134,7 +134,7 @@ class HousekeepingOrderController extends Controller
 
             Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order));
 
-            return response()->json(["message" => "payment succeeded"], 200);
+            return response()->json(["message" => "payment succeeded", "data" => $housekeeping_order], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
