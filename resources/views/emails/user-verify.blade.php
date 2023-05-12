@@ -257,7 +257,7 @@
                                                                             style="padding-left:15px;padding-right:15px;font-size:15px;display:inline-block;letter-spacing:normal;"><a
                                                                                 href="{{ $actionUrl }}"
                                                                                 dir="ltr"
-                                                                                style="color:#ffffff !important; margin: 0; word-break: break-word; line-height: 30px;">Verify
+                                                                                style="color:#ffffff !important; text-decorator: none; margin: 0; word-break: break-word; line-height: 30px;">Verify
                                                                                 my account</a></span>
                                                                     </div>
                                                                     <!--[if mso]></center></v:textbox></v:roundrect><![endif]-->

@@ -32,7 +32,10 @@ Route::get('/email/verify', function () {
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
-    return redirect('https://hedgecare.ca');
+    return response()->json([
+        "message" => "success verify email",
+        "data" => Auth::user(),
+    ], 200);
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::prefix("housekeeping")->group(function () {
