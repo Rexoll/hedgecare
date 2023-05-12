@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('phone_number')->unique();
             $table->enum('role', ['admin', 'user', 'provider'])->default('user');
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password')->nullable();
+            $table->string('password');
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();

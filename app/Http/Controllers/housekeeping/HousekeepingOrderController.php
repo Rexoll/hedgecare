@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\housekeeping;
+namespace App\Http\Controllers\Housekeeping;
 
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceHousekeepingOrder;

@@ -39,7 +39,7 @@ class UserVerifyNotification extends VerifyEmail
      */
     public function toMail($notifiable)
     {
-        $actionUrl = $this->verificationUrl($notifiable);
+        $actionUrl = explode("?", $this->verificationUrl($notifiable))[0];
 
         return (new MailMessage)->subject('Verify your account')->view(
             'emails.user-verify',

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class user extends Seeder
 {
@@ -21,6 +22,7 @@ class user extends Seeder
                 'email' => 'mulia@gmail.com',
                 'phone_number' => '+6289655376610',
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'roy',
@@ -28,6 +30,7 @@ class user extends Seeder
                 'email' => 'marteen@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'jack',
@@ -35,6 +38,7 @@ class user extends Seeder
                 'email' => 'zoro@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'pablo',
@@ -42,6 +46,7 @@ class user extends Seeder
                 'email' => 'konvici@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'spesfi',
@@ -49,6 +54,7 @@ class user extends Seeder
                 'email' => 'okla@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'wodie',
@@ -56,6 +62,7 @@ class user extends Seeder
                 'email' => 'hodie@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'coffso',
@@ -63,6 +70,7 @@ class user extends Seeder
                 'email' => 'toreto@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'michele',
@@ -70,6 +78,7 @@ class user extends Seeder
                 'email' => 'roundi@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'dina',
@@ -77,6 +86,7 @@ class user extends Seeder
                 'email' => 'dina@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'steve',
@@ -84,6 +94,7 @@ class user extends Seeder
                 'email' => 'steve@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'mark',
@@ -91,6 +102,7 @@ class user extends Seeder
                 'email' => 'mark@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
             [
                 'first_name' => 'jeff',
@@ -98,6 +110,7 @@ class user extends Seeder
                 'email' => 'jeff@gmail.com',
                 'phone_number' => '+62' . rand(10000000000, 99999999999),
                 'role' => 'provider',
+                'password' => Hash::make("Masukdeh12"),
             ],
         ]);
     }

@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Custom\CustomOrderController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
-use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
-use App\Http\Controllers\housekeeping\HousekeepingOrderController;
+use App\Http\Controllers\Housekeeping\HousekeepingAdditionalServiceController;
+use App\Http\Controllers\Housekeeping\HousekeepingCategoryController;
+use App\Http\Controllers\Housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\rentAfriend\rentAfriendCategoryController;
 use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
@@ -34,9 +34,9 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     return response()->json([
         "message" => "success verify email",
-        "data" => Auth::user(),
+        "data" => Auth::user()
     ], 200);
-})->middleware(['auth', 'signed'])->name('verification.verify');
+})->middleware(['auth:sanctum'])->name('verification.verify');
 
 Route::prefix("housekeeping")->group(function () {
     Route::prefix("categories")->group(function () {
