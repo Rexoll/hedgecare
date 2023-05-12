@@ -44,7 +44,7 @@ class UserVerifyNotification extends VerifyEmail
         return (new MailMessage)->subject('Verify your account')->view(
             'emails.user-verify',
             [
-                'actionUrl' => "https://hedgecare.ca/confirm-email/" . $actionUrl,
+                'actionUrl' => "https://hedgecare.ca/confirm-email?url=" . $actionUrl,
             ]
         );
     }
