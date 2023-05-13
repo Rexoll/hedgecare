@@ -20,8 +20,8 @@ return new class extends Migration {
             $table->unsignedDouble('price');
             $table->unsignedDouble('rating', 5);
             $table->unsignedBigInteger('review');
-            $table->unsignedSmallInteger('start_time_available')->nullable();
-            $table->unsignedSmallInteger('end_time_available')->nullable();
+            $table->time('start_time_available')->nullable();
+            $table->time('end_time_available')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
             $table->string('address');
