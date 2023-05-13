@@ -20,8 +20,9 @@ class HousekeepingOrder extends Model
         'service_hours',
         'detail_service',
         'provider_id',
-        'start_date',
         'sub_total',
+        'from_hour',
+        'to_hour',
     ];
 
     protected $hidden = [

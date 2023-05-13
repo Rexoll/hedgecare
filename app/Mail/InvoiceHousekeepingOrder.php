@@ -18,7 +18,7 @@ class InvoiceHousekeepingOrder extends Mailable
      *
      * @return void
      */
-    public function __construct(public HousekeepingOrder $order)
+    public function __construct(public HousekeepingOrder $order, public $suffix_card_number)
     {
     }
 
@@ -30,7 +30,7 @@ class InvoiceHousekeepingOrder extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject:'Invoice Order Testing',
+            subject: 'Invoice Order Testing',
         );
     }
 
@@ -42,17 +42,18 @@ class InvoiceHousekeepingOrder extends Mailable
     public function content()
     {
         return new Content(
-            view:'emails.invoice',
-            with:[
+            view: 'emails.invoice',
+            with: [
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
                 "order_category" => $this->order->category->name,
-                "order_hours" => $this->order->service_hours,
+                "order_hours" => $this->order->to_hour - $this->order->from_hour,
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
                 "order_buyer_address" => $this->order->street_address,
                 "order_seller_address" => $this->order->provider->address,
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
+                "suffix_card_number" => $this->suffix_card_number,
             ]
         );
     }

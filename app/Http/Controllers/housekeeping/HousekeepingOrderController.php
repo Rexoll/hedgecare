@@ -22,10 +22,10 @@ class HousekeepingOrderController extends Controller
                 "order_type" => "in:individual,business|required",
                 "street_address" => "string|required",
                 "detail_address" => "string|nullable",
-                "service_hours" => "string|required",
                 "detail_service" => "string|required",
                 "provider_id" => "integer|required",
-                "start_date" => "date|required",
+                "from_hour" => "integer|required_with:to_hour|min:0|max:23",
+                "to_hour" => "integer|required_with:from_hour|gt:from_hour|min:1|max:24",
                 "services" => "array|required",
                 "services.*" => "integer|required"
             ]);
@@ -42,7 +42,7 @@ class HousekeepingOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $housekeeping_order = HousekeepingOrder::create([...$validate, "sub_total" => $provider->price]);
+            $housekeeping_order = HousekeepingOrder::create([...$validate, "sub_total" => ($provider->price * ($validate["to_hour"] - $validate["from_hour"]))]);
             HousekeepingOrderAdditionalService::insert(
                 array_map(function ($value) use ($housekeeping_order) {
                     return [
@@ -131,8 +131,7 @@ class HousekeepingOrderController extends Controller
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order->id)->with(["category", "provider"])->first();
 
-
-            Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order));
+            Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $housekeeping_order], 200);
         } catch (\Exception $e) {

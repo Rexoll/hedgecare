@@ -28,8 +28,6 @@ class Provider extends Model
 
     protected $hidden = [
         'user_id',
-        'start_time_available',
-        'end_time_available',
         'latitude',
         'longitude',
         'pivot',

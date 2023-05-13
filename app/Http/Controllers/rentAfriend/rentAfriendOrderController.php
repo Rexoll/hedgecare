@@ -193,7 +193,7 @@ class rentAfriendOrderController extends Controller
 
             Mail::to($validate["email"])->send(new InvoiceRentAfriendOrder($rentAfriend_order));
 
-            return response()->json(["message" => "payment succeeded"], 200);
+            return response()->json(["message" => "payment succeeded", "data" => $rentAfriend_order], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
