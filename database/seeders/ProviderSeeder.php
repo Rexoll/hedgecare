@@ -26,6 +26,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'housekeeping',
                 'active_days' => 'Tuesday,Wednesday,Thursday,Friday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 2,
@@ -37,6 +39,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'housekeeping',
                 'active_days' => 'Sunday,Monday,Thursday,Friday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 3,
@@ -48,6 +52,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'housekeeping',
                 'active_days' => 'Sunday,Monday,Tuesday,Wednesday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 4,
@@ -59,6 +65,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'tutoring',
                 'active_days' => 'Monday,Tuesday,Wednesday,Thursday,Friday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 5,
@@ -70,6 +78,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'tutoring',
                 'active_days' => 'Sunday,Wednesday,Thursday,Friday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 6,
@@ -81,6 +91,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'tutoring',
                 'active_days' => 'Sunday,Monday,Tuesday,Friday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 7,
@@ -92,6 +104,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'rentafriend',
                 'active_days' => 'Sunday,Monday,Thursday,Friday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 8,
@@ -103,6 +117,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'rentafriend',
                 'active_days' => 'Sunday,Monday,Tuesday,Wednesday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 9,
@@ -114,6 +130,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'rentafriend',
                 'active_days' => 'Monday,Tuesday,Wednesday,Thursday,Friday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 10,
@@ -125,6 +143,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'other',
                 'active_days' => 'Sunday,Wednesday,Thursday,Friday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 11,
@@ -136,6 +156,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'other',
                 'active_days' => 'Sunday,Monday,Tuesday,Friday,Saturday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
             [
                 'user_id' => 12,
@@ -147,6 +169,8 @@ class ProviderSeeder extends Seeder
                 'category' => 'other',
                 'active_days' => 'Sunday,Monday,Tuesday,Wednesday,Thursday',
                 'address' => '8920  xStreet, Vancouver 49859, USA',
+                'start_time_available' => mt_rand(0, 12) . ":00:00",
+                'end_time_available' => mt_rand(13, 24) . ":00:00",
             ],
         ]);
     }

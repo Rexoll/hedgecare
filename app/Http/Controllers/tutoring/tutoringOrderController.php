@@ -69,7 +69,7 @@ class tutoringOrderController extends Controller
             $tutoring_order = tutoringOrder::where("id", $tutoring_order["id"])->with(["skills", "provider"])->first();
 
             return response()->json([
-                "message" => "success create housekeeping order",
+                "message" => "success create tutoring order",
                 "data" => $tutoring_order,
             ], 201);
         } catch (\Exception $e) {

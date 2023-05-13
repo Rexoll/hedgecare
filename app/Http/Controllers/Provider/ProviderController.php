@@ -74,8 +74,8 @@ class ProviderController extends Controller
                         }
                     }
                 })
-                ->whereTime('start_time_available', '>=', $validate_query["start_time_available"] ?? 0)
-                ->whereTime('end_time_available', '<=', $validate_query["end_time_available"] ?? 24)
+                ->whereTime('start_time_available', '>=', $validate_query["start_time_available"] ?? "00:00:00")
+                ->whereTime('end_time_available', '<=', $validate_query["end_time_available"] ?? "24:00:00")
 
                 ->whereBetween('price', [$validate_query["lowest_price"] ?? 1, $validate_query["highest_price"] ?? 150])
 

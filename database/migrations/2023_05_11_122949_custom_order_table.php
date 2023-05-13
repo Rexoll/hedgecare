@@ -16,7 +16,8 @@ return new class extends Migration {
             $table->id();
             $table->string('street_address');
             $table->string('detail_address')->nullable();
-            $table->string('service_hours');
+            $table->unsignedMediumInteger('from_hour');
+            $table->unsignedMediumInteger('to_hour');
             $table->text('detail_service');
             $table->unsignedBigInteger('provider_id');
             $table->timestamp('start_date');

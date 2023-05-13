@@ -19,7 +19,8 @@ class CustomOrderController extends Controller
             $validator = Validator::make($request->all(), [
                 "street_address" => "string|required",
                 "detail_address" => "string|nullable",
-                "service_hours" => "string|required",
+                "from_hour" => "integer|required|min:0|max:23",
+                "to_hour" => "integer|required|gt:from_hour|min:1|max:24",
                 "detail_service" => "string|required",
                 "provider_id" => "integer|required",
                 "start_date" => "date|required",
@@ -37,7 +38,7 @@ class CustomOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $custom_order = CustomOrder::create([...$validate, "sub_total" => $provider->price]);
+            $custom_order = CustomOrder::create([...$validate, "sub_total" => ($provider->price * ($validate["to_hour"] - $validate["from_hour"]))]);
 
             $custom_order = CustomOrder::where("id", $custom_order["id"])->with(["provider"])->first();
 
@@ -118,8 +119,7 @@ class CustomOrderController extends Controller
 
             $custom_order = CustomOrder::where("id", $custom_order->id)->with(["provider"])->first();
 
-
-            Mail::to($validate["email"])->send(new InvoiceCustomOrder($custom_order));
+            Mail::to($validate["email"])->send(new InvoiceCustomOrder($custom_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $custom_order], 200);
         } catch (\Exception $e) {
