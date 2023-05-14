@@ -13,7 +13,7 @@ class tutoringController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -31,7 +31,7 @@ class tutoringController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -76,7 +76,7 @@ class tutoringController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\tutoring  $tutoring
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -97,7 +97,7 @@ class tutoringController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\tutoring  $tutoring
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -135,7 +135,7 @@ class tutoringController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\tutoring  $tutoring
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {

@@ -24,8 +24,8 @@ class HousekeepingOrderController extends Controller
                 "detail_address" => "string|nullable",
                 "detail_service" => "string|required",
                 "provider_id" => "integer|required",
-                "from_hour" => "integer|required|min:0|max:23",
-                "to_hour" => "integer|required|gt:from_hour|min:1|max:24",
+                "from_hour" => "integer|lt:to_hour|min:0|max:23",
+                "to_hour" => "integer|gt:from_hour|min:1|max:24",
                 "services" => "array|required",
                 "services.*" => "integer|required"
             ]);
@@ -42,7 +42,7 @@ class HousekeepingOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $housekeeping_order = HousekeepingOrder::create([...$validate, "sub_total" => ($provider->price * ($validate["to_hour"] - $validate["from_hour"]))]);
+            $housekeeping_order = HousekeepingOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
             HousekeepingOrderAdditionalService::insert(
                 array_map(function ($value) use ($housekeeping_order) {
                     return [

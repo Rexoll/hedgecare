@@ -21,6 +21,8 @@ class rentAfriendOrder extends Model
         'provider_id',
         'start_date',
         'sub_total',
+        'from_hour',
+        'to_hour',
     ];
 
     protected $hidden = [

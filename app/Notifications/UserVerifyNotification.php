@@ -15,7 +15,7 @@ class UserVerifyNotification extends VerifyEmail
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(public string $token)
     {
         //
     }
@@ -44,7 +44,7 @@ class UserVerifyNotification extends VerifyEmail
         return (new MailMessage)->subject('Verify your account')->view(
             'emails.user-verify',
             [
-                'actionUrl' => "https://hedgecare.ca/confirm-email?url=" . $actionUrl,
+                'actionUrl' => "https://hedgecare.ca/confirm-email?url=" . $actionUrl . "&token=" . $this->token,
             ]
         );
     }

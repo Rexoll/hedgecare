@@ -16,16 +16,6 @@ use Stripe\StripeClient;
 class rentAfriendOrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -36,10 +26,11 @@ class rentAfriendOrderController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 "category_id" => "integer|required",
-                "service_hours" => "string|required",
                 "detail_service" => "string|required",
                 "provider_id" => "integer|required",
                 "start_date" => "date|required",
+                "from_hour" => "integer|lt:to_hour|min:0|max:23",
+                "to_hour" => "integer|gt:from_hour|min:1|max:24",
                 "socialmedia_contact" => "array|required",
                 "socialmedia_contact.*.platform" => "string|required",
                 "socialmedia_contact.*.username" => "string|required",
@@ -58,7 +49,7 @@ class rentAfriendOrderController extends Controller
             $validate = $validator->validate();
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $rentAfriend_order = rentAfriendOrder::create([...$validate, "sub_total" => $provider->price]);
+            $rentAfriend_order = rentAfriendOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
             rentAfriendOrderAdditionalService::insert(
                 array_map(function ($value) use ($rentAfriend_order) {
                     return [
@@ -88,40 +79,6 @@ class rentAfriendOrderController extends Controller
             return response()->json(["message" => $e->getMessage()], 500);
         }
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\rentAfriendOrder  $rentAfriendOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function show(rentAfriendOrder $rentAfriendOrder)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\rentAfriendOrder  $rentAfriendOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, rentAfriendOrder $rentAfriendOrder)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\rentAfriendOrder  $rentAfriendOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(rentAfriendOrder $rentAfriendOrder)
-    {
-        //
     }
 
     public function payWithCard(Request $request, int $order_id)
@@ -191,7 +148,7 @@ class rentAfriendOrderController extends Controller
 
             $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order->id)->with(["category", "provider"])->first();
 
-            Mail::to($validate["email"])->send(new InvoiceRentAfriendOrder($rentAfriend_order));
+            Mail::to($validate["email"])->send(new InvoiceRentAfriendOrder($rentAfriend_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $rentAfriend_order], 200);
         } catch (\Exception $e) {

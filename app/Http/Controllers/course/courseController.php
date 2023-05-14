@@ -12,7 +12,7 @@ class courseController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -30,7 +30,7 @@ class courseController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -63,7 +63,7 @@ class courseController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\course  $course
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -84,7 +84,7 @@ class courseController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\course  $course
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -119,7 +119,7 @@ class courseController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\course  $course
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
     {

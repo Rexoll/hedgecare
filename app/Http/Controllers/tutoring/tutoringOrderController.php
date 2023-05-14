@@ -15,16 +15,6 @@ use Stripe\StripeClient;
 class tutoringOrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -76,40 +66,6 @@ class tutoringOrderController extends Controller
             return response()->json(["message" => $e->getMessage()], 500);
         }
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\tutoringOrder  $tutoringOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function show(tutoringOrder $tutoringOrder)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\tutoringOrder  $tutoringOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, tutoringOrder $tutoringOrder)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\tutoringOrder  $tutoringOrder
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(tutoringOrder $tutoringOrder)
-    {
-        //
     }
 
     public function payWithCard(Request $request, int $order_id)
@@ -179,8 +135,7 @@ class tutoringOrderController extends Controller
 
             $tutoring_order = tutoringOrder::where("id", $tutoring_order->id)->with("provider")->first();
 
-
-            Mail::to($validate["email"])->send(new InvoiceTutoringOrder($tutoring_order));
+            Mail::to($validate["email"])->send(new InvoiceTutoringOrder($tutoring_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded"], 200);
         } catch (\Exception $e) {
