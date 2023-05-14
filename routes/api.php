@@ -92,6 +92,7 @@ Route::prefix('auth')->group(function () {
     Route::prefix('users')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+        Route::middleware('auth:sanctum')->get('/current', [AuthController::class, 'currentUser']);
     });
     Route::prefix('providers')->group(function () {
         Route::post('/register', [AuthController::class, 'provider_register']);

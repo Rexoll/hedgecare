@@ -93,6 +93,14 @@ class AuthController extends Controller
         }
     }
 
+    public function currentUser()
+    {
+        return response()->json([
+            "message" => "get current user success",
+            "data" => Auth::user(),
+        ], 200);
+    }
+
 
     public function provider_register(Request $request)
     {
