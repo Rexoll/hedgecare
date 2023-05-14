@@ -74,20 +74,24 @@ class AuthController extends Controller
                 return response()->json([
                     'message' => $validate->errors(),
                 ], 400);
-            } else {
-                if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-                    $email = User::where('email', $request->email)->first();
-                    $token = $email->createToken('login_token')->plainTextToken;
-                    return response()->json([
-                        'data' =>
-                        [
-                            'user' => $email,
-                            'tokenType' => 'bearer',
-                            'token' => $token,
-                        ],
-                    ], 200);
-                }
             }
+
+            if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return response()->json([
+                    'message' => 'unauthorized',
+                ], 401);
+            }
+
+            $email = User::where('email', $request->email)->first();
+            $token = $email->createToken('login_token')->plainTextToken;
+            return response()->json([
+                'data' =>
+                [
+                    'user' => $email,
+                    'tokenType' => 'bearer',
+                    'token' => $token,
+                ],
+            ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
