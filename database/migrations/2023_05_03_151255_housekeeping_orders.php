@@ -18,8 +18,8 @@ return new class extends Migration {
             $table->enum('order_type', ['individual', 'business']);
             $table->string('street_address');
             $table->string('detail_address')->nullable();
-            $table->unsignedMediumInteger('from_hour');
-            $table->unsignedMediumInteger('to_hour');
+            $table->unsignedMediumInteger('from_hour')->default(1);
+            $table->unsignedMediumInteger('to_hour')->default(2);
             $table->text('detail_service');
             $table->unsignedBigInteger('provider_id');
             $table->double('sub_total')->nullable();

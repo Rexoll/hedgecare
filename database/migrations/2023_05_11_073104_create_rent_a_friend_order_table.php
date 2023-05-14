@@ -15,8 +15,8 @@ return new class extends Migration {
         Schema::create('rentAfriend_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
-            $table->unsignedMediumInteger('from_hour');
-            $table->unsignedMediumInteger('to_hour');
+            $table->unsignedMediumInteger('from_hour')->default(1);
+            $table->unsignedMediumInteger('to_hour')->default(2);
             $table->text('detail_service');
             $table->unsignedBigInteger('provider_id');
             $table->dateTime('start_date');
