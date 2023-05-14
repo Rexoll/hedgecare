@@ -137,7 +137,7 @@ class tutoringOrderController extends Controller
 
             Mail::to($validate["email"])->send(new InvoiceTutoringOrder($tutoring_order, substr($validate["card_number"], -4)));
 
-            return response()->json(["message" => "payment succeeded"], 200);
+            return response()->json(["message" => "payment succeeded", "data" => $tutoring_order], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
