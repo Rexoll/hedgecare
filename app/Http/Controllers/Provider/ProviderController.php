@@ -23,6 +23,9 @@ class ProviderController extends Controller
                 "end_time_available" => "date_format:H:i:s|nullable",
                 "lowest_price" => "integer|nullable",
                 "highest_price" => "integer|nullable",
+                "latitude" => "numeric|nullable",
+                "longitude" => "numeric|nullable",
+                "radius" => "integer|nullable",
             ]);
 
             if ($validator_query->fails()) {
@@ -34,20 +37,30 @@ class ProviderController extends Controller
 
             $validate_query = $validator_query->validate();
 
-            $providers = Provider::
-                whereHas("skills", function ($q) use ($validate_query) {
-                    if ($validate_query["skills"] ?? null != null) {
-                        $i = 0;
-                        foreach (explode(',', $validate_query["skills"]) as $skill) {
-                            if ($i == 0) {
-                                $q->Where("skills.id", "=", $skill);
-                            } else {
-                                $q->orWhere("skills.id", "=", $skill);
-                            }
-                            $i++;
+            $lat = $validate_query['latitude'] ?? null;
+            $lng = $validate_query['longitude'] ?? null;
+            $radius = $validate_query['radius'] ?? null;
+
+            $providers = new Provider;
+            if ($lat != null && $lng != null && $radius != null) {
+                $providers = $providers->selectRaw("*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance")
+                    ->having('distance', '<=', $radius)
+                    ->orderBy('distance')
+                    ->setBindings([$lat, $lng, $lat]);
+            }
+            $providers = $providers->whereHas("skills", function ($q) use ($validate_query) {
+                if ($validate_query["skills"] ?? null != null) {
+                    $i = 0;
+                    foreach (explode(',', $validate_query["skills"]) as $skill) {
+                        if ($i == 0) {
+                            $q->Where("skills.id", "=", $skill);
+                        } else {
+                            $q->orWhere("skills.id", "=", $skill);
                         }
+                        $i++;
                     }
-                })
+                }
+            })
                 ->whereHas(
                     "user",
                     function ($q) use ($validate_query) {
@@ -78,16 +91,6 @@ class ProviderController extends Controller
                 ->whereTime('end_time_available', '<=', $validate_query["end_time_available"] ?? "24:00:00")
 
                 ->whereBetween('price', [$validate_query["lowest_price"] ?? 1, $validate_query["highest_price"] ?? 150])
-
-                // FILTRASI RADIUS
-                // $lat = $request->get('lat');
-                // $lng = $request->get('lng');
-                // $radius = $request->get('radius');
-                // ->selectRaw("*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance")
-                // ->where('status', 'active')
-                // ->having('distance', '<=', $radius)
-                // ->orderBy('distance')
-                // ->setBindings([$lat, $lng, $lat])
 
                 ->with(["user", "skills", "services"])
                 ->get();
