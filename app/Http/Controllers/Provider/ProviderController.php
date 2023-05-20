@@ -25,7 +25,7 @@ class ProviderController extends Controller
                 "highest_price" => "integer|required_with:lowest_price|nullable",
                 "latitude" => "numeric|required_with:longitude,radius|nullable",
                 "longitude" => "numeric|required_with:latitude,radius|nullable",
-                "radius" => "integer|required_with:longitude,latitude|nullable",
+                "radius" => "integer|nullable",
             ]);
 
             if ($validator_query->fails()) {
@@ -116,6 +116,5 @@ class ProviderController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
-
     }
 }
