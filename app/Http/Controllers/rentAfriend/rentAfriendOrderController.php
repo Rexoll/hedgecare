@@ -34,7 +34,6 @@ class rentAfriendOrderController extends Controller
                 "socialmedia_contact" => "array|required",
                 "socialmedia_contact.*.platform" => "string|required",
                 "socialmedia_contact.*.username" => "string|required",
-                "services" => "array|required",
                 "services.*" => "integer|required",
             ]);
 
@@ -43,21 +42,22 @@ class rentAfriendOrderController extends Controller
                     "message" => "Bad send body data",
                     "errors" => $validator->errors(),
                 ], 400);
-            }
-            ;
+            };
 
             $validate = $validator->validate();
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $rentAfriend_order = rentAfriendOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
-            rentAfriendOrderAdditionalService::insert(
-                array_map(function ($value) use ($rentAfriend_order) {
-                    return [
-                        "order_id" => $rentAfriend_order["id"],
-                        "service_id" => $value,
-                    ];
-                }, $validate["services"]),
-            );
+            if ($validate["services"] ?? null != null) {
+                rentAfriendOrderAdditionalService::insert(
+                    array_map(function ($value) use ($rentAfriend_order) {
+                        return [
+                            "order_id" => $rentAfriend_order["id"],
+                            "service_id" => $value,
+                        ];
+                    }, $validate["services"]),
+                );
+            }
 
             rentAfriendSocialMedia::insert(
                 array_map(function ($value) use ($rentAfriend_order) {
@@ -78,7 +78,6 @@ class rentAfriendOrderController extends Controller
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
         }
-
     }
 
     public function payWithCard(Request $request, int $order_id)

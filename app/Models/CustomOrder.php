@@ -34,6 +34,8 @@ class CustomOrder extends Model
     protected $casts = [
         'provider_id' => 'integer',
         'start_date' => 'datetime',
+        'from_hour' => 'integer',
+        'to_hour' => 'integer',
     ];
 
     public function provider(): BelongsTo

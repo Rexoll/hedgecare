@@ -19,13 +19,13 @@ class ProviderController extends Controller
                 "services" => "regex:/^[\d,]+$/|nullable",
                 "skills" => "regex:/^[\d,]+$/|nullable",
                 "choosedDate" => "date|nullable",
-                "start_time_available" => "date_format:H:i:s|nullable",
-                "end_time_available" => "date_format:H:i:s|nullable",
-                "lowest_price" => "integer|nullable",
-                "highest_price" => "integer|nullable",
-                "latitude" => "numeric|nullable",
-                "longitude" => "numeric|nullable",
-                "radius" => "integer|nullable",
+                "start_time_available" => "date_format:H:i:s|required_with:end_time_available|nullable",
+                "end_time_available" => "date_format:H:i:s|required_with:start_time_available|nullable",
+                "lowest_price" => "integer|required_with:highest_price|nullable",
+                "highest_price" => "integer|required_with:lowest_price|nullable",
+                "latitude" => "numeric|required_with:longitude,radius|nullable",
+                "longitude" => "numeric|required_with:latitude,radius|nullable",
+                "radius" => "integer|required_with:longitude,latitude|nullable",
             ]);
 
             if ($validator_query->fails()) {

@@ -21,6 +21,7 @@ class HousekeepingOrder extends Model
         'detail_service',
         'provider_id',
         'sub_total',
+        'start_date',
         'from_hour',
         'to_hour',
     ];
@@ -37,6 +38,8 @@ class HousekeepingOrder extends Model
         'category_id' => 'integer',
         'provider_id' => 'integer',
         'start_date' => 'datetime',
+        'from_hour' => 'integer',
+        'to_hour' => 'integer',
     ];
 
     public function services(): BelongsToMany

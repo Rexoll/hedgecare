@@ -38,6 +38,8 @@ class rentAfriendOrder extends Model
         'category_id' => 'integer',
         'provider_id' => 'integer',
         'start_date' => 'datetime',
+        'from_hour' => 'integer',
+        'to_hour' => 'integer',
     ];
 
     public function services(): BelongsToMany
@@ -59,5 +61,4 @@ class rentAfriendOrder extends Model
     {
         return $this->hasMany(rentAfriendSocialMedia::class, 'order_id', 'id');
     }
-
 }

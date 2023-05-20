@@ -31,8 +31,7 @@ class CustomOrderController extends Controller
                     "message" => "Bad send body data",
                     "errors" => $validator->errors()
                 ], 400);
-            }
-            ;
+            };
 
             $validate = $validator->validate();
 
@@ -49,7 +48,6 @@ class CustomOrderController extends Controller
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
         }
-
     }
 
     public function payWithCard(Request $request, int $order_id)

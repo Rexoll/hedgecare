@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->unsignedMediumInteger('to_hour')->default(2);
             $table->text('detail_service');
             $table->unsignedBigInteger('provider_id');
-            $table->dateTime('start_date');
+            $table->date('start_date');
             $table->double('sub_total')->nullable();
             $table->double('tax')->nullable();
             $table->string('first_name')->nullable();

@@ -23,10 +23,10 @@ class HousekeepingOrderController extends Controller
                 "street_address" => "string|required",
                 "detail_address" => "string|nullable",
                 "detail_service" => "string|required",
+                "start_date" => "date|required",
                 "provider_id" => "integer|required",
                 "from_hour" => "integer|lt:to_hour|min:0|max:23",
                 "to_hour" => "integer|gt:from_hour|min:1|max:24",
-                "services" => "array|required",
                 "services.*" => "integer|required"
             ]);
 
@@ -35,22 +35,23 @@ class HousekeepingOrderController extends Controller
                     "message" => "Bad send body data",
                     "errors" => $validator->errors()
                 ], 400);
-            }
-            ;
+            };
 
             $validate = $validator->validate();
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $housekeeping_order = HousekeepingOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
-            HousekeepingOrderAdditionalService::insert(
-                array_map(function ($value) use ($housekeeping_order) {
-                    return [
-                        "order_id" => $housekeeping_order["id"],
-                        "service_id" => $value,
-                    ];
-                }, $validate["services"]),
-            );
+            if ($validate["services"] ?? null != null) {
+                HousekeepingOrderAdditionalService::insert(
+                    array_map(function ($value) use ($housekeeping_order) {
+                        return [
+                            "order_id" => $housekeeping_order["id"],
+                            "service_id" => $value,
+                        ];
+                    }, $validate["services"]),
+                );
+            }
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
 
@@ -61,7 +62,6 @@ class HousekeepingOrderController extends Controller
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
         }
-
     }
 
     public function payWithCard(Request $request, int $order_id)
