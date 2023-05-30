@@ -5,6 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\Housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\Housekeeping\HousekeepingOrderController;
+use App\Http\Controllers\Maintenance\MaintenanceAdditionalServiceController;
+use App\Http\Controllers\Maintenance\MaintenanceCategoryController;
+use App\Http\Controllers\Maintenance\MaintenanceOrderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\rentAfriend\rentAfriendCategoryController;
 use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
@@ -49,6 +52,19 @@ Route::prefix("housekeeping")->group(function () {
     Route::prefix("orders")->group(function () {
         Route::post("/", [HousekeepingOrderController::class, "store"]);
         Route::post("/{order_id}/payWithCard", [HousekeepingOrderController::class, "payWithCard"]);
+    });
+});
+
+Route::prefix("maintenance")->group(function () {
+    Route::prefix("categories")->group(function () {
+        Route::get("/", [MaintenanceCategoryController::class, "index"]);
+    });
+    Route::prefix("services")->group(function () {
+        Route::get("/", [MaintenanceAdditionalServiceController::class, "index"]);
+    });
+    Route::prefix("orders")->group(function () {
+        Route::post("/", [MaintenanceOrderController::class, "store"]);
+        Route::post("/{order_id}/payWithCard", [MaintenanceOrderController::class, "payWithCard"]);
     });
 });
 

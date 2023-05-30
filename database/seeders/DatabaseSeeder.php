@@ -27,7 +27,10 @@ class DatabaseSeeder extends Seeder
             HousekeepingAdditionalServicePriceSeeder::class,
             rentAfriendCategorySeeder::class,
             rentAfriendAdditionalServiceSeeder::class,
-            rentAfriendAdditionalServicePriceSeeder::class
+            rentAfriendAdditionalServicePriceSeeder::class,
+            maintenanceCategorySeeder::class,
+            maintenanceAdditionalServiceSeeder::class,
+            maintenanceAdditionalServicesPriceSeeder::class
         ]);
     }
 }
