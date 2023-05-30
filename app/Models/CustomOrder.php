@@ -22,6 +22,7 @@ class CustomOrder extends Model
         'sub_total',
         'from_hour',
         'to_hour',
+        'review'
     ];
 
     protected $hidden = [

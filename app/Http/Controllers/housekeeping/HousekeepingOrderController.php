@@ -29,13 +29,13 @@ class HousekeepingOrderController extends Controller
                 "provider_id" => "integer|required",
                 "from_hour" => "integer|lt:to_hour|min:0|max:23",
                 "to_hour" => "integer|gt:from_hour|min:1|max:24",
-                "services.*" => "integer|required"
+                "services.*" => "integer|required",
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     "message" => "Bad send body data",
-                    "errors" => $validator->errors()
+                    "errors" => $validator->errors(),
                 ], 400);
             };
 
@@ -106,7 +106,7 @@ class HousekeepingOrderController extends Controller
                     "exp_month" => $validate["exp_month"],
                     "exp_year" => $validate["exp_year"],
                     "cvc" => $validate["cvc"],
-                ]
+                ],
             ]);
 
             if (!isset($token["id"])) {
@@ -140,6 +140,54 @@ class HousekeepingOrderController extends Controller
             Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $housekeeping_order], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function review(Request $request, $id)
+    {
+        try {
+            $validate = Validator::make($request->all(), [
+                'review' => 'required|min:1|max:5',
+            ]);
+            if ($validate->fails()) {
+                return response()->json([
+                    'message' => $validate->errors(),
+                ], 400);
+            }
+            $findOrder = HousekeepingOrder::findOrFail($id);
+            $findOrder->update([
+                'review' => $request->review,
+            ]);
+            return response()->json([
+                'message' => 'successfully submited review',
+                'review' => $findOrder->review
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateOrder(Request $request,$id)
+    {
+        try {
+            $validate = Validator::make($request->all(),[
+                'detail_service' => 'required'
+            ]);
+            if($validate->fails()){
+                return response()->json([
+                    'message' => $validate->errors()
+                ], 400);
+            }
+            $findOrder = HousekeepingOrder::findOrFail($id);
+            $findOrder->update([
+                'detail_service' => $request->detail_service,
+            ]);
+            return response()->json([
+                'message' => 'successfully submited details',
+                'detail_service' => $findOrder->detail_service,
+            ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

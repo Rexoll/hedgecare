@@ -14,6 +14,7 @@ use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
+use App\Models\HousekeepingOrder;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,9 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 })->middleware(['auth:sanctum'])->name('verification.verify');
 
 Route::prefix("housekeeping")->group(function () {
+    Route::prefix('review')->group(function () {
+        Route::put('/{id}', [HousekeepingOrderController::class, 'review']);
+    });
     Route::prefix("categories")->group(function () {
         Route::get("/", [HousekeepingCategoryController::class, "index"]);
     });
@@ -51,11 +55,15 @@ Route::prefix("housekeeping")->group(function () {
     });
     Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::post("/", [HousekeepingOrderController::class, "store"]);
+        Route::put("/update/{id}", [HousekeepingOrderController::class, "updateOrder"]);
         Route::post("/{order_id}/payWithCard", [HousekeepingOrderController::class, "payWithCard"]);
     });
 });
 
 Route::prefix("maintenance")->group(function () {
+    Route::prefix('review')->group(function () {
+        Route::put('/{id}', [MaintenanceOrderController::class, 'review']);
+    });
     Route::prefix("categories")->group(function () {
         Route::get("/", [MaintenanceCategoryController::class, "index"]);
     });
@@ -64,6 +72,7 @@ Route::prefix("maintenance")->group(function () {
     });
     Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::post("/", [MaintenanceOrderController::class, "store"]);
+        Route::put("/update/{id}", [MaintenanceOrderController::class, "updateOrder"]);
         Route::post("/{order_id}/payWithCard", [MaintenanceOrderController::class, "payWithCard"]);
     });
 });
@@ -78,7 +87,15 @@ Route::prefix("tutoring")->group(function () {
 });
 
 Route::prefix("rentAfriend")->group(function () {
+    Route::prefix('review')->group(function () {
+        Route::put('/{id}', [rentAfriendOrderController::class, 'review']);
+    });
     Route::get('/', [rentAfriendCategoryController::class, 'index']);
+    Route::prefix("orders")->group(function () {
+        Route::post('/', [rentAfriendOrderController::class, 'store']); //create order
+        Route::put("/update/{id}", [rentAfriendOrderController::class, "updateOrder"]); //update order
+        Route::post('/payWithCard/{order_id}', [rentAfriendOrderController::class, 'payWithCard']); //pay with card
+    });
     Route::prefix("categories")->group(function () {
         Route::get('/', [rentAfriendCategoryController::class, 'index']);
     });
@@ -97,8 +114,12 @@ Route::prefix("skills")->group(function () {
 });
 
 Route::prefix("custom")->group(function () {
+    Route::prefix('review')->group(function () {
+        Route::put('/{id}', [CustomOrderController::class, 'review']);
+    });
     Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::post("/", [CustomOrderController::class, "store"]);
+        Route::put("/update/{id}", [CustomOrderController::class, "updateOrder"]); //update order
         Route::post("/{order_id}/payWithCard", [CustomOrderController::class, "payWithCard"]);
     });
 });
