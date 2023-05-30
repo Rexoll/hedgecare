@@ -154,4 +154,52 @@ class rentAfriendOrderController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    public function review(Request $request, $id)
+    {
+        try {
+            $validate = Validator::make($request->all(), [
+                'review' => 'required|min:1|max:5',
+            ]);
+            if ($validate->fails()) {
+                return response()->json([
+                    'message' => $validate->errors(),
+                ], 400);
+            }
+            $findOrder = rentAfriendOrder::findOrFail($id);
+            $findOrder->update([
+                'review' => $request->review,
+            ]);
+            return response()->json([
+                'message' => 'successfully submited review',
+                'review' => $findOrder->review
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function updateOrder(Request $request,$id)
+    {
+        try {
+            $validate = Validator::make($request->all(),[
+                'detail_service' => 'required'
+            ]);
+            if($validate->fails()){
+                return response()->json([
+                    'message' => $validate->errors()
+                ], 400);
+            }
+            $findOrder = rentAfriendOrder::findOrFail($id);
+            $findOrder->update([
+                'detail_service' => $request->detail_service,
+            ]);
+            return response()->json([
+                'message' => 'successfully submited details',
+                'detail_service' => $findOrder->detail_service,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
 }
