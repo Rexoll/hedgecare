@@ -38,6 +38,9 @@ class CustomOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $custom_order = CustomOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $custom_order->status = "not_paid";
+            $custom_order->user_id = Auth()->id();
+            $custom_order->save();
 
             $custom_order = CustomOrder::where("id", $custom_order["id"])->with(["provider"])->first();
 
@@ -113,6 +116,7 @@ class CustomOrderController extends Controller
             $custom_order->phone_number = $validate["phone_number"];
             $custom_order->email = $validate["email"];
             $custom_order->pay_with_card = $charge["id"];
+            $custom_order->status = "active";
             $custom_order->save();
 
             $custom_order = CustomOrder::where("id", $custom_order->id)->with(["provider"])->first();

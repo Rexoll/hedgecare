@@ -49,7 +49,7 @@ Route::prefix("housekeeping")->group(function () {
     Route::prefix("services")->group(function () {
         Route::get("/", [HousekeepingAdditionalServiceController::class, "index"]);
     });
-    Route::prefix("orders")->group(function () {
+    Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::post("/", [HousekeepingOrderController::class, "store"]);
         Route::post("/{order_id}/payWithCard", [HousekeepingOrderController::class, "payWithCard"]);
     });
@@ -62,7 +62,7 @@ Route::prefix("maintenance")->group(function () {
     Route::prefix("services")->group(function () {
         Route::get("/", [MaintenanceAdditionalServiceController::class, "index"]);
     });
-    Route::prefix("orders")->group(function () {
+    Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::post("/", [MaintenanceOrderController::class, "store"]);
         Route::post("/{order_id}/payWithCard", [MaintenanceOrderController::class, "payWithCard"]);
     });
@@ -79,12 +79,12 @@ Route::prefix("tutoring")->group(function () {
 
 Route::prefix("rentAfriend")->group(function () {
     Route::get('/', [rentAfriendCategoryController::class, 'index']);
-    Route::prefix("orders")->group(function () {
-        Route::post('/', [rentAfriendOrderController::class, 'store']); //create order
-        Route::post('/payWithCard/{order_id}', [rentAfriendOrderController::class, 'payWithCard']); //pay with card
-    });
     Route::prefix("categories")->group(function () {
         Route::get('/', [rentAfriendCategoryController::class, 'index']);
+    });
+    Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
+        Route::post('/', [rentAfriendOrderController::class, 'store']); //create order
+        Route::post('/payWithCard/{order_id}', [rentAfriendOrderController::class, 'payWithCard']); //pay with card
     });
 });
 
@@ -97,7 +97,7 @@ Route::prefix("skills")->group(function () {
 });
 
 Route::prefix("custom")->group(function () {
-    Route::prefix("orders")->group(function () {
+    Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::post("/", [CustomOrderController::class, "store"]);
         Route::post("/{order_id}/payWithCard", [CustomOrderController::class, "payWithCard"]);
     });
@@ -106,12 +106,18 @@ Route::prefix("custom")->group(function () {
 
 Route::prefix('auth')->group(function () {
     Route::prefix('users')->group(function () {
+        Route::middleware('auth:sanctum')->patch('/currentUser', [AuthController::class, 'updateProfile']);
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+        Route::middleware('auth:sanctum')->delete('/logout', [AuthController::class, 'logout']);
         Route::middleware('auth:sanctum')->get('/current', [AuthController::class, 'currentUser']);
     });
     Route::prefix('providers')->group(function () {
         Route::post('/register', [AuthController::class, 'provider_register']);
-        Route::post('/login', [AuthController::class, 'provider_login']);
     });
+});
+
+Route::middleware(['auth:sanctum'])->prefix('jobs')->group(function () {
+    Route::get('active/currentUser', [AuthController::class, 'getActiveJobUser']);
+    Route::get('history/currentUser', [AuthController::class, 'getHistoryJobUser']);
 });

@@ -42,6 +42,9 @@ class MaintenanceOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $maintenance_order = MaintenanceOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $maintenance_order->status = "not_paid";
+            $maintenance_order->user_id = Auth()->id();
+            $maintenance_order->save();
             if ($validate["services"] ?? null != null) {
                 MaintenanceOrderAdditionalService::insert(
                     array_map(function ($value) use ($maintenance_order) {
@@ -127,6 +130,7 @@ class MaintenanceOrderController extends Controller
             $maintenance_order->phone_number = $validate["phone_number"];
             $maintenance_order->email = $validate["email"];
             $maintenance_order->pay_with_card = $charge["id"];
+            $maintenance_order->status = "active";
             $maintenance_order->save();
 
             $maintenance_order = MaintenanceOrder::where("id", $maintenance_order->id)->with(["category", "provider"])->first();

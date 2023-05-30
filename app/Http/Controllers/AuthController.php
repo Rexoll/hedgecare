@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Mail\RegisterProvider;
+use App\Models\CustomOrder;
+use App\Models\HousekeepingOrder;
+use App\Models\MaintenanceOrder;
+use App\Models\Provider;
+use App\Models\rentAfriendOrder;
 use App\Models\User;
 use App\Notifications\UserVerifyNotification;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Mail;
 
@@ -82,12 +88,19 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $email = User::where('email', $request->email)->first();
-            $token = $email->createToken('login_token')->plainTextToken;
+            $user = User::where('email', $request->email)->first();
+            $token = $user->createToken('login_token')->plainTextToken;
+            if ($user->role == 'provider') {
+                $provider = Provider::where('user_id', $user->id)->first();
+                $user = [
+                    ...$user->toArray(),
+                    'provider' => $provider,
+                ];
+            }
             return response()->json([
                 'data' =>
                 [
-                    'user' => $email,
+                    'user' => $user,
                     'tokenType' => 'bearer',
                     'token' => $token,
                 ],
@@ -95,14 +108,6 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
-    }
-
-    public function currentUser()
-    {
-        return response()->json([
-            "message" => "get current user success",
-            "data" => Auth::user(),
-        ], 200);
     }
 
 
@@ -150,38 +155,160 @@ class AuthController extends Controller
         }
     }
 
-    public function provider_login(Request $request)
+    public function currentUser()
     {
-        try {
-            $validate = Validator::make($request->all(), [
-                'email' => 'email|required',
-                'password' => 'required',
-            ]);
+        return response()->json([
+            "message" => "get current user success",
+            "data" => Auth::user(),
+        ], 200);
+    }
 
-            if ($validate->fails()) {
-                return response()->json([
-                    'message' => $validate->errors(),
-                ], 400);
-            } else {
-                if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'provider'])) {
-                    $email = User::where('email', $request->email)->first();
-                    $token = $email->createToken('login_token')->plainTextToken;
-                    return response()->json([
-                        'data' =>
-                        [
-                            'user' => $email,
-                            'tokenType' => 'bearer',
-                            'token' => $token,
-                        ],
-                    ], 200);
-                } else {
-                    return response()->json([
-                        'message' => 'unauthorized',
-                    ], 401);
-                }
-            }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+    public function updateProfile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'string|nullable',
+            'last_name' => 'string|nullable',
+            'email' => 'email|nullable|min:6',
+            'phone_number' => 'regex:/^\+[1-9]{1}[0-9]{3,14}$/|nullable',
+            'address' => 'string|nullable',
+            'postal_code' => 'string|nullable',
+            'thumbnail' => 'nullable|file|mimes:jpeg,jpg,png',
+            'date_of_birth' => 'date|nullable',
+            'gender' => 'in:Male,Female|nullable',
+            'occupation' => 'string|nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+            ], 400);
         }
+
+        $validate = Arr::where($validator->validate(), function ($value, $key) {
+            return $value ?? null != null;
+        });
+
+        if ($validate['thumbnail'] ?? null != null) {
+            $validate['thumbnail'] = Storage::putFileAs(
+                'public/images',
+                $validate['thumbnail'],
+                'thumbnail-' . Auth::user()->id . '.png',
+            );
+            $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-' . Auth::user()->id . '.png';
+        }
+
+        $user = User::where('id', Auth::user()->id)->update($validate);
+        if ($user < 1) {
+            return response()->json([
+                "message" => "data user profile nothing has changed",
+            ], 400);
+        }
+
+        $user = User::where('id', Auth::user()->id)->first();
+
+        return response()->json([
+            "message" => "success update profile",
+            "data" => $user,
+        ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::user()->tokens()->where('id', Auth::user()->id)->delete();
+        return response(['message' => 'success logout'], 200);
+    }
+
+    public function getActiveJobUser(Request $request)
+    {
+        $rent_a_friend_order = rentAfriendOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider', 'services'])->get();
+        $housekeeping_order = HousekeepingOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider', 'services'])->get();
+        $maintenance_order = MaintenanceOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider', 'services'])->get();
+        $custom_order = CustomOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider'])->get();
+
+        $orders = [
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'service_name' => 'Rent A Friend'
+                ];
+            }, $rent_a_friend_order->toArray()),
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'service_name' => 'Housekeeping'
+                ];
+            }, $housekeeping_order->toArray()),
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'service_name' => 'Maintenance'
+                ];
+            }, $maintenance_order->toArray()),
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'services' => [],
+                    'service_name' => 'Custom'
+                ];
+            }, $custom_order->toArray()),
+        ];
+
+        if (!$orders) {
+            return response([
+                'message' => 'history jobs is empty',
+            ], 404);
+        }
+
+        return response([
+            'message' => 'success get active jobs',
+            'data' => $orders,
+        ], 200);
+    }
+
+    public function getHistoryJobUser(Request $request)
+    {
+        $rent_a_friend_order = rentAfriendOrder::where(['user_id' => Auth()->user()->id, 'status' => 'done'])->with(['provider', 'services'])->get();
+        $housekeeping_order = HousekeepingOrder::where(['user_id' => Auth()->user()->id, 'status' => 'done'])->with(['provider', 'services'])->get();
+        $maintenance_order = MaintenanceOrder::where(['user_id' => Auth()->user()->id, 'status' => 'done'])->with(['provider', 'services'])->get();
+        $custom_order = CustomOrder::where(['user_id' => Auth()->user()->id, 'status' => 'done'])->with(['provider'])->get();
+
+        $orders = [
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'service_name' => 'Rent A Friend'
+                ];
+            }, $rent_a_friend_order->toArray()),
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'service_name' => 'Housekeeping'
+                ];
+            }, $housekeeping_order->toArray()),
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'service_name' => 'Maintenance'
+                ];
+            }, $maintenance_order->toArray()),
+            ...array_map(function (array $data) {
+                return [
+                    ...$data,
+                    'services' => [],
+                    'service_name' => 'Custom'
+                ];
+            }, $custom_order->toArray()),
+        ];
+
+        if (!$orders) {
+            return response([
+                'message' => 'history jobs is empty',
+            ], 404);
+        }
+
+        return response([
+            'message' => 'success get history jobs',
+            'data' => $orders,
+        ], 200);
     }
 }

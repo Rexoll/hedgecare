@@ -48,6 +48,9 @@ class rentAfriendOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $rentAfriend_order = rentAfriendOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $rentAfriend_order->status = "not_paid";
+            $rentAfriend_order->user_id = Auth()->id();
+            $rentAfriend_order->save();
             if ($validate["services"] ?? null != null) {
                 rentAfriendOrderAdditionalService::insert(
                     array_map(function ($value) use ($rentAfriend_order) {
@@ -143,6 +146,7 @@ class rentAfriendOrderController extends Controller
             $rentAfriend_order->phone_number = $validate["phone_number"];
             $rentAfriend_order->email = $validate["email"];
             $rentAfriend_order->pay_with_card = $charge["id"];
+            $rentAfriend_order->status = "active";
             $rentAfriend_order->save();
 
             $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order->id)->with(["category", "provider"])->first();

@@ -7,7 +7,9 @@ use App\Mail\InvoiceHousekeepingOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
 use App\Models\Provider;
+use Database\Seeders\user;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
@@ -42,6 +44,9 @@ class HousekeepingOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $housekeeping_order = HousekeepingOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $housekeeping_order->status = "not_paid";
+            $housekeeping_order->user_id = Auth()->user()->id;
+            $housekeeping_order->save();
             if ($validate["services"] ?? null != null) {
                 HousekeepingOrderAdditionalService::insert(
                     array_map(function ($value) use ($housekeeping_order) {
@@ -127,6 +132,7 @@ class HousekeepingOrderController extends Controller
             $housekeeping_order->phone_number = $validate["phone_number"];
             $housekeeping_order->email = $validate["email"];
             $housekeeping_order->pay_with_card = $charge["id"];
+            $housekeeping_order->status = "active";
             $housekeeping_order->save();
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order->id)->with(["category", "provider"])->first();

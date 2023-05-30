@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      *
@@ -22,7 +23,9 @@ return new class extends Migration {
             $table->unsignedMediumInteger('from_hour')->default(1);
             $table->unsignedMediumInteger('to_hour')->default(2);
             $table->text('detail_service');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('provider_id');
+            $table->enum('status', ['not_paid', 'active', 'cancel', 'done']);
             $table->double('sub_total')->nullable();
             $table->double('tax')->nullable();
             $table->string('first_name')->nullable();
