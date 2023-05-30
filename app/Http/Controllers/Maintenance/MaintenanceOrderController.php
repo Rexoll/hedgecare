@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Maintenance;
 
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceMaintenanceOrder;
-use App\Models\HousekeepingOrder;
 use App\Models\MaintenanceOrder;
 use App\Models\MaintenanceOrderAdditionalService;
 use App\Models\Provider;
@@ -85,7 +84,7 @@ class MaintenanceOrderController extends Controller
 
             $validate = $validator->validate();
 
-            $maintenance_order = HousekeepingOrder::where("id", $order_id)->first();
+            $maintenance_order = MaintenanceOrder::where("id", $order_id)->first();
 
             if ($maintenance_order == null) {
                 return response()->json(["message" => "order not found"], 404);
