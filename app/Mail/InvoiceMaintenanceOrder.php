@@ -2,14 +2,14 @@
 
 namespace App\Mail;
 
-use App\Models\HousekeepingOrder;
+use App\Models\MaintenanceOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InvoiceHousekeepingOrder extends Mailable
+class InvoiceMaintenanceOrder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,8 +18,9 @@ class InvoiceHousekeepingOrder extends Mailable
      *
      * @return void
      */
-    public function __construct(public HousekeepingOrder $order, public $suffix_card_number)
+    public function __construct(public MaintenanceOrder $order, public $suffix_card_number)
     {
+        //
     }
 
     /**
@@ -30,7 +31,7 @@ class InvoiceHousekeepingOrder extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Invoice Housekeeping Order',
+            subject:'Invoice Maintenance Order',
         );
     }
 
@@ -42,8 +43,8 @@ class InvoiceHousekeepingOrder extends Mailable
     public function content()
     {
         return new Content(
-            view: 'emails.invoice',
-            with: [
+            view:'emails.invoice',
+            with:[
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
                 "order_category" => $this->order->category->name,
