@@ -44,7 +44,7 @@ class MaintenanceOrder extends Model
 
     public function services(): BelongsToMany
     {
-        return $this->belongsToMany(MaintenanceAdditionalService::class, "Maintenance_orders_additional_services", 'order_id', 'service_id');
+        return $this->belongsToMany(MaintenanceAdditionalService::class, "maintenance_orders_additional_services", 'order_id', 'service_id');
     }
 
     public function category(): BelongsTo
