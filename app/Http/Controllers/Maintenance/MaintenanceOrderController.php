@@ -56,7 +56,7 @@ class MaintenanceOrderController extends Controller
             $maintenance_order = MaintenanceOrder::where("id", $maintenance_order["id"])->with(["services", "category", "provider"])->first();
 
             return response()->json([
-                "message" => "success create housekeeping order",
+                "message" => "success create Maintenance order",
                 "data" => $maintenance_order,
             ], 201);
         } catch (\Exception $e) {
