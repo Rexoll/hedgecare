@@ -10,7 +10,7 @@ class MaintenanceAdditionalServicePrice extends Model
 {
     use HasFactory;
 
-    protected $table = 'maintenance_additional_services_prices';
+    protected $table = 'maintenance_additional_service_prices';
 
     protected $fillable = [
         'provider_id',
