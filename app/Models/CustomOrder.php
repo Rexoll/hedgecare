@@ -37,6 +37,8 @@ class CustomOrder extends Model
         'start_date' => 'datetime',
         'from_hour' => 'integer',
         'to_hour' => 'integer',
+        'sub_total' => 'double',
+        'tax' => 'double',
     ];
 
     public function provider(): BelongsTo

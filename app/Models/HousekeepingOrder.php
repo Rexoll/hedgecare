@@ -32,6 +32,7 @@ class HousekeepingOrder extends Model
         'provider_id',
         'pay_with_paypal',
         'pay_with_card',
+        'user_id',
         'pivot',
     ];
 
@@ -41,6 +42,8 @@ class HousekeepingOrder extends Model
         'start_date' => 'datetime',
         'from_hour' => 'integer',
         'to_hour' => 'integer',
+        'sub_total' => 'double',
+        'tax' => 'double',
     ];
 
     public function services(): BelongsToMany

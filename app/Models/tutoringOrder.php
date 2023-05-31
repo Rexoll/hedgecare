@@ -35,6 +35,8 @@ class tutoringOrder extends Model
     protected $casts = [
         'provider_id' => 'integer',
         'start_date' => 'datetime',
+        'sub_total' => 'double',
+        'tax' => 'double',
     ];
 
     /**
