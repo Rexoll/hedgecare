@@ -117,4 +117,8 @@ class ProviderController extends Controller
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
+
+    public function update(Request $request)
+    {
+    }
 }
