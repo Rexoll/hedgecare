@@ -170,13 +170,13 @@ class HousekeepingOrderController extends Controller
         }
     }
 
-    public function updateOrder(Request $request,$id)
+    public function updateOrder(Request $request, $id)
     {
         try {
-            $validate = Validator::make($request->all(),[
+            $validate = Validator::make($request->all(), [
                 'detail_service' => 'required'
             ]);
-            if($validate->fails()){
+            if ($validate->fails()) {
                 return response()->json([
                     'message' => $validate->errors()
                 ], 400);
