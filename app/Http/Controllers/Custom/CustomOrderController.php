@@ -143,6 +143,7 @@ class CustomOrderController extends Controller
             $findOrder = CustomOrder::findOrFail($id);
             $findOrder->update([
                 'review' => $request->review,
+                'status' => 'done'
             ]);
             return response()->json([
                 'message' => 'successfully submited review',

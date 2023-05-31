@@ -159,6 +159,7 @@ class HousekeepingOrderController extends Controller
             $findOrder = HousekeepingOrder::findOrFail($id);
             $findOrder->update([
                 'review' => $request->review,
+                'status' => 'done'
             ]);
             return response()->json([
                 'message' => 'successfully submited review',
