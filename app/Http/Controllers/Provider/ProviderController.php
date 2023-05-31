@@ -147,7 +147,7 @@ class ProviderController extends Controller
                 $validate['thumbnail'],
                 'thumbnail-provider-' . $id . '.png',
             );
-            $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-provider' . $id . '.png';
+            $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-provider-' . $id . '.png';
         }
 
         $user = Provider::where('id', $id)->update($validate);
