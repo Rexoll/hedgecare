@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Provider;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ProviderController extends Controller
@@ -118,7 +121,47 @@ class ProviderController extends Controller
         }
     }
 
-    public function update(Request $request)
+    public function update(Request $request, int $id)
     {
+        $validator = Validator::make($request->all(), [
+            'about' => 'string|nullable',
+            'price' => 'numeric|nullable',
+            'category' => 'in:tutoring,housekeeping,rentafriend,maintenance,other|nullable',
+            'thumbnail' => 'nullable|file|mimes:jpeg,jpg,png',
+            "skills.*" => "integer|nullable",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors(),
+            ], 400);
+        }
+
+        $validate = Arr::where($validator->validate(), function ($value, $key) {
+            return $value ?? null != null;
+        });
+
+        if ($validate['thumbnail'] ?? null != null) {
+            $validate['thumbnail'] = Storage::putFileAs(
+                'public/images',
+                $validate['thumbnail'],
+                'thumbnail-provider-' . $id . '.png',
+            );
+            $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-provider' . $id . '.png';
+        }
+
+        $user = Provider::where('id', $id)->update($validate);
+        if ($user < 1) {
+            return response()->json([
+                "message" => "data profile provider nothing has changed",
+            ], 400);
+        }
+
+        $user = Provider::where('id', $id)->first();
+
+        return response()->json([
+            "message" => "success update provider profile",
+            "data" => $user,
+        ], 200);
     }
 }

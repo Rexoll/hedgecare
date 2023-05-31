@@ -192,9 +192,9 @@ class AuthController extends Controller
             $validate['thumbnail'] = Storage::putFileAs(
                 'public/images',
                 $validate['thumbnail'],
-                'thumbnail-' . Auth::user()->id . '.png',
+                'thumbnail-user-' . Auth::user()->id . '.png',
             );
-            $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-' . Auth::user()->id . '.png';
+            $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-user-' . Auth::user()->id . '.png';
         }
 
         $user = User::where('id', Auth::user()->id)->update($validate);
