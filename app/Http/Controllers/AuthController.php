@@ -226,29 +226,13 @@ class AuthController extends Controller
         $custom_order = CustomOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider'])->get();
 
         $orders = [
-            ...array_map(function (array $data) {
-                return [
-                    ...$data,
-                    'service_name' => 'Rent A Friend'
-                ];
-            }, $rent_a_friend_order->toArray()),
-            ...array_map(function (array $data) {
-                return [
-                    ...$data,
-                    'service_name' => 'Housekeeping'
-                ];
-            }, $housekeeping_order->toArray()),
-            ...array_map(function (array $data) {
-                return [
-                    ...$data,
-                    'service_name' => 'Maintenance'
-                ];
-            }, $maintenance_order->toArray()),
+            ...$rent_a_friend_order->toArray(),
+            ...$housekeeping_order->toArray(),
+            ...$maintenance_order->toArray(),
             ...array_map(function (array $data) {
                 return [
                     ...$data,
                     'services' => [],
-                    'service_name' => 'Custom'
                 ];
             }, $custom_order->toArray()),
         ];
@@ -273,29 +257,13 @@ class AuthController extends Controller
         $custom_order = CustomOrder::where(['user_id' => Auth()->user()->id, 'status' => 'done'])->with(['provider'])->get();
 
         $orders = [
-            ...array_map(function (array $data) {
-                return [
-                    ...$data,
-                    'service_name' => 'Rent A Friend'
-                ];
-            }, $rent_a_friend_order->toArray()),
-            ...array_map(function (array $data) {
-                return [
-                    ...$data,
-                    'service_name' => 'Housekeeping'
-                ];
-            }, $housekeeping_order->toArray()),
-            ...array_map(function (array $data) {
-                return [
-                    ...$data,
-                    'service_name' => 'Maintenance'
-                ];
-            }, $maintenance_order->toArray()),
+            ...$rent_a_friend_order->toArray(),
+            ...$housekeeping_order->toArray(),
+            ...$maintenance_order->toArray(),
             ...array_map(function (array $data) {
                 return [
                     ...$data,
                     'services' => [],
-                    'service_name' => 'Custom'
                 ];
             }, $custom_order->toArray()),
         ];

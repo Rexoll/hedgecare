@@ -13,7 +13,7 @@ class ProviderController extends Controller
     {
         try {
             $validator_query = Validator::make($request->query->all(), [
-                "category" => "in:tutoring,housekeeping,rentafriend,other|nullable",
+                "category" => "in:tutoring,housekeeping,rentafriend,maintenance,other|nullable",
                 "search" => "nullable",
                 "sortBy" => "in:name,rating,review,price|nullable",
                 "services" => "regex:/^[\d,]+$/|nullable",
