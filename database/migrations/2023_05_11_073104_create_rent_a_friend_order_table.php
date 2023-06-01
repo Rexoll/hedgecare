@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('pay_with_paypal')->nullable();
             $table->string('pay_with_card')->nullable();
-            $table->float('review')->nullable();
+            $table->float('rating')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 

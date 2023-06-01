@@ -24,7 +24,7 @@ class HousekeepingOrder extends Model
         'start_date',
         'from_hour',
         'to_hour',
-        'review',
+        'rating',
         'status'
     ];
 

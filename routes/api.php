@@ -8,6 +8,7 @@ use App\Http\Controllers\Housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\Maintenance\MaintenanceAdditionalServiceController;
 use App\Http\Controllers\Maintenance\MaintenanceCategoryController;
 use App\Http\Controllers\Maintenance\MaintenanceOrderController;
+use App\Http\Controllers\orderController;
 use App\Http\Controllers\Provider\ProviderController;
 use App\Http\Controllers\rentAfriend\rentAfriendCategoryController;
 use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
@@ -137,6 +138,11 @@ Route::prefix('auth')->group(function () {
     Route::prefix('providers')->group(function () {
         Route::post('/register', [AuthController::class, 'provider_register']);
     });
+});
+
+Route::middleware(['auth:sanctum'])->prefix('order')->group(function () {
+    Route::put('/rating', [orderController::class, 'rating']);
+    Route::put('/update', [orderController::class, 'update']);
 });
 
 Route::middleware(['auth:sanctum'])->prefix('jobs')->group(function () {
