@@ -44,6 +44,7 @@ class rentAfriendOrder extends Model
         'to_hour' => 'integer',
         'sub_total' => 'double',
         'tax' => 'double',
+        'rating' => 'integer',
     ];
 
     public function services(): BelongsToMany
