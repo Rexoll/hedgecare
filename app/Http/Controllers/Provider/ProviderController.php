@@ -126,6 +126,8 @@ class ProviderController extends Controller
         $validator = Validator::make($request->all(), [
             'about' => 'string|nullable',
             'price' => 'numeric|nullable',
+            'latitude' => 'numeric|nullable',
+            'longitude' => 'numeric|nullable',
             'category' => 'in:tutoring,housekeeping,rentafriend,maintenance,other|nullable',
             'thumbnail' => 'nullable|file|mimes:jpeg,jpg,png',
             "skills.*" => "integer|nullable",

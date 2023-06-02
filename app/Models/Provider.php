@@ -28,8 +28,6 @@ class Provider extends Model
 
     protected $hidden = [
         'user_id',
-        'latitude',
-        'longitude',
         'pivot',
     ];
 
@@ -58,5 +56,4 @@ class Provider extends Model
     {
         return $this->hasMany(HousekeepingAdditionalServicePrices::class, 'provider_id', 'id')->with('service');
     }
-
 }
