@@ -63,7 +63,7 @@ class CustomOrderController extends Controller
                 "email" => "email|required",
                 "card_number" => "string|digits:16|required",
                 "exp_month" => "string|digits:2|required",
-                "exp_year" => "string |digits:2|required",
+                "exp_year" => "string|min:2|max:4|required",
                 "cvc" => "string|digits:3|required",
             ]);
 
@@ -154,13 +154,13 @@ class CustomOrderController extends Controller
         }
     }
 
-    public function updateOrder(Request $request,$id)
+    public function updateOrder(Request $request, $id)
     {
         try {
-            $validate = Validator::make($request->all(),[
+            $validate = Validator::make($request->all(), [
                 'detail_service' => 'required'
             ]);
-            if($validate->fails()){
+            if ($validate->fails()) {
                 return response()->json([
                     'message' => $validate->errors()
                 ], 400);

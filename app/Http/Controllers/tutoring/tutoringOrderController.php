@@ -39,8 +39,7 @@ class tutoringOrderController extends Controller
                     "message" => "Bad send body data",
                     "errors" => $validator->errors()
                 ], 400);
-            }
-            ;
+            };
 
             $validate = $validator->validate();
 
@@ -65,7 +64,6 @@ class tutoringOrderController extends Controller
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
         }
-
     }
 
     public function payWithCard(Request $request, int $order_id)
@@ -78,7 +76,7 @@ class tutoringOrderController extends Controller
                 "email" => "email|required",
                 "card_number" => "string|digits:16|required",
                 "exp_month" => "string|digits:2|required",
-                "exp_year" => "string |digits:2|required",
+                "exp_year" => "string|min:2|max:4|required",
                 "cvc" => "string|digits:3|required",
             ]);
 
