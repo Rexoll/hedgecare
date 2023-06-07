@@ -130,7 +130,7 @@ class rentAfriendOrderController extends Controller
             $charge = $stripe->charges->create([
                 "card" => $token["id"],
                 "currency" => "USD",
-                "amount" => 20 * 100,
+                "amount" => ($rentAfriend_order->sub_total + $rentAfriend_order->tax) * 100,
                 "description" => "Pay rent a friend Order",
             ]);
 
