@@ -114,17 +114,17 @@ class rentAfriendOrderController extends Controller
             }
 
             $stripe = new StripeClient(env("STRIPE_SECRET"));
-            $token = $stripe->tokens->create([
-                "card" => [
-                    "number" => $validate["card_number"],
-                    "exp_month" => $validate["exp_month"],
-                    "exp_year" => $validate["exp_year"],
-                    "cvc" => $validate["cvc"],
-                ],
-            ]);
-
-            if (!isset($token["id"])) {
-                return response()->json(["message" => "card not found"], 404);
+            try {
+                $token = $stripe->tokens->create([
+                    "card" => [
+                        "number" => $validate["card_number"],
+                        "exp_month" => $validate["exp_month"],
+                        "exp_year" => $validate["exp_year"],
+                        "cvc" => $validate["cvc"],
+                    ],
+                ]);
+            } catch (\Throwable $th) {
+                return response()->json(["message" => $th->getMessage()], 400);
             }
 
             $charge = $stripe->charges->create([
