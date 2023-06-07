@@ -107,7 +107,7 @@ Route::prefix("rentAfriend")->group(function () {
 });
 
 Route::prefix("providers")->group(function () {
-    Route::middleware('cache.headers:public;max_age=2628000;etag')->get("/", [ProviderController::class, "index"]);
+    Route::middleware('cache.headers:public;max_age=1800;etag')->get("/", [ProviderController::class, "index"]);
     Route::patch("/{id}", [ProviderController::class, "update"]);
 });
 
