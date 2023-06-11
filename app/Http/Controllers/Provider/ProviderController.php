@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Provider;
 
 use App\Models\Provider;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -165,5 +165,15 @@ class ProviderController extends Controller
             "message" => "success update provider profile",
             "data" => $user,
         ], 200);
+    }
+
+    public function destroy($id)
+    {
+        try {
+            Provider::findOrFail($id)->delete();
+            return response()->json(['message' => 'Successfull deleted'], 200);
+        } catch (ModelNotFoundException) {
+            return response()->json(['message' => 'Data provider not found or deleted'], 404);
+        }
     }
 }

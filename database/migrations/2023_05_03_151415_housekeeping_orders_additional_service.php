@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('order_id')->references('id')->on('housekeeping_orders');
-            $table->foreign('service_id')->references('id')->on('housekeeping_additional_services');
+            $table->foreign('service_id')->references('id')->on('housekeeping_additional_services')->onDelete('cascade');
         });
     }
 
