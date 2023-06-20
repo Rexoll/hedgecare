@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Provider;
 
 use App\Models\Provider;
 use App\Models\Skill;
+use Hamcrest\Core\IsTypeOf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -132,7 +133,7 @@ class ProviderController extends Controller
             'longitude' => 'numeric|nullable',
             'category' => 'in:tutoring,housekeeping,rentafriend,maintenance,other|nullable',
             'thumbnail' => 'nullable|file|mimes:jpeg,jpg,png',
-            "skills" => "array|nullable",
+            "skills" => "nullable",
             "skills.*" => "integer|nullable",
         ]);
 
@@ -157,6 +158,9 @@ class ProviderController extends Controller
 
 
         if ($validate['skills'] ?? null != null) {
+            if (gettype($validate['skills']) == 'string') {
+                $validate['skills'] = json_decode($validate['skills']);
+            }
             $provider = Provider::where('id', $id)->first();
             $provider->skills()->sync($validate['skills']);
             unset($validate['skills']);
