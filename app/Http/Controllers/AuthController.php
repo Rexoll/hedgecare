@@ -68,6 +68,46 @@ class AuthController extends Controller
         }
     }
 
+    public function loginAsAdmin(Request $request)
+    {
+        try {
+            $validate = Validator::make($request->all(), [
+                'email' => 'email|required',
+                'password' => 'required',
+            ]);
+
+            if ($validate->fails()) {
+                return response()->json([
+                    'message' => $validate->errors(),
+                ], 400);
+            }
+
+            if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return response()->json([
+                    'message' => 'unauthorized',
+                ], 401);
+            }
+
+            $user = User::where('email', $request->email)->first();
+            $token = $user->createToken('login_token')->plainTextToken;
+            if ($user->role != 'admin') {
+                return response()->json([
+                    'message' => 'forbidden',
+                ], 403);
+            }
+            return response()->json([
+                'data' =>
+                [
+                    'user' => $user,
+                    'tokenType' => 'bearer',
+                    'token' => $token,
+                ],
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
     public function login(Request $request)
     {
         try {

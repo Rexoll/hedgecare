@@ -17,6 +17,14 @@ class user extends Seeder
     {
         DB::table('users')->insert([
             [
+                'first_name' => 'Admin',
+                'last_name' => 'HedgeCare',
+                'email' => 'admin@hedgecare.ca',
+                'phone_number' => '+6289655376612',
+                'role' => 'admin',
+                'password' => Hash::make("Masukdeh12"),
+            ],
+            [
                 'first_name' => 'Mulia',
                 'last_name' => 'Firmansyah',
                 'email' => 'mulia@gmail.com',

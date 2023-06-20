@@ -139,6 +139,9 @@ Route::prefix('auth')->group(function () {
     Route::prefix('providers')->group(function () {
         Route::post('/register', [AuthController::class, 'provider_register']);
     });
+    Route::prefix('admin')->group(function () {
+        Route::post('/login', [AuthController::class, 'loginAsAdmin']);
+    });
 });
 
 Route::middleware(['auth:sanctum'])->prefix('order')->group(function () {
