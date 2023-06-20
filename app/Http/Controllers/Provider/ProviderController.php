@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Provider;
 
 use App\Models\Provider;
+use App\Models\Skill;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -131,6 +132,7 @@ class ProviderController extends Controller
             'longitude' => 'numeric|nullable',
             'category' => 'in:tutoring,housekeeping,rentafriend,maintenance,other|nullable',
             'thumbnail' => 'nullable|file|mimes:jpeg,jpg,png',
+            "skills" => "array|nullable",
             "skills.*" => "integer|nullable",
         ]);
 
@@ -153,18 +155,19 @@ class ProviderController extends Controller
             $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-provider-' . $id . '.png';
         }
 
-        $user = Provider::where('id', $id)->update($validate);
-        if ($user < 1) {
-            return response()->json([
-                "message" => "data profile provider nothing has changed",
-            ], 400);
+
+        if ($validate['skills'] ?? null != null) {
+            $provider = Provider::where('id', $id)->first();
+            $provider->skills()->sync($validate['skills']);
+            unset($validate['skills']);
         }
 
-        $user = Provider::where('id', $id)->first();
+        $provider = Provider::where('id', $id)->update($validate);
+        $provider = Provider::where('id', $id)->with('skills')->first();
 
         return response()->json([
             "message" => "success update provider profile",
-            "data" => $user,
+            "data" => $provider,
         ], 200);
     }
 
