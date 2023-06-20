@@ -125,6 +125,7 @@ class ProviderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'about' => 'string|nullable',
+            'address' => 'string|nullable',
             'price' => 'numeric|nullable',
             'latitude' => 'numeric|nullable',
             'longitude' => 'numeric|nullable',
