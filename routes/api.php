@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\Housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\Housekeeping\HousekeepingOrderController;
+use App\Http\Controllers\jobBoard\jobBoardController;
 use App\Http\Controllers\Maintenance\MaintenanceAdditionalServiceController;
 use App\Http\Controllers\Maintenance\MaintenanceCategoryController;
 use App\Http\Controllers\Maintenance\MaintenanceOrderController;
@@ -75,6 +76,17 @@ Route::prefix("maintenance")->group(function () {
         Route::post("/", [MaintenanceOrderController::class, "store"]);
         Route::put("/update/{id}", [MaintenanceOrderController::class, "updateOrder"]);
         Route::post("/{order_id}/payWithCard", [MaintenanceOrderController::class, "payWithCard"]);
+    });
+});
+
+Route::prefix("jobBoard")->group(function () {
+    Route::prefix('review')->group(function () {
+        Route::put('/{id}', [jobBoardController::class, 'review']);
+    });
+    Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
+        Route::post("/", [jobBoardController::class, "store"]);
+        Route::put("/update/{id}", [jobBoardController::class, "updateOrder"]);
+        Route::post("/{order_id}/payWithCard", [jobBoardController::class, "payWithCard"]);
     });
 });
 
