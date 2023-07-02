@@ -285,7 +285,9 @@ class jobBoardController extends Controller
 
             $validate_query = $validator_query->validate();
 
-            $search = jobBoardOrders::where("service_name", "LIKE", "%" . ($validate_query["service_name"] ?? '') . "%")->paginate(10);
+            $search = jobBoardOrders::where("service_name", "LIKE", "%" . ($validate_query["service_name"] ?? '') . "%")
+                ->with(['user', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])
+                ->paginate(10);
 
             return response()->json([
                 'data' => $search,
