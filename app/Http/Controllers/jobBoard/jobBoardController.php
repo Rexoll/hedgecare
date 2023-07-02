@@ -173,7 +173,7 @@ class jobBoardController extends Controller
             $jobBoard_order->phone_number = $validate["phone_number"];
             $jobBoard_order->email = $validate["email"];
             $jobBoard_order->pay_with_card = $charge["id"];
-            $jobBoard_order->status = "active";
+            $jobBoard_order->status = "paid";
             $jobBoard_order->save();
 
             $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order->id)->first();
