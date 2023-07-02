@@ -269,10 +269,24 @@ class jobBoardController extends Controller
         }
     }
 
-    public function searchJobBoard($params)
+    public function searchJobBoard(Request $request)
     {
         try {
-            $search = jobBoardOrders::where('service_name', $params)->paginate(10);
+            $validator_query = Validator::make($request->query->all(), [
+                'service_name' => 'string',
+            ]);
+
+            if ($validator_query->fails()) {
+                return response()->json([
+                    "message" => "Bad request query url",
+                    "errors" => $validator_query->errors(),
+                ], 400);
+            }
+
+            $validate_query = $validator_query->validate();
+
+            $search = jobBoardOrders::where("service_name", "LIKE", "%" . ($validate_query["service_name"]) . "%")->paginate(10);
+
             return response()->json([
                 'data' => $search,
             ], 200);

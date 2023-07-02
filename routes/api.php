@@ -85,7 +85,7 @@ Route::prefix("jobBoard")->group(function () {
     });
     Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::get('/getAll', [jobBoardController::class, 'get']);
-        Route::get('/search/{params}',[jobBoardController::class,'searchJobBoard']);
+        Route::get('/search',[jobBoardController::class,'searchJobBoard']);
         Route::post("/", [jobBoardController::class, "store"]);
         Route::put("/update/{id}", [jobBoardController::class, "updateOrder"]);
         Route::post("/{order_id}/payWithCard", [jobBoardController::class, "payWithCard"]);
