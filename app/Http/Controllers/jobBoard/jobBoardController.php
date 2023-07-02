@@ -115,7 +115,7 @@ class jobBoardController extends Controller
         }
     }
 
-    public function payWithCard(Request $request, int $order_id)
+    public function payWithCard(Request $request, $order_id)
     {
         try {
             $validator = Validator::make($request->all(), [
