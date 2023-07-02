@@ -260,7 +260,7 @@ class AuthController extends Controller
         $housekeeping_order = HousekeepingOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider', 'services'])->get();
         $maintenance_order = MaintenanceOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider', 'services'])->get();
         $custom_order = CustomOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['provider'])->get();
-        $jobBoard_order = jobBoardOrders::where(['user_id' => Auth::user()->id , 'status' => 'active'])->get();
+        $jobBoard_order = jobBoardOrders::where(['user_id' => Auth::user()->id , 'status' => 'active'])->with('user')->get();
 
         $orders = [
             ...$rent_a_friend_order->toArray(),
