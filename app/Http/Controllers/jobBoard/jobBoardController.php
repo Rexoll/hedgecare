@@ -282,6 +282,7 @@ class jobBoardController extends Controller
 
             $search = jobBoardOrders::where([["service_name", "LIKE", "%" . ($validate_query["service_name"] ?? '') . "%"], ['status', '=', 'paid']])
                 ->with(['user', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])
+                ->orderBy('created_at', 'desc')
                 ->get();
 
             return response()->json([
