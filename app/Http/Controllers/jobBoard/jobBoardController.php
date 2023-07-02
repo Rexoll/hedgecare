@@ -243,7 +243,7 @@ class jobBoardController extends Controller
     public function get(Request $request)
     {
         try {
-            $get = jobBoardOrders::with(['user', 'order.maintenance', 'order.housekeeping', 'order.rentafriend'])->paginate(10);
+            $get = jobBoardOrders::with(['user', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])->paginate(10);
             return response()->json([
                 'data' => $get
             ], 200);
