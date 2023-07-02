@@ -59,7 +59,7 @@ class jobBoardOrders extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function services(): HasMany
+    public function order(): HasMany
     {
         return $this->hasMany(jobBoardOrderAdditionalService::class, 'order_id', 'id');
     }
