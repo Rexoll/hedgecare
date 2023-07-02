@@ -190,7 +190,7 @@ class AuthController extends Controller
 
     public function currentUser()
     {
-        $user = User::find(Auth::id())->with('provider')->first();
+        $user = User::where("id", Auth::user()->id)->with('provider')->first();
 
         return response()->json([
             "message" => "get current user success",
