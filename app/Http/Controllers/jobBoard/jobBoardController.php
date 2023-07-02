@@ -80,7 +80,7 @@ class jobBoardController extends Controller
                     break;
                 default:
                     return response()->json([
-                        'data' => 'Service not found, please insert a right service'
+                        'data' => 'Service not found, please insert a right service',
                     ], 404);
                     break;
             }
@@ -245,7 +245,36 @@ class jobBoardController extends Controller
         try {
             $get = jobBoardOrders::with(['user', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])->paginate(10);
             return response()->json([
-                'data' => $get
+                'data' => $get,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function setAcctive($id)
+    {
+        try {
+            $find = jobBoardOrders::where('id', $id)->first();
+            if (!$find) {
+                return response()->json(['message' => 'data tidak ditemukan'], 404);
+            } else {
+                $find->update([
+                    'status' => 'active',
+                ]);
+                return response()->json(['message' => 'Order has been accepted'], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function searchJobBoard($params)
+    {
+        try {
+            $search = jobBoardOrders::where('service_name', $params)->paginate(10);
+            return response()->json([
+                'data' => $search,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
