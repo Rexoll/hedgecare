@@ -8,6 +8,7 @@ use App\Models\MaintenanceOrder;
 use App\Models\MaintenanceOrderAdditionalService;
 use App\Models\Provider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
@@ -41,9 +42,7 @@ class MaintenanceOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $maintenance_order = MaintenanceOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
-            $maintenance_order->status = "not_paid";
-            $maintenance_order->user_id = Auth()->id();
+            $maintenance_order = MaintenanceOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
             $maintenance_order->save();
             if ($validate["services"] ?? null != null) {
                 MaintenanceOrderAdditionalService::insert(

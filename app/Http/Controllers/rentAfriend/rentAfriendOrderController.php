@@ -9,6 +9,7 @@ use App\Models\rentAfriendOrder;
 use App\Models\rentAfriendOrderAdditionalService;
 use App\Models\rentAfriendSocialMedia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
@@ -47,9 +48,7 @@ class rentAfriendOrderController extends Controller
             $validate = $validator->validate();
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $rentAfriend_order = rentAfriendOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
-            $rentAfriend_order->status = "not_paid";
-            $rentAfriend_order->user_id = Auth()->id();
+            $rentAfriend_order = rentAfriendOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
             $rentAfriend_order->save();
             if ($validate["services"] ?? null != null) {
                 rentAfriendOrderAdditionalService::insert(

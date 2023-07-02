@@ -38,7 +38,7 @@ class CustomOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $custom_order = CustomOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $custom_order = CustomOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
             $custom_order->status = "not_paid";
             $custom_order->user_id = Auth::user()->id;
             $custom_order->save();
