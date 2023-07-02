@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('detail_address')->nullable();
             $table->date('start_date');
             $table->text('detail_service');
-            $table->enum('status', ['not_paid', 'active', 'cancel', 'done']);
+            $table->enum('status', ['not_paid', 'paid', 'active', 'cancel', 'done']);
             $table->double('sub_total')->nullable();
             $table->double('tax')->nullable();
             $table->string('first_name')->nullable();
