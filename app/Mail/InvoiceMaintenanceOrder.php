@@ -31,7 +31,7 @@ class InvoiceMaintenanceOrder extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject:'Invoice Maintenance Order',
+            subject: 'Invoice Maintenance Order',
         );
     }
 
@@ -43,8 +43,8 @@ class InvoiceMaintenanceOrder extends Mailable
     public function content()
     {
         return new Content(
-            view:'emails.invoice',
-            with:[
+            view: 'emails.invoice',
+            with: [
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
                 "order_category" => $this->order->category->name,
@@ -52,7 +52,7 @@ class InvoiceMaintenanceOrder extends Mailable
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
                 "order_buyer_address" => $this->order->street_address,
-                "order_seller_address" => $this->order->provider->address,
+                "order_seller_address" => "South San Francisco, 354 Oyster Point Blvd",
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
                 "suffix_card_number" => $this->suffix_card_number,
             ]

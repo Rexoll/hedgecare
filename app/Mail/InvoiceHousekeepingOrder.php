@@ -51,7 +51,7 @@ class InvoiceHousekeepingOrder extends Mailable
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
                 "order_buyer_address" => $this->order->street_address,
-                "order_seller_address" => $this->order->provider->address,
+                "order_seller_address" => "South San Francisco, 354 Oyster Point Blvd",
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
                 "suffix_card_number" => $this->suffix_card_number,
             ]
