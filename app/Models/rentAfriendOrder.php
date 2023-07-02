@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class rentAfriendOrder extends Model
 {
@@ -23,6 +24,7 @@ class rentAfriendOrder extends Model
         'sub_total',
         'from_hour',
         'to_hour',
+        'user_id',
         'rating',
         'status'
     ];
@@ -46,6 +48,11 @@ class rentAfriendOrder extends Model
         'tax' => 'double',
         'rating' => 'integer',
     ];
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 
     public function services(): BelongsToMany
     {

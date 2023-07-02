@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CustomOrder extends Model
 {
@@ -22,6 +23,7 @@ class CustomOrder extends Model
         'sub_total',
         'from_hour',
         'to_hour',
+        'user_id',
         'rating',
         'status'
     ];
@@ -42,6 +44,11 @@ class CustomOrder extends Model
         'tax' => 'double',
         'rating' => 'integer',
     ];
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 
     public function provider(): BelongsTo
     {

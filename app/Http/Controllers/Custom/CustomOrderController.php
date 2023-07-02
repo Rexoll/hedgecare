@@ -7,6 +7,7 @@ use App\Models\CustomOrder;
 use App\Models\Provider;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
@@ -39,7 +40,7 @@ class CustomOrderController extends Controller
 
             $custom_order = CustomOrder::create([...$validate, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
             $custom_order->status = "not_paid";
-            $custom_order->user_id = Auth()->id();
+            $custom_order->user_id = Auth::user()->id;
             $custom_order->save();
 
             $custom_order = CustomOrder::where("id", $custom_order["id"])->with(["provider"])->first();

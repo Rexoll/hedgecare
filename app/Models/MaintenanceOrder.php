@@ -24,6 +24,7 @@ class MaintenanceOrder extends Model
         'start_date',
         'from_hour',
         'to_hour',
+        'user_id',
         'rating',
         'status'
     ];
@@ -46,6 +47,11 @@ class MaintenanceOrder extends Model
         'tax' => 'double',
         'rating' => 'integer',
     ];
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
 
     public function services(): BelongsToMany
     {
