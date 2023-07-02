@@ -181,7 +181,7 @@ class jobBoardController extends Controller
             $jobBoard_order->status = "active";
             $jobBoard_order->save();
 
-            $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order->id)->with(["category", "provider"])->first();
+            $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order->id)->first();
 
             Mail::to($validate["email"])->send(new invoiceJobBoardOrders($jobBoard_order, substr($validate["card_number"], -4)));
 
