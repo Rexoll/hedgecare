@@ -128,15 +128,8 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('email', $request->email)->with('provider')->first();
             $token = $user->createToken('login_token')->plainTextToken;
-            if ($user->role == 'provider') {
-                $provider = Provider::where('user_id', $user->id)->first();
-                $user = [
-                    ...$user->toArray(),
-                    'provider' => $provider,
-                ];
-            }
             return response()->json([
                 'data' =>
                 [
@@ -197,9 +190,11 @@ class AuthController extends Controller
 
     public function currentUser()
     {
+        $user = User::find(Auth::id())->with('provider')->first();
+
         return response()->json([
             "message" => "get current user success",
-            "data" => Auth::user(),
+            "data" => $user,
         ], 200);
     }
 

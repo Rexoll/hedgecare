@@ -41,6 +41,7 @@ class jobBoardController extends Controller
             $jobBoard_order = jobBoardOrders::create([
                 "street_address" => $validate['street_address'],
                 "detail_address" => $validate['detail_address'] ?? null,
+                "service_name" => $validate['service_name'],
                 "detail_service" => $validate['detail_service'],
                 "start_date" => $validate['start_date'],
                 "from_hour" => $validate['from_hour'],
