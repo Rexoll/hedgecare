@@ -62,5 +62,4 @@ class jobBoardOrders extends Model
     {
         return $this->hasOne(jobBoardOrderAdditionalService::class, 'order_id', 'id');
     }
-
 }

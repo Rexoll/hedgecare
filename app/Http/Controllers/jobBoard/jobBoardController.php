@@ -17,98 +17,98 @@ class jobBoardController extends Controller
     public function store(Request $request)
     {
         try {
-        $validator = Validator::make($request->all(), [
-            "street_address" => "string|required",
-            "detail_address" => "string|nullable",
-            "detail_service" => "string|required",
-            "service_name" => "string|required",
-            "start_date" => "date|required",
-            "from_hour" => "integer|lt:to_hour|min:0|max:23|required",
-            "to_hour" => "integer|gt:from_hour|min:1|max:24|required",
-            "sub_total" => "integer|required",
-            "services.*" => "integer|required",
-        ]);
+            $validator = Validator::make($request->all(), [
+                "street_address" => "string|required",
+                "detail_address" => "string|nullable",
+                "detail_service" => "string|required",
+                "service_name" => "string|required",
+                "start_date" => "date|required",
+                "from_hour" => "integer|lt:to_hour|min:0|max:23|required",
+                "to_hour" => "integer|gt:from_hour|min:1|max:24|required",
+                "sub_total" => "integer|required",
+                "services.*" => "integer|required",
+            ]);
 
-        if ($validator->fails()) {
+            if ($validator->fails()) {
+                return response()->json([
+                    "message" => "Bad send body data",
+                    "errors" => $validator->errors(),
+                ], 400);
+            };
+
+            $validate = $validator->validate();
+
+            $jobBoard_order = jobBoardOrders::create([
+                "street_address" => $validate['street_address'],
+                "detail_address" => $validate['detail_address'] ?? null,
+                "detail_service" => $validate['detail_service'],
+                "start_date" => $validate['start_date'],
+                "from_hour" => $validate['from_hour'],
+                "to_hour" => $validate['to_hour'],
+                "sub_total" => $validate['sub_total'],
+                "status" => 'not_paid',
+                "user_id" => Auth::user()->id,
+            ]);
+
+            $get_jobBoard = jobBoardOrders::where('id', $jobBoard_order->id)->first();
+            $value = $validate['service_name'];
+            switch ($value) {
+                case 'housekeeping':
+                    foreach ($validate['services'] as $data) {
+                        jobBoardOrderAdditionalService::create([
+                            'order_id' => $get_jobBoard['id'],
+                            'housekeeping_id' => $data,
+                        ]);
+                    }
+                    break;
+                case 'maintenance':
+                    foreach ($validate['services'] as $data) {
+                        jobBoardOrderAdditionalService::create([
+                            'order_id' => $get_jobBoard['id'],
+                            'maintenance_id' => $data,
+                        ]);
+                    }
+                    break;
+                case 'rentafriend':
+                    foreach ($validate['services'] as $data) {
+                        jobBoardOrderAdditionalService::create([
+                            'order_id' => $get_jobBoard['id'],
+                            'rentafriend_id' => $data,
+                        ]);
+                    }
+                    break;
+                default:
+                    return response()->json([
+                        'data' => 'Service not found, please insert a right service'
+                    ], 404);
+                    break;
+            }
+
+            $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order["id"])->with('user')->first();
+
+            //search for service_name
+            switch ($value) {
+                case 'housekeeping':
+                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('housekeeping')->get();
+                    break;
+                case 'maintenance':
+                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('maintenance')->get();
+                    break;
+                case 'rentafriend':
+                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('rentafriend')->get();
+                    break;
+                default:
+                    return response()->json(['message' => 'notfound'], 404);
+                    break;
+            }
+
             return response()->json([
-                "message" => "Bad send body data",
-                "errors" => $validator->errors(),
-            ], 400);
-        };
-
-        $validate = $validator->validate();
-
-        $jobBoard_order = jobBoardOrders::create([
-            "street_address" => $validate['street_address'],
-            "detail_address" => $validate['detail_address'] ?? null,
-            "detail_service" => $validate['detail_service'],
-            "start_date" => $validate['start_date'],
-            "from_hour" => $validate['from_hour'],
-            "to_hour" => $validate['to_hour'],
-            "sub_total" => $validate['sub_total'],
-            "status" => 'not_paid',
-            "user_id" => Auth::user()->id,
-        ]);
-
-        $get_jobBoard = jobBoardOrders::where('id', $jobBoard_order->id)->first();
-        $value = $validate['service_name'];
-        switch ($value) {
-            case 'housekeeping':
-                foreach ($validate['services'] as $data) {
-                    jobBoardOrderAdditionalService::create([
-                        'order_id' => $get_jobBoard['id'],
-                        'housekeeping_id' => $data,
-                    ]);
-                }
-                break;
-            case 'maintenance':
-                foreach ($validate['services'] as $data) {
-                    jobBoardOrderAdditionalService::create([
-                        'order_id' => $get_jobBoard['id'],
-                        'maintenance_id' => $data,
-                    ]);
-                }
-                break;
-            case 'rentafriend':
-                foreach ($validate['services'] as $data) {
-                    jobBoardOrderAdditionalService::create([
-                        'order_id' => $get_jobBoard['id'],
-                        'rentafriend_id' => $data,
-                    ]);
-                }
-                break;
-            default:
-            return response()->json([
-                'data' => 'Service not found, please insert a right service'
-            ], 404);
-                break;
-        }
-
-        $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order["id"])->with('user')->first();
-
-        //search for service_name
-        switch ($value) {
-            case 'housekeeping':
-                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('housekeeping')->get();
-                break;
-            case 'maintenance':
-                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('maintenance')->get();
-                break;
-            case 'rentafriend':
-                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('rentafriend')->get();
-                break;
-            default:
-            return response()->json(['message' => 'notfound'], 404);
-                break;
-        }
-
-        return response()->json([
-            "message" => "success create Job Board order",
-            "data" => [
-                $jobBoard_order,
-                $find,
-            ],
-        ], 201);
+                "message" => "success create Job Board order",
+                "data" => [
+                    $jobBoard_order,
+                    $find,
+                ],
+            ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
         }
@@ -239,14 +239,14 @@ class jobBoardController extends Controller
         }
     }
 
-    public function get()
+    public function get(Request $request)
     {
-        try{
-            $get = jobBoardOrders::with(['user','order.rentafriend'])->paginate(10);
+        try {
+            $get = jobBoardOrders::with(['user', 'order.maintenance', 'order.housekeeping', 'order.rentafriend'])->paginate(10);
             return response()->json([
                 'data' => $get
             ], 200);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }

@@ -19,6 +19,10 @@ class jobBoardOrderAdditionalService extends Model
         'maintenance_id',
     ];
     protected $hidden = [
+        'order_id',
+        'housekeeping_id',
+        'rentafriend_id',
+        'maintenance_id',
         'created_at',
         'updated_at',
     ];
@@ -38,12 +42,12 @@ class jobBoardOrderAdditionalService extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function houseKeeping(): HasOne
+    public function housekeeping(): HasOne
     {
         return $this->hasOne(HousekeepingAdditionalService::class, 'id', 'housekeeping_id');
     }
 
-    public function rentAfriend(): HasOne
+    public function rentafriend(): HasOne
     {
         return $this->hasOne(rentAfriendAdditionalService::class, 'id', 'rentafriend_id');
     }
@@ -57,5 +61,4 @@ class jobBoardOrderAdditionalService extends Model
     {
         return $this->belongsTo(jobBoardOrders::class, 'id', 'order_id');
     }
-
 }
