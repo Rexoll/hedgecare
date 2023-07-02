@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\jobBoard;
 
 use App\Http\Controllers\Controller;
-use App\Mail\invoiceJobBoardOrders;
 use App\Models\jobBoardOrderAdditionalService;
 use App\Models\jobBoardOrders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
 
@@ -105,10 +103,7 @@ class jobBoardController extends Controller
 
             return response()->json([
                 "message" => "success create Job Board order",
-                "data" => [
-                    $jobBoard_order,
-                    $find,
-                ],
+                "data" =>$jobBoard_order,
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
