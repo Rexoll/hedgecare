@@ -183,7 +183,7 @@ class jobBoardController extends Controller
 
             $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order->id)->first();
 
-            Mail::to($validate["email"])->send(new invoiceJobBoardOrders($jobBoard_order, substr($validate["card_number"], -4)));
+            // Mail::to($validate["email"])->send(new invoiceJobBoardOrders($jobBoard_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $jobBoard_order], 200);
         } catch (\Exception $e) {

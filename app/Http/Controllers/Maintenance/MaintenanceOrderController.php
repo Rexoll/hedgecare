@@ -135,7 +135,7 @@ class MaintenanceOrderController extends Controller
 
             $maintenance_order = MaintenanceOrder::where("id", $maintenance_order->id)->with(["category", "provider"])->first();
 
-            Mail::to($validate["email"])->send(new InvoiceMaintenanceOrder($maintenance_order, substr($validate["card_number"], -4)));
+            // Mail::to($validate["email"])->send(new InvoiceMaintenanceOrder($maintenance_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $maintenance_order], 200);
         } catch (\Exception $e) {

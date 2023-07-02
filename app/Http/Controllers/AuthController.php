@@ -53,7 +53,7 @@ class AuthController extends Controller
 
                 $token = $register->createToken('register_token')->plainTextToken;
 
-                $register->notify(new UserVerifyNotification($token));
+                // $register->notify(new UserVerifyNotification($token));
 
                 return response()->json([
                     'message' => 'register successfull',
@@ -172,7 +172,7 @@ class AuthController extends Controller
 
                 $register->markEmailAsVerified();
 
-                Mail::send(new RegisterProvider($register));
+                // Mail::send(new RegisterProvider($register));
 
                 $token = $register->createToken('register_token')->plainTextToken;
                 return response()->json([
