@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class jobBoardOrderAdditionalService extends Model
@@ -12,8 +14,8 @@ class jobBoardOrderAdditionalService extends Model
     protected $table = 'job_board_orders_additional_services';
     protected $fillable = [
         'order_id',
-        'houseKeeping_id',
-        'rentAfriend_id',
+        'housekeeping_id',
+        'rentafriend_id',
         'maintenance_id',
     ];
     protected $hidden = [
@@ -38,12 +40,22 @@ class jobBoardOrderAdditionalService extends Model
      */
     public function houseKeeping(): HasOne
     {
-        return $this->hasOne(HousekeepingAdditionalService::class, 'id', 'houseKeeping_id');
+        return $this->hasOne(HousekeepingAdditionalService::class, 'id', 'housekeeping_id');
     }
 
     public function rentAfriend(): HasOne
     {
-        return $this->hasOne(rentAfriendAdditionalService::class, 'id', 'rentAfriend_id');
+        return $this->hasOne(rentAfriendAdditionalService::class, 'id', 'rentafriend_id');
+    }
+
+    /**
+     * Get the order that owns the jobBoardOrderAdditionalService
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(jobBoardOrders::class, 'id', 'order_id');
     }
 
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class jobBoardOrders extends Model
@@ -43,6 +44,23 @@ class jobBoardOrders extends Model
      */
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, 'id', 'user_Id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    /**
+     * Get the order associated with the jobBoardOrders
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+
+    /**
+     * The order that belong to the jobBoardOrderAdditionalService
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function order(): HasOne
+    {
+        return $this->hasOne(jobBoardOrderAdditionalService::class, 'order_id', 'id');
+    }
+
 }

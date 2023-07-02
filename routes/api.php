@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Custom\CustomOrderController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Custom\CustomOrderController;
 use App\Http\Controllers\Housekeeping\HousekeepingAdditionalServiceController;
 use App\Http\Controllers\Housekeeping\HousekeepingCategoryController;
 use App\Http\Controllers\Housekeeping\HousekeepingOrderController;
@@ -16,7 +16,6 @@ use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
-use App\Models\HousekeepingOrder;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +29,7 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -41,7 +40,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
     return response()->json([
         "message" => "success verify email",
-        "data" => Auth::user()
+        "data" => Auth::user(),
     ], 200);
 })->middleware(['auth:sanctum'])->name('verification.verify');
 
@@ -87,6 +86,7 @@ Route::prefix("jobBoard")->group(function () {
         Route::post("/", [jobBoardController::class, "store"]);
         Route::put("/update/{id}", [jobBoardController::class, "updateOrder"]);
         Route::post("/{order_id}/payWithCard", [jobBoardController::class, "payWithCard"]);
+        Route::get('/getAll', [jobBoardController::class, 'get']);
     });
 });
 
@@ -138,7 +138,6 @@ Route::prefix("custom")->group(function () {
         Route::post("/{order_id}/payWithCard", [CustomOrderController::class, "payWithCard"]);
     });
 });
-
 
 Route::prefix('auth')->group(function () {
     Route::prefix('users')->group(function () {

@@ -16,7 +16,7 @@ class jobBoardController extends Controller
 {
     public function store(Request $request)
     {
-        // try {
+        try {
         $validator = Validator::make($request->all(), [
             "street_address" => "string|required",
             "detail_address" => "string|nullable",
@@ -53,37 +53,29 @@ class jobBoardController extends Controller
         $get_jobBoard = jobBoardOrders::where('id', $jobBoard_order->id)->first();
         $value = $validate['service_name'];
         switch ($value) {
-            case 'houseKeeping':
+            case 'housekeeping':
                 foreach ($validate['services'] as $data) {
                     jobBoardOrderAdditionalService::create([
                         'order_id' => $get_jobBoard['id'],
-                        'houseKeeping_id' => $data,
+                        'housekeeping_id' => $data,
                     ]);
                 }
                 break;
             case 'maintenance':
-                // if ($validate["services"] ?? null != null) {
-                //     jobBoardOrderAdditionalService::insert(
-                //         array_map(function ($value) use ($jobBoard_service) {
-                //             return [
-                //                 "order_id" => $jobBoard_order["id"],
-                //                 "maintenance_id" => $value,
-                //             ];
-                //         }, $validate["services"]),
-                //     );
-                // }
+                foreach ($validate['services'] as $data) {
+                    jobBoardOrderAdditionalService::create([
+                        'order_id' => $get_jobBoard['id'],
+                        'maintenance_id' => $data,
+                    ]);
+                }
                 break;
-            case 'rentAfriend':
-                // if ($validate["services"] ?? null != null) {
-                //     jobBoardOrderAdditionalService::insert(
-                //         array_map(function ($value) use ($jobBoard_service) {
-                //             return [
-                //                 "order_id" => $jobBoard_order["id"],
-                //                 "rentAfriend_id" => $value,
-                //             ];
-                //         }, $validate["services"]),
-                //     );
-                // }
+            case 'rentafriend':
+                foreach ($validate['services'] as $data) {
+                    jobBoardOrderAdditionalService::create([
+                        'order_id' => $get_jobBoard['id'],
+                        'rentafriend_id' => $data,
+                    ]);
+                }
                 break;
             default:
             return response()->json([
@@ -96,17 +88,17 @@ class jobBoardController extends Controller
 
         //search for service_name
         switch ($value) {
-            case 'houseKeeping':
-                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('houseKeeping')->first();
+            case 'housekeeping':
+                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('housekeeping')->get();
                 break;
             case 'maintenance':
-                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('maintenance')->first();
+                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('maintenance')->get();
                 break;
-            case 'rentAfriend':
-                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('rentAfriend')->first();
+            case 'rentafriend':
+                $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('rentafriend')->get();
                 break;
             default:
-                // Lakukan sesuatu jika $value tidak cocok dengan case-case di atas
+            return response()->json(['message' => 'notfound'], 404);
                 break;
         }
 
@@ -117,9 +109,9 @@ class jobBoardController extends Controller
                 $find,
             ],
         ], 201);
-        // } catch (\Exception $e) {
-        //     return response()->json(["message" => $e->getMessage()], 500);
-        // }
+        } catch (\Exception $e) {
+            return response()->json(["message" => $e->getMessage()], 500);
+        }
     }
 
     public function payWithCard(Request $request, int $order_id)
@@ -243,6 +235,18 @@ class jobBoardController extends Controller
                 'detail_service' => $findOrder->detail_service,
             ], 200);
         } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function get()
+    {
+        try{
+            $get = jobBoardOrders::with(['user','order.rentafriend'])->paginate(10);
+            return response()->json([
+                'data' => $get
+            ], 200);
+        }catch(\Exception $e){
             return response()->json(['message' => $e->getMessage()], 500);
         }
     }
