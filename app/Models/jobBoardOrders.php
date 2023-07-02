@@ -38,6 +38,15 @@ class jobBoardOrders extends Model
         'updated_at'
     ];
 
+    protected $casts = [
+        'start_date' => 'datetime',
+        'from_hour' => 'integer',
+        'to_hour' => 'integer',
+        'sub_total' => 'double',
+        'tax' => 'double',
+        'rating' => 'integer',
+    ];
+
     /**
      * Get the user associated with the jobBoardOrderAdditionalService
      *
