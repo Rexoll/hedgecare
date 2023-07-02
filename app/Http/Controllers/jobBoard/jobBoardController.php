@@ -90,13 +90,13 @@ class jobBoardController extends Controller
             //search for service_name
             switch ($value) {
                 case 'housekeeping':
-                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('housekeeping')->get();
+                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
                     break;
                 case 'maintenance':
-                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('maintenance')->get();
+                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
                     break;
                 case 'rentafriend':
-                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->with('rentafriend')->get();
+                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
                     break;
                 default:
                     return response()->json(['message' => 'notfound'], 404);
