@@ -273,7 +273,7 @@ class jobBoardController extends Controller
     {
         try {
             $validator_query = Validator::make($request->query->all(), [
-                'service_name' => 'string',
+                'service_name' => 'string|nullable',
             ]);
 
             if ($validator_query->fails()) {
