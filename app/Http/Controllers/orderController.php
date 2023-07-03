@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
+use App\Models\jobBoardOrders;
 use App\Models\MaintenanceOrder;
 use App\Models\rentAfriendOrder;
 use Illuminate\Http\Request;
@@ -131,6 +132,15 @@ class orderController extends Controller
                     }
                     $customOrder->detail_service = $detail_service;
                     $customOrder->save();
+                    break;
+
+                case 'job-board':
+                    $jobBoard = jobBoardOrders::find($order_id);
+                    if (is_null($jobBoard)) {
+                        return response()->json(['message' => 'order_id not found'], 404);
+                    }
+                    $jobBoard->detail_service = $detail_service;
+                    $jobBoard->save();
                     break;
 
                 default:

@@ -291,7 +291,7 @@ class AuthController extends Controller
 
         if (!$orders) {
             return response([
-                'message' => 'history jobs is empty',
+                'message' => 'active jobs is empty',
             ], 404);
         }
 
