@@ -51,7 +51,7 @@ class rentAfriendOrder extends Model
 
     public function user(): HasOne
     {
-        return $this->hasOne(User::class, 'user_id', 'id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     public function services(): BelongsToMany
