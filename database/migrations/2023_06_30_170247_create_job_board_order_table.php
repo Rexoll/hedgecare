@@ -33,10 +33,12 @@ return new class extends Migration
             $table->string('pay_with_paypal')->nullable();
             $table->string('pay_with_card')->nullable();
             $table->float('rating')->nullable();
+            $table->unsignedBigInteger('provider_id')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('provider_id')->references('id')->on('providers')->onDelete('cascade');
         });
     }
 

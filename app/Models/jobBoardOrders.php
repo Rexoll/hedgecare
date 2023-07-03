@@ -29,6 +29,7 @@ class jobBoardOrders extends Model
         'last_name',
         'phone_number',
         'email',
+        'provider_id',
         'pay_with_paypal',
         'pay_with_card',
         'rating',
@@ -71,5 +72,10 @@ class jobBoardOrders extends Model
     public function services(): HasMany
     {
         return $this->hasMany(jobBoardOrderAdditionalService::class, 'order_id', 'id');
+    }
+
+    public function provider(): HasOne
+    {
+        return $this->hasOne(Provider::class, 'id', 'provider_id');
     }
 }

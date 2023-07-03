@@ -103,7 +103,7 @@ class jobBoardController extends Controller
 
             return response()->json([
                 "message" => "success create Job Board order",
-                "data" =>$jobBoard_order,
+                "data" => $jobBoard_order,
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
@@ -256,6 +256,7 @@ class jobBoardController extends Controller
             } else {
                 $find->update([
                     'status' => 'active',
+                    'provider_id' => Auth::user()->provider->id,
                 ]);
                 return response()->json(['message' => 'Order has been accepted'], 200);
             }
