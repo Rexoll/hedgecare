@@ -122,7 +122,7 @@ class CustomOrderController extends Controller
 
             $custom_order = CustomOrder::where("id", $custom_order->id)->with(["provider"])->first();
 
-            // Mail::to($validate["email"])->send(new InvoiceCustomOrder($custom_order, substr($validate["card_number"], -4)));
+            Mail::to($validate["email"])->send(new InvoiceCustomOrder($custom_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $custom_order], 200);
         } catch (\Exception $e) {

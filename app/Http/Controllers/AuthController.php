@@ -10,14 +10,13 @@ use App\Models\MaintenanceOrder;
 use App\Models\Provider;
 use App\Models\rentAfriendOrder;
 use App\Models\User;
-use App\Notifications\UserVerifyNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -144,7 +143,6 @@ class AuthController extends Controller
         }
     }
 
-
     public function provider_register(Request $request)
     {
 
@@ -172,7 +170,7 @@ class AuthController extends Controller
 
                 $register->markEmailAsVerified();
 
-                // Mail::send(new RegisterProvider($register));
+                Mail::send(new RegisterProvider($register));
 
                 $token = $register->createToken('register_token')->plainTextToken;
                 return response()->json([

@@ -150,7 +150,7 @@ class rentAfriendOrderController extends Controller
 
             $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order->id)->with(["category", "provider"])->first();
 
-            // Mail::to($validate["email"])->send(new InvoiceRentAfriendOrder($rentAfriend_order, substr($validate["card_number"], -4)));
+            Mail::to($validate["email"])->send(new InvoiceRentAfriendOrder($rentAfriend_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $rentAfriend_order], 200);
         } catch (\Exception $e) {

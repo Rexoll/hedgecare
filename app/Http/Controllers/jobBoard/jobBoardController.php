@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\jobBoard;
 
 use App\Http\Controllers\Controller;
+use App\Mail\invoiceJobBoardOrders;
 use App\Models\jobBoardOrderAdditionalService;
 use App\Models\jobBoardOrders;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
 
@@ -178,7 +180,7 @@ class jobBoardController extends Controller
 
             $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order->id)->first();
 
-            // Mail::to($validate["email"])->send(new invoiceJobBoardOrders($jobBoard_order, substr($validate["card_number"], -4)));
+            Mail::to($validate["email"])->send(new invoiceJobBoardOrders($jobBoard_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $jobBoard_order], 200);
         } catch (\Exception $e) {
