@@ -176,6 +176,7 @@ class ProviderController extends Controller
 
         $provider = Provider::where('id', $id)->update($validate);
         $provider = Provider::where('id', $id)->with('skills')->first();
+        $provider->markEmailAsVerified();
 
         return response()->json([
             "message" => "success update provider profile",

@@ -188,8 +188,6 @@ class AuthController extends Controller
                     'active_days' => null,
                 ]);
 
-                $register->markEmailAsVerified();
-
                 Mail::send(new RegisterProvider($register));
 
                 $token = $register->createToken('register_token')->plainTextToken;
