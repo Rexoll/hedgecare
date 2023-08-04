@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Provider;
 
 use App\Models\Provider;
 use App\Models\Skill;
+use App\Models\User;
 use Hamcrest\Core\IsTypeOf;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -173,10 +174,11 @@ class ProviderController extends Controller
             $provider->skills()->sync($validate['skills']);
             unset($validate['skills']);
         }
+        $verrify = User::where('id', $provider->user_id)->first();
+        $verrify->markEmailAsVerified();
 
         $provider = Provider::where('id', $id)->update($validate);
         $provider = Provider::where('id', $id)->with('skills')->first();
-        $provider->markEmailAsVerified();
 
         return response()->json([
             "message" => "success update provider profile",
