@@ -169,6 +169,18 @@ class AuthController extends Controller
                     'password' => Hash::make($request->password),
                 ]);
 
+                Provider::create([
+                    'user_id' => $register->id,
+                    'thumbnail' => null,
+                    'about' => null,
+                    'price' => 0,
+                    'rating' => 0,
+                    'review' => null,
+                    'address' => null,
+                    'category' => null,
+                    'active_days' => null,
+                ]);
+
                 $register->markEmailAsVerified();
 
                 Mail::send(new RegisterProvider($register));

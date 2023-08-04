@@ -16,17 +16,17 @@ return new class extends Migration
         Schema::create('providers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
-            $table->string('thumbnail');
-            $table->string('about');
+            $table->string('thumbnail')->nullable();
+            $table->string('about')->nullable();
             $table->unsignedDouble('price');
-            $table->unsignedDouble('rating', 5);
-            $table->unsignedBigInteger('review');
+            $table->unsignedDouble('rating');
+            $table->unsignedBigInteger('review')->nullable();
             $table->time('start_time_available')->nullable();
             $table->time('end_time_available')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
-            $table->string('address');
-            $table->string('active_days');
+            $table->string('address')->nullable();
+            $table->string('active_days')->nullable();
             $table->enum('category', ['tutoring', 'housekeeping', 'rentafriend', 'maintenance', 'other']);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
