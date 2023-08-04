@@ -46,15 +46,16 @@ class ProviderController extends Controller
             $lng = $validate_query['longitude'] ?? null;
             $radius = $validate_query['radius'] ?? null;
 
-            $providers = new Provider;
+            $providers =  Provider::query();
             if ($lat != null && $lng != null && $radius != null) {
-                $providers = $providers->selectRaw("*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance")
+                $providers->selectRaw("*, ( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance")
                     ->having('distance', '<=', $radius)
                     ->orderBy('distance')
                     ->setBindings([$lat, $lng, $lat]);
             }
-            $providers = $providers->whereHas("skills", function ($q) use ($validate_query) {
-                if ($validate_query["skills"] ?? null != null) {
+
+            if ($validate_query["skills"] ?? null) {
+                $providers->whereHas("skills", function ($q) use ($validate_query) {
                     $i = 0;
                     foreach (explode(',', $validate_query["skills"]) as $skill) {
                         if ($i == 0) {
@@ -64,43 +65,50 @@ class ProviderController extends Controller
                         }
                         $i++;
                     }
-                }
-            })
-                ->whereHas(
+                });
+            }
+
+            if ($validate_query['search'] ?? null) {
+                $providers->whereHas(
                     "user",
                     function ($q) use ($validate_query) {
-                        if ($validate_query["search"] ?? null != null) {
-                            $q->where("first_name", "LIKE", "%" . ($validate_query["search"]) . "%")
-                                ->orWhere("last_name", "LIKE", "%" . ($validate_query["search"]) . "%");
-                        }
+                        $q->where("first_name", "LIKE", "%" . ($validate_query["search"]) . "%")
+                            ->orWhere("last_name", "LIKE", "%" . ($validate_query["search"]) . "%");
                     }
-                )
-                ->where([
-                    ["category", "LIKE", "%" . ($validate_query["category"] ?? "") . "%"],
-                    ["active_days", "LIKE", "%" . (($validate_query["choosedDate"] ?? null) == null ? "" : date('l', strtotime($validate_query["choosedDate"]))) . "%"],
-                ])
-                ->whereHas("services", function ($q) use ($validate_query) {
-                    if ($validate_query["services"] ?? null != null) {
-                        $i = 0;
-                        foreach (explode(',', $validate_query["services"]) as $service) {
-                            if ($i == 0) {
-                                $q->Where("id", "=", $service);
-                            } else {
-                                $q->orWhere("id", "=", $service);
-                            }
-                            $i++;
+                );
+            }
+
+            if ($validate_query['services'] ?? null) {
+                $providers->whereHas("services", function ($q) use ($validate_query) {
+                    $i = 0;
+                    foreach (explode(',', $validate_query["services"]) as $service) {
+                        if ($i == 0) {
+                            $q->Where("id", "=", $service);
+                        } else {
+                            $q->orWhere("id", "=", $service);
                         }
+                        $i++;
                     }
-                })
-                ->whereTime('start_time_available', '>=', $validate_query["start_time_available"] ?? "00:00:00")
-                ->whereTime('end_time_available', '<=', $validate_query["end_time_available"] ?? "23:00:00")
+                });
+            }
 
-                ->whereBetween('price', [$validate_query["lowest_price"] ?? 1, $validate_query["highest_price"] ?? 150])
+            if ($validate_query['start_time_available'] ?? null && $validate_query["end_time_available"] ?? null) {
+                $providers->whereTime('start_time_available', '>=', $validate_query["start_time_available"])
+                    ->whereTime('end_time_available', '<=', $validate_query["end_time_available"]);
+            }
 
-                ->with(["user", "skills", "services"])
-                ->get();
+            if ($validate_query['lowest_price'] ?? null && $validate_query["highest_price"] ?? null) {
+                $providers->whereBetween('price', [$validate_query["lowest_price"], $validate_query["highest_price"]]);
+            }
 
-            $providers = collect($providers);
+            if ($validate_query['active_days'] ?? null) {
+                $providers->where("active_days", "LIKE", "%" . date('l', strtotime($validate_query["choosedDate"])) . "%");
+            }
+            if ($validate_query['active_days'] ?? null) {
+                $providers->where("category", "LIKE", "%" . $validate_query["category"] . "%");
+            }
+
+            $providers = collect($providers->with(["user", "skills", "services"])->get());
             if (($validate_query["sortBy"] ?? null) == "name") {
                 $providers = $providers->sortBy([
                     function ($a, $b) {

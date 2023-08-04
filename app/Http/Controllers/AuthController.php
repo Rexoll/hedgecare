@@ -183,7 +183,7 @@ class AuthController extends Controller
 
                 $register->markEmailAsVerified();
 
-                Mail::send(new RegisterProvider($register));
+                // Mail::send(new RegisterProvider($register));
 
                 $token = $register->createToken('register_token')->plainTextToken;
                 return response()->json([
