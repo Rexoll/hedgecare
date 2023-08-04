@@ -27,7 +27,7 @@ return new class extends Migration
             $table->double('longitude')->nullable();
             $table->string('address')->nullable();
             $table->string('active_days')->nullable();
-            $table->enum('category', ['tutoring', 'housekeeping', 'rentafriend', 'maintenance', 'other']);
+            $table->enum('category', ['tutoring', 'housekeeping', 'rentafriend', 'maintenance', 'other'])->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
