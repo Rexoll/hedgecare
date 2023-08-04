@@ -129,6 +129,13 @@ class AuthController extends Controller
                 ], 401);
             }
 
+            if (Auth::user()->email_verified_at == null) {
+                Auth::user()->tokens()->where('id', Auth::user()->id)->delete();
+                return response()->json([
+                    'message' => 'Email verification required',
+                ], 401);
+            }
+
             $user = User::where('email', $request->email)->with('provider')->first();
             $token = $user->createToken('login_token')->plainTextToken;
             return response()->json([
@@ -183,7 +190,7 @@ class AuthController extends Controller
 
                 $register->markEmailAsVerified();
 
-                // Mail::send(new RegisterProvider($register));
+                Mail::send(new RegisterProvider($register));
 
                 $token = $register->createToken('register_token')->plainTextToken;
                 return response()->json([
