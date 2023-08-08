@@ -34,7 +34,7 @@ class RegisterProvider extends Mailable
     {
         return new Envelope(
             subject: 'Register Provider',
-            to: ["address" => "noreply@hedgecare.ca"],
+            to: ["address" => "cs@hedgecare.ca"],
         );
     }
 
