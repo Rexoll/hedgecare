@@ -162,6 +162,7 @@ class orderController extends Controller
             $validate = Validator::make($request->all(), [
                 'email' => 'email',
                 'message' => 'required',
+                'phone_number' => 'required'
             ]);
 
             if ($validate->fails()) {

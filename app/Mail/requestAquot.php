@@ -48,6 +48,7 @@ class requestAquot extends Mailable
             with: [
                 'email' => $this->requestAquot['email'],
                 'messages' => $this->requestAquot['message'],
+                'phone_number' => $this->requestAquot['phone_number'],
             ]
         );
     }
