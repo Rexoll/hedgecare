@@ -158,21 +158,25 @@ class orderController extends Controller
 
     public function requestAquot(Request $request)
     {
-        $validate = Validator::make($request->all(), [
-            'email' => 'email',
-            'message' => 'required',
-        ]);
+        try {
+            $validate = Validator::make($request->all(), [
+                'email' => 'email',
+                'message' => 'required',
+            ]);
 
-        if ($validate->fails()) {
-            return response()->json(['message' => $validate->errors()], 400);
+            if ($validate->fails()) {
+                return response()->json(['message' => $validate->errors()], 400);
+            }
+
+            $validate = $validate->validate();
+
+            Mail::to($validate["email"])->send(new requestAquot($validate));
+
+            return response()->json([
+                'message' => 'email sended',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
-
-        $validate = $validate->validate();
-
-        Mail::to($validate["email"])->send(new requestAquot($validate));
-
-        return response()->json([
-            'message' => 'email sended'
-        ], 200);
     }
 }
