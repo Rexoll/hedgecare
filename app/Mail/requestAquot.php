@@ -32,7 +32,7 @@ class requestAquot extends Mailable
     {
         return new Envelope(
             subject: 'Someone just requested a quote',
-            to: ["address" => "cs@hedgecare.ca"],
+            to: ["address" => "kevin.azela227@gmail.com"],
         );
     }
 
