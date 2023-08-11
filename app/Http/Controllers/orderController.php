@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\requestAquot;
 use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\jobBoardOrders;
 use App\Models\MaintenanceOrder;
 use App\Models\rentAfriendOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class orderController extends Controller
@@ -152,5 +154,25 @@ class orderController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
+    }
+
+    public function requestAquot(Request $request)
+    {
+        $validate = Validator::make($request->all(), [
+            'email' => 'email',
+            'message' => 'required',
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json(['message' => $validate->errors()], 400);
+        }
+
+        $validate = $validate->validate();
+
+        Mail::to($validate["email"])->send(new requestAquot($validate));
+
+        return response()->json([
+            'message' => 'email sended'
+        ], 200);
     }
 }

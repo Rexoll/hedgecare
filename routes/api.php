@@ -16,7 +16,6 @@ use App\Http\Controllers\rentAfriend\rentAfriendOrderController;
 use App\Http\Controllers\Skill\SkillController;
 use App\Http\Controllers\tutoring\tutoringController;
 use App\Http\Controllers\tutoring\tutoringOrderController;
-use App\Models\jobBoardOrders;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -85,7 +84,7 @@ Route::prefix("jobBoard")->group(function () {
     });
     Route::middleware(['auth:sanctum'])->prefix("orders")->group(function () {
         Route::get('/getAll', [jobBoardController::class, 'get']);
-        Route::get('/search',[jobBoardController::class,'searchJobBoard']);
+        Route::get('/search', [jobBoardController::class, 'searchJobBoard']);
         Route::post("/", [jobBoardController::class, "store"]);
         Route::put("/update/{id}", [jobBoardController::class, "updateOrder"]);
         Route::post("/{order_id}/payWithCard", [jobBoardController::class, "payWithCard"]);
@@ -167,3 +166,6 @@ Route::middleware(['auth:sanctum'])->prefix('jobs')->group(function () {
     Route::get('active/currentUser', [AuthController::class, 'getActiveJobUser']);
     Route::get('history/currentUser', [AuthController::class, 'getHistoryJobUser']);
 });
+
+//Request a quote
+Route::post('request/quote', [orderController::class, 'requestAquot']);

@@ -2,15 +2,14 @@
 
 namespace App\Mail;
 
-use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterProvider extends Mailable
+class requestAquot extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +18,7 @@ class RegisterProvider extends Mailable
      *
      * @return void
      */
-    public function __construct(public User $user)
+    public function __construct(public $requestAquot)
     {
         //
     }
@@ -32,7 +31,7 @@ class RegisterProvider extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Register Provider',
+            subject: 'Someone just requested a quote',
             to: ["address" => "cs@hedgecare.ca"],
         );
     }
@@ -45,12 +44,10 @@ class RegisterProvider extends Mailable
     public function content()
     {
         return new Content(
-            text: 'emails.register-provider',
+            text: 'emails.request-a-quot',
             with: [
-                'first_name' => $this->user->first_name,
-                'last_name' => $this->user->last_name,
-                'email' => $this->user->email,
-                'phone_number' => $this->user->phone_number,
+                'email' => $this->requestAquot['email'],
+                'messages' => $this->requestAquot['message'],
             ]
         );
     }
