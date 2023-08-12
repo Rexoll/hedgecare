@@ -191,7 +191,7 @@ class ProviderController extends Controller
         try {
             Provider::findOrFail($id)->delete();
             return response()->json(['message' => 'Successfull deleted'], 200);
-        } catch (ModelNotFoundException) {
+        } catch (ModelNotFoundException $th) {
             return response()->json(['message' => 'Data provider not found or deleted'], 404);
         }
     }
