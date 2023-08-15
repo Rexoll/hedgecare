@@ -398,7 +398,7 @@ class AuthController extends Controller
     {
         try {
             $validate = Validator::make($request->all(),[
-                'mail' => 'email|required'
+                'email' => 'email|required'
             ]);
             if($validate->fails()){
                 return response()->json(['message' => $validate->errors()], 400);
