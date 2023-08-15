@@ -412,7 +412,7 @@ class AuthController extends Controller
                 $otp = oneTimePassword::create([
                     'one_time_password' => Carbon::now()->addMinutes(15),
                     'expired_at' => Carbon::now(),
-                    'user_id',
+                    'user_id' => $find->id,
                 ]);
                 Mail::to($find->email)->send(new forgotPassword($otp));
                 return response()->json(['message' => 'Please check your email'], 200);
