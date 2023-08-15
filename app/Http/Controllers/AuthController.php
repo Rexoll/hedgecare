@@ -415,7 +415,7 @@ class AuthController extends Controller
                     'user_id',
                 ]);
                 Mail::to($find->email)->send(new forgotPassword($otp));
-                return response()->json(['message' => $find], 200);
+                return response()->json(['message' => 'Please check your email'], 200);
             }
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
