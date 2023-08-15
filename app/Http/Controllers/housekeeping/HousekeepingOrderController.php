@@ -137,7 +137,7 @@ class HousekeepingOrderController extends Controller
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order->id)->with(["category", "provider"])->first();
 
-            Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order, substr($validate["card_number"], -4)));
+            Mail::to([$validate["email"],'cs@hedgecare.ca'])->send(new InvoiceHousekeepingOrder($housekeeping_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $housekeeping_order], 200);
         } catch (\Exception $e) {
