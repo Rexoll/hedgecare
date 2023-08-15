@@ -383,7 +383,8 @@ class AuthController extends Controller
             } elseif (Carbon::now() > $find->expired_at) {
                 return response()->json(['message' => 'Otp has been expired'], 403);
             } else {
-                User::where('id', $find->user_id)->update([
+                $user = User::where('id', $find->user_id)->first();
+                $user->update([
                     'password' => Hash::make($request->password),
                 ]);
             }
