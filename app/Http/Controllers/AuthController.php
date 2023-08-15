@@ -387,6 +387,7 @@ class AuthController extends Controller
                     'password' => Hash::make($request->password),
                 ]);
             }
+            oneTimePassword::where('one_time_password', $otp)->delete();
             return response()->json(['message' => 'Success'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);

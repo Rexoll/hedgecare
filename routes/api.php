@@ -147,7 +147,7 @@ Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
         Route::put('/forgot/{otp}', [AuthController::class, 'forgot']);
-        Route::get('/mail', [AuthController::class, 'getMail']);
+        Route::post('/mail', [AuthController::class, 'getMail']);
         Route::middleware('auth:sanctum')->delete('/logout', [AuthController::class, 'logout']);
         Route::middleware('auth:sanctum')->get('/current', [AuthController::class, 'currentUser']);
     });
