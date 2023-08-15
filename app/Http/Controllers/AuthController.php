@@ -403,7 +403,7 @@ class AuthController extends Controller
             if($validate->fails()){
                 return response()->json(['message' => $validate->errors()], 400);
             }
-            $find = User::where('email', $request->mail)->first();
+            $find = User::where('email', $request->email)->first();
             if ($find == null) {
                 return response()->json([
                     'message' => 'No users found',
