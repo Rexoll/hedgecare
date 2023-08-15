@@ -363,4 +363,43 @@ class AuthController extends Controller
             'data' => $orders,
         ], 200);
     }
+
+    public function forgot(Request $request, $email)
+    {
+        try {
+            $validate = Validator::make($request->all(), [
+                'password' => 'required|confirmed|min:6',
+            ]);
+            if ($validate->fails()) {
+                return response()->json(['message' => $validate->errors()], 400);
+            }
+            $find = User::where('email', $email)->first();
+            if($find == null){
+                return response()->json(['message' => 'User not found'], 404);
+            }
+            $find->update([
+                'password' => Hash::make($request->password),
+            ]);
+            return response()->json(['message' => 'Success'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function getMail($mail)
+    {
+        try {
+            $find = User::where('email', $mail)->first();
+            if ($find == null) {
+                return response()->json([
+                    'message' => 'No users found',
+                ], 404);
+            } else {
+                Mail::to($find->email)->send(new requestAquot($validate));
+                return response()->json(['message' => $find], 200);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
 }
