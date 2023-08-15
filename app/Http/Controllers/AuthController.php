@@ -396,6 +396,12 @@ class AuthController extends Controller
     public function getMail(Request $request)
     {
         try {
+            $validate = Validator::make($request->all(),[
+                'mail' => 'email'
+            ]);
+            if($validate->fails()){
+                return response()->json(['message' => $validate->errors()], 400);
+            }
             $find = User::where('email', $request->mail)->first();
             if ($find == null) {
                 return response()->json([
