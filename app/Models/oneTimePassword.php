@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class oneTimePassword extends Model
 {
     use HasFactory;
-    protected $table = 'users';
+    protected $table = 'one_time_paswords';
     protected $fillable = [
         'one_time_password',
         'user_id',
