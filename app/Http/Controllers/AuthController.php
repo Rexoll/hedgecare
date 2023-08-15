@@ -410,7 +410,7 @@ class AuthController extends Controller
                 ], 404);
             } else {
                 $otp = oneTimePassword::create([
-                    'one_time_password' => Carbon::now()->addMinutes(15),
+                    'one_time_password' => Str::random(10),
                     'expired_at' => Carbon::now(),
                     'user_id' => $find->id,
                 ]);
