@@ -383,7 +383,7 @@ class AuthController extends Controller
             } elseif (Carbon::now() > $find->expired_at) {
                 return response()->json(['message' => 'Otp has been expired'], 403);
             } else {
-                $find->update([
+                User::where('id', $find->user_id)->update([
                     'password' => Hash::make($request->password),
                 ]);
             }
@@ -397,10 +397,10 @@ class AuthController extends Controller
     public function getMail(Request $request)
     {
         try {
-            $validate = Validator::make($request->all(),[
-                'email' => 'email|required'
+            $validate = Validator::make($request->all(), [
+                'email' => 'email|required',
             ]);
-            if($validate->fails()){
+            if ($validate->fails()) {
                 return response()->json(['message' => $validate->errors()], 400);
             }
             $find = User::where('email', $request->email)->first();
