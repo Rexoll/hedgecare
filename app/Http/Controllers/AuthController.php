@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\forgotPassword;
 use App\Mail\RegisterProvider;
 use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\jobBoardOrders;
 use App\Models\MaintenanceOrder;
+use App\Models\oneTimePassword;
 use App\Models\Provider;
 use App\Models\rentAfriendOrder;
 use App\Models\User;
 use App\Notifications\UserVerifyNotification;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +21,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -364,7 +368,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function forgot(Request $request, $email)
+    public function forgot(Request $request, $otp)
     {
         try {
             $validate = Validator::make($request->all(), [
@@ -373,13 +377,16 @@ class AuthController extends Controller
             if ($validate->fails()) {
                 return response()->json(['message' => $validate->errors()], 400);
             }
-            $find = User::where('email', $email)->first();
-            if($find == null){
+            $find = oneTimePassword::where('one_time_password', $otp)->first();
+            if ($find == null) {
                 return response()->json(['message' => 'User not found'], 404);
+            } elseif (Carbon::now() > $find->expired_at) {
+                return response()->json(['message' => 'Otp has been expired'], 403);
+            } else {
+                $find->update([
+                    'password' => Hash::make($request->password),
+                ]);
             }
-            $find->update([
-                'password' => Hash::make($request->password),
-            ]);
             return response()->json(['message' => 'Success'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
@@ -395,7 +402,12 @@ class AuthController extends Controller
                     'message' => 'No users found',
                 ], 404);
             } else {
-                Mail::to($find->email)->send(new requestAquot($validate));
+                $otp = oneTimePassword::create([
+                    'one_time_password' => Carbon::now()->addMinutes(15),
+                    'expired_at' => Carbon::now(),
+                    'user_id',
+                ]);
+                Mail::to($find->email)->send(new forgotPassword($otp));
                 return response()->json(['message' => $find], 200);
             }
         } catch (\Exception $e) {
