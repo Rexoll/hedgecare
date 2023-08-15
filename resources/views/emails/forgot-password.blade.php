@@ -255,7 +255,7 @@
                                                                         style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#0b2a59;border-radius:50px;width:auto;border-top:0px solid transparent;font-weight:700;border-right:0px solid transparent;border-bottom:0px solid transparent;border-left:0px solid transparent;padding-top:5px;padding-bottom:5px;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:15px;text-align:center;mso-border-alt:none;word-break:keep-all;">
                                                                         <span
                                                                             style="padding-left:15px;padding-right:15px;font-size:15px;display:inline-block;letter-spacing:normal;"><a
-                                                                                href="{{ 'https://hedgecare.ca/change-password/' . $otp }}"
+                                                                                href="{{ 'https://hedgecare.ca/change-password/' . $otp->one_time_password }}"
                                                                                 dir="ltr"
                                                                                 style="color:#ffffff !important; text-decorator: none; margin: 0; word-break: break-word; line-height: 30px;">Change Password</a></span>
                                                                     </div>
