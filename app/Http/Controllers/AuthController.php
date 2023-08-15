@@ -393,10 +393,10 @@ class AuthController extends Controller
         }
     }
 
-    public function getMail($mail)
+    public function getMail(Request $request)
     {
         try {
-            $find = User::where('email', $mail)->first();
+            $find = User::where('email', $request->mail)->first();
             if ($find == null) {
                 return response()->json([
                     'message' => 'No users found',
