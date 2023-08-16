@@ -45,8 +45,7 @@ class CustomOrderController extends Controller
             $custom_order->user_id = Auth::user()->id;
             $custom_order->save();
 
-            $custom_order = CustomOrder::where("id", $custom_order["id"])->with(["provider"])->first();
-            $mail = User::where('id', $custom_order->provider_id)->first();
+            $mail = User::where('id', $provider->user_id)->first();
             Mail::to($mail->email)->send(new CustomOrderNotification($custom_order));
 
             return response()->json([

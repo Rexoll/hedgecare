@@ -74,7 +74,7 @@ class rentAfriendOrderController extends Controller
             );
 
             $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider", "socialmedia"])->first();
-            $mail = User::where('id', $rentAfriend_order->provider_id)->first();
+            $mail = User::where('id', $provider->user_id)->first();
             Mail::to($mail->email)->send(new RentAfriendOrderNotification($rentAfriend_order));
 
             return response()->json([

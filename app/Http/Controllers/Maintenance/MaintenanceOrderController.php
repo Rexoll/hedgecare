@@ -58,9 +58,9 @@ class MaintenanceOrderController extends Controller
             }
 
             $maintenance_order = MaintenanceOrder::where("id", $maintenance_order["id"])->with(["services", "category", "provider"])->first();
-            $mail = User::where('id', $maintenance_order->provider_id)->first();
+            $mail = User::where('id', $provider->user_id)->first();
             Mail::to($mail->email)->send(new MaintenanceOrderNotification($maintenance_order));
-            
+
             return response()->json([
                 "message" => "success create Maintenance order",
                 "data" => $maintenance_order,
