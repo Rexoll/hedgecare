@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\HousekeepingOrder;
+use App\Models\rentAfriendOrder;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class HousekeepingOrderNotification extends Mailable
+class RentAfriendOrderNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,7 @@ class HousekeepingOrderNotification extends Mailable
      *
      * @return void
      */
-    public function __construct(public HousekeepingOrder $order)
+    public function __construct(public rentAfriendOrder $order)
     {
         //
     }
@@ -47,7 +47,7 @@ class HousekeepingOrderNotification extends Mailable
             view: 'mail.order-notification',
             with: [
                 "order_buyer_name" => $this->order->first_name . ' ' . $this->order->last_name,
-                "service" => 'House Keeping',
+                "service" => 'Rent a friend',
                 "order_hours" => $this->order->to_hour - $this->order->from_hour,
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
                 "email" => $this->order->email,

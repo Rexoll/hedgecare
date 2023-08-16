@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Custom;
 
+use App\Mail\CustomOrderNotification;
 use App\Mail\InvoiceCustomOrder;
 use App\Models\CustomOrder;
 use App\Models\Provider;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -44,6 +46,8 @@ class CustomOrderController extends Controller
             $custom_order->save();
 
             $custom_order = CustomOrder::where("id", $custom_order["id"])->with(["provider"])->first();
+            $mail = User::where('id', $custom_order->provider_id)->first();
+            Mail::to($mail->email)->send(new CustomOrderNotification($custom_order));
 
             return response()->json([
                 "message" => "success create custom order",

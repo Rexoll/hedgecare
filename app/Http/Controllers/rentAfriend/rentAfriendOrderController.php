@@ -4,10 +4,12 @@ namespace App\Http\Controllers\rentAfriend;
 
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceRentAfriendOrder;
+use App\Mail\RentAfriendOrderNotification;
 use App\Models\Provider;
 use App\Models\rentAfriendOrder;
 use App\Models\rentAfriendOrderAdditionalService;
 use App\Models\rentAfriendSocialMedia;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -72,6 +74,8 @@ class rentAfriendOrderController extends Controller
             );
 
             $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider", "socialmedia"])->first();
+            $mail = User::where('id', $rentAfriend_order->provider_id)->first();
+            Mail::to($mail->email)->send(new RentAfriendOrderNotification($rentAfriend_order));
 
             return response()->json([
                 "message" => "success create rent a friend order",

@@ -8,7 +8,9 @@ use App\Mail\InvoiceHousekeepingOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
 use App\Models\Provider;
-use Database\Seeders\user;
+use App\Models\User as ModelsUser;
+use App\Models\User;
+use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -45,8 +47,6 @@ class HousekeepingOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $housekeeping_order = HousekeepingOrder::create([...$validate, 'user_id' => Auth()->user()->id, 'status' => 'not_paid', "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
-            // $housekeeping_order->status = "not_paid";
-            // $housekeeping_order->user_id = Auth()->user()->id;
             $housekeeping_order->save();
             if ($validate["services"] ?? null != null) {
                 HousekeepingOrderAdditionalService::insert(
@@ -60,7 +60,8 @@ class HousekeepingOrderController extends Controller
             }
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
-            Mail::to($housekeeping_order["email"])->send(new HousekeepingOrderNotification($housekeeping_order));
+            $mail = User::where('id', $housekeeping_order->provider_id)->first();
+            Mail::to($mail->email)->send(new HousekeepingOrderNotification($housekeeping_order));
 
             return response()->json([
                 "message" => "success create housekeeping order",

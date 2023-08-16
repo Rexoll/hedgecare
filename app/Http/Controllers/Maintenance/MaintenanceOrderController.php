@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Maintenance;
 
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceMaintenanceOrder;
+use App\Mail\MaintenanceOrderNotification;
 use App\Models\MaintenanceOrder;
 use App\Models\MaintenanceOrderAdditionalService;
 use App\Models\Provider;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -56,7 +58,9 @@ class MaintenanceOrderController extends Controller
             }
 
             $maintenance_order = MaintenanceOrder::where("id", $maintenance_order["id"])->with(["services", "category", "provider"])->first();
-
+            $mail = User::where('id', $maintenance_order->provider_id)->first();
+            Mail::to($mail->email)->send(new MaintenanceOrderNotification($maintenance_order));
+            
             return response()->json([
                 "message" => "success create Maintenance order",
                 "data" => $maintenance_order,
@@ -134,7 +138,7 @@ class MaintenanceOrderController extends Controller
 
             $maintenance_order = MaintenanceOrder::where("id", $maintenance_order->id)->with(["category", "provider"])->first();
 
-            // Mail::to($validate["email"])->send(new InvoiceMaintenanceOrder($maintenance_order, substr($validate["card_number"], -4)));
+            Mail::to($validate["email"])->send(new InvoiceMaintenanceOrder($maintenance_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $maintenance_order], 200);
         } catch (\Exception $e) {
