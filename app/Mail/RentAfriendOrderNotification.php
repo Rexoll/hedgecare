@@ -44,7 +44,7 @@ class RentAfriendOrderNotification extends Mailable
     public function content()
     {
         return new Content(
-            view: 'mails.order-notification',
+            view: 'emails.order-notification',
             with: [
                 "order_buyer_name" => $this->order->first_name . ' ' . $this->order->last_name,
                 "service" => 'Rent a friend',

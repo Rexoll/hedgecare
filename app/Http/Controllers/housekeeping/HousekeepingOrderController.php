@@ -61,7 +61,6 @@ class HousekeepingOrderController extends Controller
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
             $mail = User::where('id', $provider->user_id)->first();
-            dd($mail->email);
             Mail::to($mail)->send(new HousekeepingOrderNotification($housekeeping_order));
 
             return response()->json([
