@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Housekeeping;
 
 use App\Http\Controllers\Controller;
-use App\Mail\HousekeepingOrderNotification;
+use App\Mail\HouseKeepingOrderNotification;
 use App\Mail\InvoiceHousekeepingOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
