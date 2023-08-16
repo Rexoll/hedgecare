@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Custom\CustomOrderController;
-use App\Http\Controllers\Housekeeping\HousekeepingAdditionalServiceController;
-use App\Http\Controllers\Housekeeping\HousekeepingCategoryController;
-use App\Http\Controllers\Housekeeping\HousekeepingOrderController;
+use App\Http\Controllers\housekeeping\HousekeepingAdditionalServiceController;
+use App\Http\Controllers\housekeeping\HousekeepingCategoryController;
+use App\Http\Controllers\housekeeping\HousekeepingOrderController;
 use App\Http\Controllers\jobBoard\jobBoardController;
 use App\Http\Controllers\Maintenance\MaintenanceAdditionalServiceController;
 use App\Http\Controllers\Maintenance\MaintenanceCategoryController;
