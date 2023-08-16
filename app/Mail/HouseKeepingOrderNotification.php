@@ -44,7 +44,7 @@ class HousekeepingOrderNotification extends Mailable
     public function content()
     {
         return new Content(
-            view: 'mail.order-notification',
+            view: 'mails.order-notification',
             with: [
                 "order_buyer_name" => $this->order->first_name . ' ' . $this->order->last_name,
                 "service" => 'House Keeping',
