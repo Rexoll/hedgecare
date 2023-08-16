@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Housekeeping;
 
 use App\Http\Controllers\Controller;
+use App\Mail\HousekeepingOrderNotification;
 use App\Mail\InvoiceHousekeepingOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
@@ -59,6 +60,7 @@ class HousekeepingOrderController extends Controller
             }
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
+            Mail::to($housekeeping_order["email"])->send(new HousekeepingOrderNotification($housekeeping_order));
 
             return response()->json([
                 "message" => "success create housekeeping order",
@@ -138,7 +140,6 @@ class HousekeepingOrderController extends Controller
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order->id)->with(["category", "provider"])->first();
 
             Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order, substr($validate["card_number"], -4)));
-            Mail::to('cs@hedgecare.ca')->send(new InvoiceHousekeepingOrder($housekeeping_order, substr($validate["card_number"], -4)));
 
             return response()->json(["message" => "payment succeeded", "data" => $housekeeping_order], 200);
         } catch (\Exception $e) {
