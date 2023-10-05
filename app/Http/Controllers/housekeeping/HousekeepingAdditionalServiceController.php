@@ -4,16 +4,15 @@ namespace App\Http\Controllers\Housekeeping;
 
 use App\Http\Controllers\Controller;
 use App\Models\HousekeepingAdditionalService;
-use Illuminate\Http\Request;
 
 class HousekeepingAdditionalServiceController extends Controller
 {
     public function index()
     {
-        $housekeeping_additional_services = HousekeepingAdditionalService::with("category")->get();
+        $housekeeping_additional_services = HousekeepingAdditionalService::with(["category", "skill"])->get();
         if ($housekeeping_additional_services->isEmpty()) {
             return response()->json([
-                "message" => "housekeeping addtional service is empty"
+                "message" => "housekeeping addtional service is empty",
             ], 404);
         }
         return response()->json([

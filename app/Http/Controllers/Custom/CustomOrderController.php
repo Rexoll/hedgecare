@@ -22,8 +22,8 @@ class CustomOrderController extends Controller
             $validator = Validator::make($request->all(), [
                 "street_address" => "string|required",
                 "detail_address" => "string|nullable",
-                "from_hour" => "integer|lt:to_hour|min:0|max:23",
-                "to_hour" => "integer|gt:from_hour|min:1|max:24",
+                "from_hour" => "integer|min:0|max:23",
+                "expected_hour" => "integer|min:1|max:24",
                 "detail_service" => "string|required",
                 "provider_id" => "integer|required",
                 "start_date" => "date|required",
@@ -40,7 +40,8 @@ class CustomOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $custom_order = CustomOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $sub_total = $provider->price * $request->expected_hour;
+            $custom_order = CustomOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $custom_order->status = "not_paid";
             $custom_order->user_id = Auth::user()->id;
             $custom_order->save();
@@ -114,7 +115,6 @@ class CustomOrderController extends Controller
                 return response()->json(["message" => "payment pending"], 202);
             }
 
-            $custom_order->tax = 2.50;
             $custom_order->first_name = $validate["first_name"];
             $custom_order->last_name = $validate["last_name"];
             $custom_order->phone_number = $validate["phone_number"];

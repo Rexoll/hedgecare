@@ -32,8 +32,8 @@ class rentAfriendOrderController extends Controller
                 "detail_service" => "string|required",
                 "provider_id" => "integer|required",
                 "start_date" => "date|required",
-                "from_hour" => "integer|lt:to_hour|min:0|max:23",
-                "to_hour" => "integer|gt:from_hour|min:1|max:24",
+                "from_hour" => "integer|min:0|max:23",
+                "expected_hour" => "integer|min:1|max:24",
                 "socialmedia_contact" => "array|required",
                 "socialmedia_contact.*.platform" => "string|required",
                 "socialmedia_contact.*.username" => "string|required",
@@ -50,7 +50,8 @@ class rentAfriendOrderController extends Controller
             $validate = $validator->validate();
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $rentAfriend_order = rentAfriendOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $sub_total = $provider->price * $request->expected_hour;
+            $rentAfriend_order = rentAfriendOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $rentAfriend_order->save();
             if ($validate["services"] ?? null != null) {
                 rentAfriendOrderAdditionalService::insert(
@@ -143,7 +144,6 @@ class rentAfriendOrderController extends Controller
                 return response()->json(["message" => "payment pending"], 202);
             }
 
-            $rentAfriend_order->tax = 2.50;
             $rentAfriend_order->first_name = $validate["first_name"];
             $rentAfriend_order->last_name = $validate["last_name"];
             $rentAfriend_order->phone_number = $validate["phone_number"];

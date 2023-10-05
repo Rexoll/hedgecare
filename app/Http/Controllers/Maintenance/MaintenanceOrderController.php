@@ -28,8 +28,8 @@ class MaintenanceOrderController extends Controller
                 "detail_service" => "string|required",
                 "start_date" => "date|required",
                 "provider_id" => "integer|required",
-                "from_hour" => "integer|lt:to_hour|min:0|max:23",
-                "to_hour" => "integer|gt:from_hour|min:1|max:24",
+                "from_hour" => "integer|min:0|max:23",
+                "expected_hour" => "integer|min:1|max:24",
                 "services.*" => "integer|required",
             ]);
 
@@ -44,7 +44,8 @@ class MaintenanceOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $maintenance_order = MaintenanceOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $sub_total = $provider->price * $request->expected_hour;
+            $maintenance_order = MaintenanceOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $maintenance_order->save();
             if ($validate["services"] ?? null != null) {
                 MaintenanceOrderAdditionalService::insert(
@@ -127,7 +128,6 @@ class MaintenanceOrderController extends Controller
                 return response()->json(["message" => "payment pending"], 202);
             }
 
-            $maintenance_order->tax = 2.50;
             $maintenance_order->first_name = $validate["first_name"];
             $maintenance_order->last_name = $validate["last_name"];
             $maintenance_order->phone_number = $validate["phone_number"];

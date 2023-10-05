@@ -24,7 +24,7 @@ class MaintenanceOrder extends Model
         'sub_total',
         'start_date',
         'from_hour',
-        'to_hour',
+        'expected_hour',
         'user_id',
         'rating',
         'status'

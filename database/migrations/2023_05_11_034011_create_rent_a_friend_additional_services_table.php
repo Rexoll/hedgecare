@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('rentAfriend_additional_services', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('skill_id');
             $table->unsignedBigInteger('category_id');
             $table->softDeletes();
             $table->timestamps();

@@ -24,7 +24,7 @@ class HousekeepingOrder extends Model
         'sub_total',
         'start_date',
         'from_hour',
-        'to_hour',
+        'expected_hour',
         'rating',
         'user_id',
         'status'

@@ -18,19 +18,15 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             user::class,
+            SkillSeeder::class,
             HousekeepingCategorySeeder::class,
             HousekeepingAdditionalServiceSeeder::class,
             course::class,
             ProviderSeeder::class,
-            SkillSeeder::class,
             ProviderSkillSeeder::class,
-            HousekeepingAdditionalServicePriceSeeder::class,
             rentAfriendCategorySeeder::class,
-            rentAfriendAdditionalServiceSeeder::class,
-            rentAfriendAdditionalServicePriceSeeder::class,
             maintenanceCategorySeeder::class,
             maintenanceAdditionalServiceSeeder::class,
-            maintenanceAdditionalServicesPriceSeeder::class
         ]);
     }
 }

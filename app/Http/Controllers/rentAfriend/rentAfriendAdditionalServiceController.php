@@ -16,7 +16,7 @@ class rentAfriendAdditionalServiceController extends Controller
     public function index()
     {
         try {
-            $get = rentAfriendAdditionalService::with('category')->get();
+            $get = rentAfriendAdditionalService::with('category','skill')->get();
             return response()->json([
                 'data' => $get,
             ], 200);

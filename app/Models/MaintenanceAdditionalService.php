@@ -13,7 +13,7 @@ class MaintenanceAdditionalService extends Model
     protected $table = 'maintenance_additional_services';
 
     protected $fillable = [
-        'name',
+        'skill_id',
         'category_id',
     ];
 
@@ -38,5 +38,15 @@ class MaintenanceAdditionalService extends Model
     public function price(): HasOne
     {
         return $this->hasOne(MaintenanceAdditionalServicePrice::class, 'service_id', 'id')->with('provider');
+    }
+
+    /**
+     * Get the skill associated with the HousekeepingAdditionalService
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function skill(): HasOne
+    {
+        return $this->hasOne(Skill::class, 'id', 'skill_id');
     }
 }

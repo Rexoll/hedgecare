@@ -253,6 +253,54 @@ class SkillSeeder extends Seeder
             [
                 'name' => 'Duct Cleaning',
             ],
+            [
+                "name" => "Wingman/Wingwoman",
+            ],
+            [
+                "name" => "Playing Sports",
+            ],
+            [
+                "name" => "Sightseeing",
+            ],
+            [
+                "name" => "Dinner",
+            ],
+            [
+                "name" => "Hiking",
+            ],
+            [
+                "name" => "FamilyFunctions",
+            ],
+            [
+                "name" => "Gym friend/Workout Partner",
+            ],
+            [
+                "name" => "Going to a bar",
+            ],
+            [
+                "name" => "Walking buddy",
+            ],
+            [
+                "name" => "Business events",
+            ],
+            [
+                "name" => "Biking",
+            ],
+            [
+                "name" => "Exploring the city",
+            ],
+            [
+                "name" => "Social/emotional support",
+            ],
+            [
+                "name" => "Phone friend",
+            ],
+            [
+                "name" => "Facetime/Vidiocall",
+            ],
+            [
+                "name" => "Social/emotional support",
+            ],
         ]);
     }
 }

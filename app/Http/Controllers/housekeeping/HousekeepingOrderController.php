@@ -30,8 +30,8 @@ class HousekeepingOrderController extends Controller
                 "detail_service" => "string|required",
                 "start_date" => "date|required",
                 "provider_id" => "integer|required",
-                "from_hour" => "integer|lt:to_hour|min:0|max:23",
-                "to_hour" => "integer|gt:from_hour|min:1|max:24",
+                "from_hour" => "integer|min:0|max:23",
+                "expected_hour" => "integer|min:1|max:24",
                 "services.*" => "integer|required",
             ]);
 
@@ -46,7 +46,8 @@ class HousekeepingOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $housekeeping_order = HousekeepingOrder::create([...$validate, 'user_id' => Auth()->user()->id, 'status' => 'not_paid', "sub_total" => ($provider->price * (($validate["to_hour"] ?? 2) - ($validate["from_hour"] ?? 1)))]);
+            $sub_total = $provider->price * $request->expected_hour;
+            $housekeeping_order = HousekeepingOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $housekeeping_order->save();
             if ($validate["services"] ?? null != null) {
                 HousekeepingOrderAdditionalService::insert(
@@ -129,7 +130,6 @@ class HousekeepingOrderController extends Controller
                 return response()->json(["message" => "payment pending"], 202);
             }
 
-            $housekeeping_order->tax = 2.50;
             $housekeeping_order->first_name = $validate["first_name"];
             $housekeeping_order->last_name = $validate["last_name"];
             $housekeeping_order->phone_number = $validate["phone_number"];

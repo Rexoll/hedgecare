@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class rentAfriendAdditionalService extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
     protected $table = 'rentAfriend_additional_services';
     protected $fillable = [
-        'name',
-        'category_id'
+        'skill_id',
+        'category_id',
     ];
 
     protected $casts = [
@@ -33,5 +33,15 @@ class rentAfriendAdditionalService extends Model
     public function price(): HasOne
     {
         return $this->hasOne(rentAfriendAdditionalServicePrice::class, 'service_id', 'id')->with('provider');
+    }
+
+    /**
+     * Get the skill associated with the HousekeepingAdditionalService
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function skill(): HasOne
+    {
+        return $this->hasOne(Skill::class, 'id', 'skill_id');
     }
 }

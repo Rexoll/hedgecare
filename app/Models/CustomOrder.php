@@ -22,7 +22,7 @@ class CustomOrder extends Model
         'start_date',
         'sub_total',
         'from_hour',
-        'to_hour',
+        'expected_hour',
         'user_id',
         'rating',
         'status'

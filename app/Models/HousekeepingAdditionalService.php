@@ -15,7 +15,7 @@ class HousekeepingAdditionalService extends Model
     protected $table = 'housekeeping_additional_services';
 
     protected $fillable = [
-        'name',
+        'skill_id',
         'category_id',
     ];
 
@@ -32,6 +32,7 @@ class HousekeepingAdditionalService extends Model
     {
         return $this->belongsTo(HousekeepingCategory::class, 'category_id', 'id');
     }
+
     public function provider(): BelongsTo
     {
         return $this->belongsTo(HousekeepingAdditionalService::class, 'service_id', 'id')->with('provider');
@@ -40,5 +41,15 @@ class HousekeepingAdditionalService extends Model
     public function price(): HasOne
     {
         return $this->hasOne(HousekeepingAdditionalServicePrices::class, 'service_id', 'id')->with('provider');
+    }
+
+    /**
+     * Get the skill associated with the HousekeepingAdditionalService
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function skill(): HasOne
+    {
+        return $this->hasOne(Skill::class, 'id', 'skill_id');
     }
 }

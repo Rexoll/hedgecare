@@ -14,12 +14,13 @@ return new class extends Migration {
     {
         Schema::create('housekeeping_additional_services', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->unsignedBigInteger('skill_id');
             $table->unsignedBigInteger('category_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
 
             $table->foreign('category_id')->references('id')->on('housekeeping_categories');
+            $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
         });
     }
 

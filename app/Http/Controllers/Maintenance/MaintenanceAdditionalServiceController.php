@@ -10,7 +10,7 @@ class MaintenanceAdditionalServiceController extends Controller
     public function index()
     {
         try {
-            $maintenance_additional_services = MaintenanceAdditionalService::with("category")->get();
+            $maintenance_additional_services = MaintenanceAdditionalService::with(["category", "skill"])->get();
             if ($maintenance_additional_services->isEmpty()) {
                 return response()->json([
                     "message" => "maintenance addtional service is empty",
