@@ -26,6 +26,7 @@ class rentAfriendOrder extends Model
         'to_hour',
         'user_id',
         'rating',
+        'tax',
         'status'
     ];
 

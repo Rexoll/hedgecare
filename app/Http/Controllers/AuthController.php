@@ -279,18 +279,18 @@ class AuthController extends Controller
         $type_user = $request->query('type_user', 'user');
 
         if ($type_user == 'user') {
-            $rent_a_friend_order = rentAfriendOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider', 'services'])->get();
-            $housekeeping_order = HousekeepingOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider', 'services'])->get();
-            $maintenance_order = MaintenanceOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider', 'services'])->get();
-            $custom_order = CustomOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider'])->get();
+            $rent_a_friend_order = rentAfriendOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider.user', 'services'])->get();
+            $housekeeping_order = HousekeepingOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider.user', 'services'])->get();
+            $maintenance_order = MaintenanceOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider.user', 'services'])->get();
+            $custom_order = CustomOrder::where(['user_id' => Auth()->user()->id, 'status' => 'active'])->with(['user', 'provider.user'])->get();
             $jobBoard_order = jobBoardOrders::where(['user_id' => Auth::user()->id, 'status' => 'active'])
-                ->with(['user', 'provider', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])
+                ->with(['user', 'provider.user', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])
                 ->get();
         } else {
-            $rent_a_friend_order = rentAfriendOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider', 'services'])->get();
-            $housekeeping_order = HousekeepingOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider', 'services'])->get();
-            $maintenance_order = MaintenanceOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider', 'services'])->get();
-            $custom_order = CustomOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider'])->get();
+            $rent_a_friend_order = rentAfriendOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider.user', 'services'])->get();
+            $housekeeping_order = HousekeepingOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider.user', 'services'])->get();
+            $maintenance_order = MaintenanceOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider.user', 'services'])->get();
+            $custom_order = CustomOrder::where(['provider_id' => Auth()->user()->provider->id, 'status' => 'active'])->with(['user', 'provider.user'])->get();
             $jobBoard_order = jobBoardOrders::where(['provider_id' => Auth::user()->provider->id, 'status' => 'active'])
                 ->with(['user', 'provider', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])
                 ->get();
