@@ -23,8 +23,8 @@ class jobBoardController extends Controller
                 "detail_service" => "string|required",
                 "service_name" => "string|required",
                 "start_date" => "date|required",
-                "from_hour" => "integer|lt:to_hour|min:0|max:23|required",
-                "to_hour" => "integer|gt:from_hour|min:1|max:24|required",
+                "from_hour" => "integer|min:0|max:23",
+                "expected_hour" => "integer|min:1|max:24",
                 "sub_total" => "integer|required",
                 "services.*" => "integer|required",
             ]);
@@ -44,9 +44,10 @@ class jobBoardController extends Controller
                 "service_name" => $validate['service_name'],
                 "detail_service" => $validate['detail_service'],
                 "start_date" => $validate['start_date'],
-                "from_hour" => $validate['from_hour'],
+                "expected_hour" => $validate['expected_hour'],
                 "to_hour" => $validate['to_hour'],
                 "sub_total" => $validate['sub_total'],
+                'tax' => $validate['sub_total'] * 0.13,
                 "status" => 'not_paid',
                 "user_id" => Auth::user()->id,
             ]);
@@ -169,7 +170,6 @@ class jobBoardController extends Controller
                 return response()->json(["message" => "payment pending"], 202);
             }
 
-            $jobBoard_order->tax = 2.50;
             $jobBoard_order->first_name = $validate["first_name"];
             $jobBoard_order->last_name = $validate["last_name"];
             $jobBoard_order->phone_number = $validate["phone_number"];

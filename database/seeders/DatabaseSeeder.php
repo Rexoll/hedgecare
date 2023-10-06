@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ProviderSeeder::class,
             ProviderSkillSeeder::class,
             rentAfriendCategorySeeder::class,
+            rentAfriendAdditionalServiceSeeder::class,
             maintenanceCategorySeeder::class,
             maintenanceAdditionalServiceSeeder::class,
         ]);

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('detail_address')->nullable();
             $table->date('start_date');
             $table->unsignedMediumInteger('from_hour')->default(1);
-            $table->unsignedMediumInteger('to_hour')->default(2);
+            $table->unsignedMediumInteger('expected_hour')->default(1);
             $table->text('detail_service');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('provider_id');

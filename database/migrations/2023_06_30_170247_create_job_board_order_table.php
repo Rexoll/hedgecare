@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedMediumInteger('from_hour')->default(1);
-            $table->unsignedMediumInteger('to_hour')->default(2);
+            $table->unsignedMediumInteger('expected_hour')->default(1);
             $table->enum('service_name', ['housekeeping', 'rentafriend', 'maintenance']);
             $table->string('street_address');
             $table->string('detail_address')->nullable();
