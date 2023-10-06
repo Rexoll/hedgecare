@@ -10,7 +10,7 @@ class MaintenanceCategoryController extends Controller
     public function index()
     {
         try {
-            $maintenance_categories = MaintenanceCategory::with(["services"])->get();
+            $maintenance_categories = MaintenanceCategory::with(["services.skill"])->get();
             if ($maintenance_categories->isEmpty()) {
                 return response()->json([
                     "message" => "maintenance categories is empty",
