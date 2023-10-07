@@ -105,7 +105,7 @@ class CustomOrderController extends Controller
             $charge = $stripe->charges->create([
                 "card" => $token["id"],
                 "currency" => "USD",
-                "amount" => ($custom_order->sub_total + $custom_order->tax) * 100,
+                "amount" => (int) (($custom_order->sub_total + $custom_order->tax) * 100),
                 "description" => "Pay Custom Order",
             ]);
 

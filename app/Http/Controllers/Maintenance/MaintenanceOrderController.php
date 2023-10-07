@@ -118,7 +118,7 @@ class MaintenanceOrderController extends Controller
             $charge = $stripe->charges->create([
                 "card" => $token["id"],
                 "currency" => "USD",
-                "amount" => ($maintenance_order->sub_total + $maintenance_order->tax) * 100,
+                "amount" => (int) (($maintenance_order->sub_total + $maintenance_order->tax) * 100),
                 "description" => "Pay Maintenance Order",
             ]);
 

@@ -120,7 +120,7 @@ class HousekeepingOrderController extends Controller
             $charge = $stripe->charges->create([
                 "card" => $token["id"],
                 "currency" => "USD",
-                "amount" => ($housekeeping_order->sub_total + $housekeeping_order->tax) * 100,
+                "amount" => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100),
                 "description" => "Pay Housekeeping Order",
             ]);
 
