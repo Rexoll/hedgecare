@@ -162,6 +162,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware(['auth:sanctum'])->prefix('order')->group(function () {
     Route::put('/rating', [orderController::class, 'rating']);
     Route::put('/update', [orderController::class, 'update']);
+    Route::put('/setAsDone', [orderController::class, 'setAsDone']);
 });
 
 Route::middleware(['auth:sanctum'])->prefix('jobs')->group(function () {
