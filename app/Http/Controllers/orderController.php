@@ -70,6 +70,15 @@ class orderController extends Controller
                     $customOrder->save();
                     break;
 
+                case 'job-board':
+                    $jobBoard = jobBoardOrders::find($order_id);
+                    if (is_null($jobBoard)) {
+                        return response()->json(['message' => 'order_id not found'], 404);
+                    }
+                    $jobBoard->rating = $rating;
+                    $jobBoard->save();
+                    break;
+
                 default:
                     return response()->json(['message' => 'Invalid service'], 400);
             }
