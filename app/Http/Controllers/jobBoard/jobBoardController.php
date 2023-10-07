@@ -44,8 +44,8 @@ class jobBoardController extends Controller
                 "service_name" => $validate['service_name'],
                 "detail_service" => $validate['detail_service'],
                 "start_date" => $validate['start_date'],
+                "from_hour" => $validate['from_hour'],
                 "expected_hour" => $validate['expected_hour'],
-                "to_hour" => $validate['to_hour'],
                 "sub_total" => $validate['sub_total'],
                 'tax' => $validate['sub_total'] * 0.13,
                 "status" => 'not_paid',
@@ -160,7 +160,7 @@ class jobBoardController extends Controller
             $charge = $stripe->charges->create([
                 "card" => $token["id"],
                 "currency" => "USD",
-                "amount" => ($jobBoard_order->sub_total + $jobBoard_order->tax) * 100,
+                "amount" => (int) ($jobBoard_order->sub_total + $jobBoard_order->tax) * 100,
                 "description" => "Pay Job Board Order",
             ]);
 
