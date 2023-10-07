@@ -232,7 +232,7 @@ class orderController extends Controller
                     return response()->json(['message' => 'Invalid service'], 400);
             }
             // Berikan response yang sesuai
-            return response()->json(['message' => 'Rating has been given successfully'], 200);
+            return response()->json(['message' => 'set status done successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
