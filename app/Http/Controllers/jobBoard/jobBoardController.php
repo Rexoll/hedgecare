@@ -284,7 +284,7 @@ class jobBoardController extends Controller
             $validate_query = $validator_query->validate();
 
             $search = jobBoardOrders::where([["service_name", "LIKE", "%" . ($validate_query["service_name"] ?? '') . "%"]])
-                ->with(['user', 'services.maintenance', 'services.housekeeping', 'services.rentafriend'])
+                ->with(['user', 'services.maintenance.skill', 'services.housekeeping.skill', 'services.rentafriend.skill'])
                 ->orderBy('created_at', 'desc')
                 ->get();
 
