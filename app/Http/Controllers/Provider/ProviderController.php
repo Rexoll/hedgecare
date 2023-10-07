@@ -105,7 +105,8 @@ class ProviderController extends Controller
             if ($validate_query['active_days'] ?? null) {
                 $providers->where("active_days", "LIKE", "%" . date('l', strtotime($validate_query["choosedDate"])) . "%");
             }
-            if ($validate_query['active_days'] ?? null) {
+
+            if ($validate_query['category'] ?? null) {
                 $providers->where("category", "LIKE", "%" . $validate_query["category"] . "%");
             }
 
