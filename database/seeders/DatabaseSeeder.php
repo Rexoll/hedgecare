@@ -22,8 +22,6 @@ class DatabaseSeeder extends Seeder
             HousekeepingCategorySeeder::class,
             HousekeepingAdditionalServiceSeeder::class,
             course::class,
-            ProviderSeeder::class,
-            ProviderSkillSeeder::class,
             rentAfriendCategorySeeder::class,
             rentAfriendAdditionalServiceSeeder::class,
             maintenanceCategorySeeder::class,
