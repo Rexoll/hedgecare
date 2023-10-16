@@ -153,6 +153,14 @@ class ProviderController extends Controller
             ], 400);
         }
 
+        $provider = Provider::where('id', $id)->with('skills', 'user')->first();
+
+        if (!$provider) {
+            return response()->json([
+                'message' => 'provider not found',
+            ], 404);
+        }
+
         $validate = Arr::where($validator->validate(), function ($value, $key) {
             return $value ?? null != null;
         });
@@ -166,8 +174,6 @@ class ProviderController extends Controller
             $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-provider-' . $id . '.png';
         }
 
-
-        $provider = Provider::where('user_id', $id)->with('skills')->first();
         if ($validate['skills'] ?? null != null) {
             if (gettype($validate['skills']) == 'string') {
                 $validate['skills'] = json_decode($validate['skills']);
@@ -175,8 +181,7 @@ class ProviderController extends Controller
             $provider->skills()->sync($validate['skills']);
             unset($validate['skills']);
         }
-        $verrify = User::where('id', $provider->user_id)->first();
-        $verrify->markEmailAsVerified();
+        $provider->user->markEmailAsVerified();
 
         $provider->fill($validate);
         $provider->save();
