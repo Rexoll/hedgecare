@@ -166,12 +166,13 @@ class ProviderController extends Controller
         });
 
         if ($validate['thumbnail'] ?? null != null) {
-            $validate['thumbnail'] = Storage::putFileAs(
-                'public/images',
-                $validate['thumbnail'],
-                'thumbnail-provider-' . $id . '.png',
+            $file_name = sprintf('thumbnail-provider-%s.png', $id);
+            $validate['thumbnail']->storeAs(
+                '/storage/images',
+                $file_name,
+                'public',
             );
-            $validate['thumbnail'] = getenv('APP_URL') . '/storage/images' . '/thumbnail-provider-' . $id . '.png';
+            $validate['thumbnail'] = url('storage/images/' .  $file_name);
         }
 
         if ($validate['skills'] ?? null != null) {
