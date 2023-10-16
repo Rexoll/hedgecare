@@ -166,6 +166,9 @@ class ProviderController extends Controller
         });
 
         if ($validate['thumbnail'] ?? null != null) {
+            if ($provider->thumbnail) {
+                unlink(public_path('/storage/images/' . pathinfo($provider->thumbnail, PATHINFO_BASENAME)));
+            }
             $file_name = sprintf('%s-thumbnail-provider-%s.png', now()->timestamp, $id);
             $validate['thumbnail']->storeAs(
                 '/images',
