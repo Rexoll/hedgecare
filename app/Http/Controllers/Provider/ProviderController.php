@@ -167,11 +167,11 @@ class ProviderController extends Controller
         }
 
 
+        $provider = Provider::where('user_id', $id)->with('skills')->first();
         if ($validate['skills'] ?? null != null) {
             if (gettype($validate['skills']) == 'string') {
                 $validate['skills'] = json_decode($validate['skills']);
             }
-            $provider = Provider::where('id', $id)->first();
             $provider->skills()->sync($validate['skills']);
             unset($validate['skills']);
         }
