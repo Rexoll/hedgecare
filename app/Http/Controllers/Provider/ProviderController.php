@@ -166,7 +166,7 @@ class ProviderController extends Controller
         });
 
         if ($validate['thumbnail'] ?? null != null) {
-            $file_name = sprintf('%s-thumbnail-provider-%s.png', now(), $id);
+            $file_name = sprintf('%s-thumbnail-provider-%s.png', now()->timestamp, $id);
             $validate['thumbnail']->storeAs(
                 '/storage/images',
                 $file_name,
