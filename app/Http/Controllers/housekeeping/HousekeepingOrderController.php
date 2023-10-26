@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\Checkout\Session;
 use Stripe\Price;
+use Stripe\Stripe;
 
 class HousekeepingOrderController extends Controller
 {
@@ -59,7 +60,7 @@ class HousekeepingOrderController extends Controller
             }
 
             //stripe site
-            $stripe = new \Stripe\StripeClient(env("STRIPE_SECRET"));
+            $stripe = Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
@@ -72,7 +73,7 @@ class HousekeepingOrderController extends Controller
                 return response()->json(["message" => $th->getMessage()], 400);
             }
 
-            $checkout_session = $stripe->checkout->Session->create([
+            $checkout_session = Session::create([
                 'ui_mode' => 'embedded',
                 'payment_method_types' => ['card'],
                 'line_items' => [[
