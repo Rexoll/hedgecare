@@ -60,12 +60,12 @@ class HousekeepingOrderController extends Controller
             }
 
             //stripe site
-            $stripe = Stripe::setApiKey(env("STRIPE_SECRET"));
+            Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
                     'currency' => 'usd',
-                    'product' => [
+                    'product_data' => [
                         'name' => 'Housekeeping',
                     ],
                 ]);
