@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Housekeeping;
 
 use App\Http\Controllers\Controller;
 use App\Mail\HouseKeepingOrderNotification;
-use App\Mail\InvoiceHousekeepingOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
 use App\Models\Provider;
@@ -15,7 +14,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\Checkout\Session;
 use Stripe\Price;
-use Stripe\StripeClient;
 
 class HousekeepingOrderController extends Controller
 {
@@ -61,7 +59,7 @@ class HousekeepingOrderController extends Controller
             }
 
             //stripe site
-            $stripe = new StripeClient(env("STRIPE_SECRET"));
+            $stripe = new \Stripe\StripeClient(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
