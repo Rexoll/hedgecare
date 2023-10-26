@@ -8,13 +8,13 @@ use App\Mail\InvoiceHousekeepingOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
 use App\Models\Provider;
-use App\Models\User as ModelsUser;
 use App\Models\User;
-use Illuminate\Foundation\Auth\User as AuthUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Stripe\Checkout\Session;
+use Stripe\Price;
 use Stripe\StripeClient;
 
 class HousekeepingOrderController extends Controller
@@ -47,7 +47,7 @@ class HousekeepingOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $sub_total = $provider->price * $request->expected_hour;
-            $housekeeping_order = HousekeepingOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
+            $housekeeping_order = HousekeepingOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $housekeeping_order->save();
             if ($validate["services"] ?? null != null) {
                 HousekeepingOrderAdditionalService::insert(
@@ -60,6 +60,34 @@ class HousekeepingOrderController extends Controller
                 );
             }
 
+            //stripe site
+            $stripe = new StripeClient(env("STRIPE_SECRET"));
+            try {
+                $productPrice = Price::create([
+                    'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'currency' => 'usd',
+                    'product' => [
+                        'name' => 'Housekeeping',
+                    ],
+                ]);
+            } catch (\Throwable $th) {
+                return response()->json(["message" => $th->getMessage()], 400);
+            }
+
+            $checkout_session = $stripe->checkout->Session->create([
+                'ui_mode' => 'embedded',
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price' => $productPrice->id, // Ganti dengan ID harga produk Anda
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => 'https://hedgecare.ca',
+                'cancel_url' => 'https://hedgecare.ca',
+            ]);
+
+            //end of stripe
+
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
             $mail = User::where('id', $provider->user_id)->first();
             Mail::to($mail->email)->send(new HousekeepingOrderNotification($housekeeping_order));
@@ -67,6 +95,7 @@ class HousekeepingOrderController extends Controller
             return response()->json([
                 "message" => "success create housekeeping order",
                 "data" => $housekeeping_order,
+                "client_secret" => $checkout_session['client_secret'],
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
@@ -81,10 +110,10 @@ class HousekeepingOrderController extends Controller
                 "last_name" => "string|required",
                 "phone_number" => "regex:/^\+[1-9]{1}[0-9]{3,14}$/|required",
                 "email" => "email|required",
-                "card_number" => "string|digits:16|required",
-                "exp_month" => "string|digits:2|required",
-                "exp_year" => "string|min:2|max:4|required",
-                "cvc" => "string|digits:3|required",
+                "card_number" => "string|digits:16|nullable",
+                "exp_month" => "string|digits:2|nullable",
+                "exp_year" => "string|min:2|max:4|nullable",
+                "cvc" => "string|digits:3|nullable",
             ]);
 
             if ($validator->fails()) {
@@ -103,46 +132,19 @@ class HousekeepingOrderController extends Controller
                 return response()->json(["message" => "this order already pay"], 409);
             }
 
-            $stripe = new StripeClient(env("STRIPE_SECRET"));
-            try {
-                $token = $stripe->tokens->create([
-                    "card" => [
-                        "number" => $validate["card_number"],
-                        "exp_month" => $validate["exp_month"],
-                        "exp_year" => $validate["exp_year"],
-                        "cvc" => $validate["cvc"],
-                    ],
-                ]);
-            } catch (\Throwable $th) {
-                return response()->json(["message" => $th->getMessage()], 400);
-            }
-
-            $charge = $stripe->charges->create([
-                "card" => $token["id"],
-                "currency" => "USD",
-                "amount" => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100),
-                "description" => "Pay Housekeeping Order",
-            ]);
-
-            if ($charge["status"] == "failed") {
-                return response()->json(["message" => $charge["failure_message"]], 406);
-            } else if ($charge["status"] == "pending") {
-                return response()->json(["message" => "payment pending"], 202);
-            }
-
             $housekeeping_order->first_name = $validate["first_name"];
             $housekeeping_order->last_name = $validate["last_name"];
             $housekeeping_order->phone_number = $validate["phone_number"];
             $housekeeping_order->email = $validate["email"];
-            $housekeeping_order->pay_with_card = $charge["id"];
             $housekeeping_order->status = "active";
             $housekeeping_order->save();
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order->id)->with(["category", "provider"])->first();
 
-            Mail::to($validate["email"])->send(new InvoiceHousekeepingOrder($housekeeping_order, substr($validate["card_number"], -4)));
-
-            return response()->json(["message" => "payment succeeded", "data" => $housekeeping_order], 200);
+            return response()->json([
+                "message" => "payment registered",
+                "data" => $housekeeping_order,
+            ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -162,11 +164,11 @@ class HousekeepingOrderController extends Controller
             $findOrder = HousekeepingOrder::findOrFail($id);
             $findOrder->update([
                 'review' => $request->review,
-                'status' => 'done'
+                'status' => 'done',
             ]);
             return response()->json([
                 'message' => 'successfully submited review',
-                'review' => $findOrder->review
+                'review' => $findOrder->review,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
@@ -177,11 +179,11 @@ class HousekeepingOrderController extends Controller
     {
         try {
             $validate = Validator::make($request->all(), [
-                'detail_service' => 'required'
+                'detail_service' => 'required',
             ]);
             if ($validate->fails()) {
                 return response()->json([
-                    'message' => $validate->errors()
+                    'message' => $validate->errors(),
                 ], 400);
             }
             $findOrder = HousekeepingOrder::findOrFail($id);

@@ -614,20 +614,6 @@
                                                         class="html_block block-2" role="presentation"
                                                         style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;"
                                                         width="100%">
-                                                        <tr>
-                                                            <td class="pad">
-                                                                <div align="center"
-                                                                    style="font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;text-align:center;">
-                                                                    <div
-                                                                        style="font-size:15px; text-align:left; padding: 10px 20px; @media(max-width: 320px){font-size:12px;}">
-                                                                        <img
-                                                                            src="{{ asset('storage/images/icon-credit-card.png') }}">
-                                                                        <strong>Credit Card</strong>
-                                                                        ({{ $suffix_card_number ?? '1442' }}) </img>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
                                                     </table>
                                                 </td>
                                                 <td class="column column-2"

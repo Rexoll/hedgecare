@@ -18,7 +18,7 @@ class InvoiceHousekeepingOrder extends Mailable
      *
      * @return void
      */
-    public function __construct(public HousekeepingOrder $order, public $suffix_card_number)
+    public function __construct(public HousekeepingOrder $order)
     {
     }
 
@@ -53,7 +53,6 @@ class InvoiceHousekeepingOrder extends Mailable
                 "order_buyer_address" => $this->order->street_address,
                 "order_seller_address" => "South San Francisco, 354 Oyster Point Blvd",
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
-                "suffix_card_number" => $this->suffix_card_number,
             ]
         );
     }
