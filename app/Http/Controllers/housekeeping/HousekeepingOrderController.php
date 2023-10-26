@@ -81,6 +81,7 @@ class HousekeepingOrderController extends Controller
                     'quantity' => 1,
                 ]],
                 'mode' => 'payment',
+                'redirect_on_completion' => 'never',
                 // 'success_url' => 'https://hedgecare.ca',
                 // 'cancel_url' => 'https://hedgecare.ca',
             ]);
