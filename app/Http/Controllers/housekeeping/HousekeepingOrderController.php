@@ -124,7 +124,7 @@ class HousekeepingOrderController extends Controller
             $email = $session->customer_details->email;
 
             if ($session->status == 'completed') {
-                $variable = $session['meta_data']; // Ganti dengan nilai yang sesuai
+                $variable = $session->metadata['product_name'];
 
                 switch ($variable) {
                     case "Housekeeping":
@@ -167,7 +167,7 @@ class HousekeepingOrderController extends Controller
                 }
             }
 
-            if ($response != null) {
+            if (isset($response)) {
                 return response()->json($response, 200);
             } else {
                 return response()->json(['message' => 'Oops, something might be wrong. please contact developer when see this messege'], 400);
