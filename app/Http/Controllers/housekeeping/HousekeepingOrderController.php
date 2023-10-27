@@ -165,6 +165,8 @@ class HousekeepingOrderController extends Controller
                         $response = (['message' => 'Oops, something might be wrong. please contact developer when see this messege']);
                         break;
                 }
+            } elseif ($session->status == 'open') {
+                $response = (['message' => 'Please complete your payment']);
             }
 
             if (isset($response)) {
