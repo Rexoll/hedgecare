@@ -133,7 +133,7 @@ class HousekeepingOrderController extends Controller
                         HousekeepingOrder::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
-                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
 
@@ -141,7 +141,7 @@ class HousekeepingOrderController extends Controller
                         MaintenanceOrder::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
-                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
 
@@ -149,7 +149,7 @@ class HousekeepingOrderController extends Controller
                         rentAfriendOrder::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
-                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
 
@@ -157,14 +157,14 @@ class HousekeepingOrderController extends Controller
                         CustomOrder::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
-                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
                     case "Jobboard":
                         jobBoardOrders::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
-                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
 
