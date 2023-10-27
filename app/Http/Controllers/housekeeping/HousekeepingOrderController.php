@@ -86,9 +86,8 @@ class HousekeepingOrderController extends Controller
                 ]],
                 'customer_email' => Auth::user()->email,
                 'mode' => 'payment',
-                'redirect_on_completion' => 'never',
-                // 'success_url' => 'https://hedgecare.ca',
-                // 'cancel_url' => 'https://hedgecare.ca',
+                'redirect_on_completion' => 'if_required',
+                'return_url'=> 'https://hedgecare.ca/order/success?session_id={CHECKOUT_SESSION_ID}',
                 'metadata' => [
                     'product_name' => 'Housekeeping', // Nama produk atau informasi lain yang sesuai
                 ],
