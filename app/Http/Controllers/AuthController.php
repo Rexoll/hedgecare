@@ -323,7 +323,6 @@ class AuthController extends Controller
 
     public function getHistoryJobUser(Request $request)
     {
-        dd(Auth::user()->provider->id);
         $type_user = $request->query('type_user', 'user');
 
         if ($type_user == 'user') {
