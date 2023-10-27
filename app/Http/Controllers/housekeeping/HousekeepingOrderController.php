@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Housekeeping;
 
 use App\Http\Controllers\Controller;
 use App\Mail\HouseKeepingOrderNotification;
+use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
+use App\Models\jobBoardOrders;
+use App\Models\MaintenanceOrder;
 use App\Models\Provider;
+use App\Models\rentAfriendOrder;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -85,9 +89,17 @@ class HousekeepingOrderController extends Controller
                 'redirect_on_completion' => 'never',
                 // 'success_url' => 'https://hedgecare.ca',
                 // 'cancel_url' => 'https://hedgecare.ca',
+                'metadata' => [
+                    'product_name' => 'Housekeeping', // Nama produk atau informasi lain yang sesuai
+                ],
             ]);
 
             //end of stripe
+
+            //save session id to DB
+            HousekeepingOrder::where('id', $housekeeping_order->id)->update([
+                'session_id' => $checkout_session->id,
+            ]);
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
             $mail = User::where('id', $provider->user_id)->first();
@@ -111,19 +123,51 @@ class HousekeepingOrderController extends Controller
             $session = Session::retrieve(['id' => $session_id]);
             $email = $session->customer_details->email;
 
-            if ($session->status == 'open') {
-                $user = User::where('email', $email)->first();
-                HousekeepingOrder::where('id', $user->id)->update([
-                    'status' => 'active',
-                ]);
+            if ($session->status == 'completed') {
+                $variable = $session['meta_data']; // Ganti dengan nilai yang sesuai
+
+                switch ($variable) {
+                    case "Housekeeping":
+                        HousekeepingOrder::where('session_id', $session_id)->update([
+                            'status' => 'active',
+                        ]);
+                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        break;
+
+                    case "Maintenance":
+                        MaintenanceOrder::where('session_id', $session_id)->update([
+                            'status' => 'active',
+                        ]);
+                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        break;
+
+                    case "Rentafriend":
+                        rentAfriendOrder::where('session_id', $session_id)->update([
+                            'status' => 'active',
+                        ]);
+                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        break;
+
+                    case "Customorder":
+                        CustomOrder::where('session_id', $session_id)->update([
+                            'status' => 'active',
+                        ]);
+                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        break;
+                    case "Jobboard":
+                        jobBoardOrders::where('session_id', $session_id)->update([
+                            'status' => 'active',
+                        ]);
+                        $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        break;
+
+                    default:
+                        $response = (['message' => 'Oops, something might be wrong. please contact developer when see this messege']);
+                        break;
+                }
             }
 
-            return response()->json([
-                'message' => 'status payment',
-                'status' => $session->status,
-                'customer_email' => $email,
-
-            ], 200);
+            return response()->json($response, 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
