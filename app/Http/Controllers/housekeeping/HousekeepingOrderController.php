@@ -107,7 +107,8 @@ class HousekeepingOrderController extends Controller
     {
         try {
             $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
-            $session = $stripe->checkout->sessions->retrieve($session_id);
+            $jsonObj = json_decode($session_id);
+            $session = $stripe->checkout->sessions->retrieve($jsonObj->session_id);
 
             // if($session->status == 'complete'){
             //     HousekeepingOrder::where('id', $id)->update([
