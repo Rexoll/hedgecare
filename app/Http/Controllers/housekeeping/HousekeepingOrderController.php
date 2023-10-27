@@ -132,6 +132,7 @@ class HousekeepingOrderController extends Controller
                             'status' => 'active',
                         ]);
                         $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $status_code = 200;
                         break;
 
                     case "Maintenance":
@@ -139,6 +140,7 @@ class HousekeepingOrderController extends Controller
                             'status' => 'active',
                         ]);
                         $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $status_code = 200;
                         break;
 
                     case "Rentafriend":
@@ -146,6 +148,7 @@ class HousekeepingOrderController extends Controller
                             'status' => 'active',
                         ]);
                         $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $status_code = 200;
                         break;
 
                     case "Customorder":
@@ -153,24 +156,28 @@ class HousekeepingOrderController extends Controller
                             'status' => 'active',
                         ]);
                         $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $status_code = 200;
                         break;
                     case "Jobboard":
                         jobBoardOrders::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
                         $response = (['message' => 'status payment', 'status' => $session->status, 'customer_email' => $email]);
+                        $status_code = 200;
                         break;
 
                     default:
                         $response = (['message' => 'Oops, something might be wrong. please contact developer when see this messege']);
+                        $status_code = 400;
                         break;
-                }
-            } elseif ($session->status == 'open') {
-                $response = (['message' => 'Please complete your payment']);
+                    }
+                } elseif ($session->status == 'open') {
+                    $response = (['message' => 'Please complete your payment']);
+                    $status_code = 400;
             }
 
             if (isset($response)) {
-                return response()->json($response, 200);
+                return response()->json($response, $status_code);
             } else {
                 return response()->json(['message' => 'Oops, something might be wrong. please contact developer when see this messege'], 400);
             }

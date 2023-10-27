@@ -58,7 +58,6 @@ Route::prefix("housekeeping")->group(function () {
         Route::post("/", [HousekeepingOrderController::class, "store"]);
         Route::put("/update/{id}", [HousekeepingOrderController::class, "updateOrder"]);
         Route::post("/{order_id}/payWithCard", [HousekeepingOrderController::class, "payWithCard"]);
-        Route::post("/check/{session_id}/stripe", [HousekeepingOrderController::class, "checkStripe"]);
     });
 });
 
@@ -161,6 +160,7 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware(['auth:sanctum'])->prefix('order')->group(function () {
+    Route::post("/check/{session_id}/stripe", [HousekeepingOrderController::class, "checkStripe"]);
     Route::put('/rating', [orderController::class, 'rating']);
     Route::put('/update', [orderController::class, 'update']);
     Route::put('/setAsDone', [orderController::class, 'setAsDone']);
