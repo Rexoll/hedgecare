@@ -87,7 +87,7 @@ class HousekeepingOrderController extends Controller
                 'customer_email' => Auth::user()->email,
                 'mode' => 'payment',
                 'redirect_on_completion' => 'always',
-                'return_url'=> 'https://hedgecare.ca/order/success?session_id={CHECKOUT_SESSION_ID}',
+                'return_url' => 'https://hedgecare.ca/order/success?session_id={CHECKOUT_SESSION_ID}',
                 'metadata' => [
                     'product_name' => 'Housekeeping', // Nama produk atau informasi lain yang sesuai
                 ],
@@ -98,6 +98,10 @@ class HousekeepingOrderController extends Controller
             //save session id to DB
             HousekeepingOrder::where('id', $housekeeping_order->id)->update([
                 'session_id' => $checkout_session->id,
+                'first_name' => Auth::user()->first_name,
+                'last_name' => Auth::user()->last_name,
+                'phone_number' => Auth::user()->phone_number,
+                'email' => Auth::user()->email,
             ]);
 
             $housekeeping_order = HousekeepingOrder::where("id", $housekeeping_order["id"])->with(["services", "category", "provider"])->first();
@@ -168,10 +172,10 @@ class HousekeepingOrderController extends Controller
                         $response = (['message' => 'Oops, something might be wrong. please contact developer when see this messege']);
                         $status_code = 400;
                         break;
-                    }
-                } elseif ($session->status == 'open') {
-                    $response = (['message' => 'Please complete your payment']);
-                    $status_code = 400;
+                }
+            } elseif ($session->status == 'open') {
+                $response = (['message' => 'Please complete your payment']);
+                $status_code = 400;
             }
 
             if (isset($response)) {
