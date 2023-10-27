@@ -80,6 +80,7 @@ class HousekeepingOrderController extends Controller
                     'price' => $productPrice->id, // Ganti dengan ID harga produk Anda
                     'quantity' => 1,
                 ]],
+                'customer_email' => Auth::user()->email,
                 'mode' => 'payment',
                 'redirect_on_completion' => 'never',
                 // 'success_url' => 'https://hedgecare.ca',
