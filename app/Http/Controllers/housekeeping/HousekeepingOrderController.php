@@ -127,6 +127,7 @@ class HousekeepingOrderController extends Controller
 
             if ($session->status == 'completed') {
                 $variable = $session->metadata['product_name'];
+                dd($variable);
 
                 switch ($variable) {
                     case "Housekeeping":
