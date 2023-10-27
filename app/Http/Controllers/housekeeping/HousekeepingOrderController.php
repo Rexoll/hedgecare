@@ -106,9 +106,9 @@ class HousekeepingOrderController extends Controller
     public function checkStripe($session_id)
     {
         try {
-            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            Stripe::setApiKey(env('STRIPE_SECRET'));
             $jsonObj = json_decode($session_id);
-            $session = $stripe->checkout->sessions->retrieve($jsonObj->session_id);
+            $session = Session::retrieve('id', $jsonObj->session_id);
 
             // if($session->status == 'complete'){
             //     HousekeepingOrder::where('id', $id)->update([
