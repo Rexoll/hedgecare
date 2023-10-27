@@ -96,7 +96,7 @@ class HousekeepingOrderController extends Controller
                 "message" => "success create housekeeping order",
                 "data" => $housekeeping_order,
                 "client_secret" => $checkout_session['client_secret'],
-                "session_id" => $checkout_session->id
+                "session_id" => $checkout_session->id,
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
@@ -117,7 +117,9 @@ class HousekeepingOrderController extends Controller
 
             return response()->json([
                 'message' => 'status payment',
-                'data' => $session
+                'status' => $session->status,
+                'customer_email' => $session->customer_details->email,
+
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
