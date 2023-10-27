@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Stripe\Checkout\Session;
+use Stripe\Price;
+use Stripe\Stripe;
 use Stripe\StripeClient;
 
 class MaintenanceOrderController extends Controller
@@ -45,7 +48,7 @@ class MaintenanceOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $sub_total = $provider->price * $request->expected_hour;
-            $maintenance_order = MaintenanceOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
+            $maintenance_order = MaintenanceOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $maintenance_order->save();
             if ($validate["services"] ?? null != null) {
                 MaintenanceOrderAdditionalService::insert(
@@ -58,13 +61,55 @@ class MaintenanceOrderController extends Controller
                 );
             }
 
+            //stripe site
+            Stripe::setApiKey(env("STRIPE_SECRET"));
+            try {
+                $productPrice = Price::create([
+                    'unit_amount' => (int) (($maintenance_order->sub_total + $maintenance_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => 'Maintenance',
+                    ],
+                ]);
+            } catch (\Throwable $th) {
+                return response()->json(["message" => $th->getMessage()], 400);
+            }
+
+            $checkout_session = Session::create([
+                'ui_mode' => 'embedded',
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price' => $productPrice->id, // Ganti dengan ID harga produk Anda
+                    'quantity' => 1,
+                ]],
+                'customer_email' => Auth::user()->email,
+                'mode' => 'payment',
+                'redirect_on_completion' => 'always',
+                'return_url' => 'https://hedgecare.ca/order/success?session_id={CHECKOUT_SESSION_ID}',
+                'metadata' => [
+                    'product_name' => 'Maintenance', // Nama produk atau informasi lain yang sesuai
+                ],
+            ]);
+
+            //end of stripe
+
+            //save session id to DB
+            MaintenanceOrder::where('id', $maintenance_order->id)->update([
+                'session_id' => $checkout_session->id,
+                'first_name' => Auth::user()->first_name,
+                'last_name' => Auth::user()->last_name,
+                'phone_number' => Auth::user()->phone_number,
+                'email' => Auth::user()->email,
+            ]);
+
             $maintenance_order = MaintenanceOrder::where("id", $maintenance_order["id"])->with(["services", "category", "provider"])->first();
             $mail = User::where('id', $provider->user_id)->first();
             Mail::to($mail->email)->send(new MaintenanceOrderNotification($maintenance_order));
 
             return response()->json([
-                "message" => "success create Maintenance order",
+                "message" => "success create maintenance order",
                 "data" => $maintenance_order,
+                "client_secret" => $checkout_session['client_secret'],
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
@@ -160,7 +205,7 @@ class MaintenanceOrderController extends Controller
             $findOrder = MaintenanceOrder::findOrFail($id);
             $findOrder->update([
                 'review' => $request->review,
-                'status' => 'done'
+                'status' => 'done',
             ]);
             return response()->json([
                 'message' => 'successfully submited review',
@@ -175,11 +220,11 @@ class MaintenanceOrderController extends Controller
     {
         try {
             $validate = Validator::make($request->all(), [
-                'detail_service' => 'required'
+                'detail_service' => 'required',
             ]);
             if ($validate->fails()) {
                 return response()->json([
-                    'message' => $validate->errors()
+                    'message' => $validate->errors(),
                 ], 400);
             }
             $findOrder = MaintenanceOrder::findOrFail($id);

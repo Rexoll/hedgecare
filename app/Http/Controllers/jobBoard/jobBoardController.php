@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
+use Stripe\Price;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 
 class jobBoardController extends Controller
 {
@@ -52,6 +55,47 @@ class jobBoardController extends Controller
                 "user_id" => Auth::user()->id,
             ]);
 
+            //stripe site
+            Stripe::setApiKey(env("STRIPE_SECRET"));
+            try {
+                $productPrice = Price::create([
+                    'unit_amount' => (int) (($jobBoard_order->sub_total + $jobBoard_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => 'Jobboard',
+                    ],
+                ]);
+            } catch (\Throwable $th) {
+                return response()->json(["message" => $th->getMessage()], 400);
+            }
+
+            $checkout_session = Session::create([
+                'ui_mode' => 'embedded',
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price' => $productPrice->id, // Ganti dengan ID harga produk Anda
+                    'quantity' => 1,
+                ]],
+                'customer_email' => Auth::user()->email,
+                'mode' => 'payment',
+                'redirect_on_completion' => 'always',
+                'return_url' => 'https://hedgecare.ca/order/success?session_id={CHECKOUT_SESSION_ID}',
+                'metadata' => [
+                    'product_name' => 'Jobboard', // Nama produk atau informasi lain yang sesuai
+                ],
+            ]);
+
+            //end of stripe
+
+            //save session id to DB
+            jobBoardOrders::where('id', $jobBoard_order->id)->update([
+                'session_id' => $checkout_session->id,
+                'first_name' => Auth::user()->first_name,
+                'last_name' => Auth::user()->last_name,
+                'phone_number' => Auth::user()->phone_number,
+                'email' => Auth::user()->email,
+            ]);
+
             $get_jobBoard = jobBoardOrders::where('id', $jobBoard_order->id)->first();
             $value = $validate['service_name'];
             switch ($value) {
@@ -86,27 +130,28 @@ class jobBoardController extends Controller
                     break;
             }
 
-            $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order["id"])->with('user')->first();
+            // $jobBoard_order = jobBoardOrders::where("id", $jobBoard_order["id"])->with('user')->first();
 
-            //search for service_name
-            switch ($value) {
-                case 'housekeeping':
-                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
-                    break;
-                case 'maintenance':
-                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
-                    break;
-                case 'rentafriend':
-                    $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
-                    break;
-                default:
-                    return response()->json(['message' => 'notfound'], 404);
-                    break;
-            }
+            // //search for service_name
+            // switch ($value) {
+            //     case 'housekeeping':
+            //         $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
+            //         break;
+            //     case 'maintenance':
+            //         $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
+            //         break;
+            //     case 'rentafriend':
+            //         $find = jobBoardOrderAdditionalService::where('order_id', $jobBoard_order->id)->first();
+            //         break;
+            //     default:
+            //         return response()->json(['message' => 'notfound'], 404);
+            //         break;
+            // }
 
             return response()->json([
-                "message" => "success create Job Board order",
+                "message" => "success create job board order",
                 "data" => $jobBoard_order,
+                "client_secret" => $checkout_session['client_secret'],
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);

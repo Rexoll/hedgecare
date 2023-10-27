@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Stripe\StripeClient;
+use Stripe\Price;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 
 class rentAfriendOrderController extends Controller
 {
@@ -74,13 +77,55 @@ class rentAfriendOrderController extends Controller
                 }, $validate["socialmedia_contact"]),
             );
 
+            //stripe site
+            Stripe::setApiKey(env("STRIPE_SECRET"));
+            try {
+                $productPrice = Price::create([
+                    'unit_amount' => (int) (($rentAfriend_order->sub_total + $rentAfriend_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'currency' => 'usd',
+                    'product_data' => [
+                        'name' => 'Rentafriend',
+                    ],
+                ]);
+            } catch (\Throwable $th) {
+                return response()->json(["message" => $th->getMessage()], 400);
+            }
+
+            $checkout_session = Session::create([
+                'ui_mode' => 'embedded',
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price' => $productPrice->id, // Ganti dengan ID harga produk Anda
+                    'quantity' => 1,
+                ]],
+                'customer_email' => Auth::user()->email,
+                'mode' => 'payment',
+                'redirect_on_completion' => 'always',
+                'return_url' => 'https://hedgecare.ca/order/success?session_id={CHECKOUT_SESSION_ID}',
+                'metadata' => [
+                    'product_name' => 'Rentafriend', // Nama produk atau informasi lain yang sesuai
+                ],
+            ]);
+
+            //end of stripe
+
+            //save session id to DB
+            rentAfriendOrder::where('id', $rentAfriend_order->id)->update([
+                'session_id' => $checkout_session->id,
+                'first_name' => Auth::user()->first_name,
+                'last_name' => Auth::user()->last_name,
+                'phone_number' => Auth::user()->phone_number,
+                'email' => Auth::user()->email,
+            ]);
+
             $rentAfriend_order = rentAfriendOrder::where("id", $rentAfriend_order["id"])->with(["services", "category", "provider", "socialmedia"])->first();
             $mail = User::where('id', $provider->user_id)->first();
             Mail::to($mail->email)->send(new RentAfriendOrderNotification($rentAfriend_order));
 
             return response()->json([
-                "message" => "success create rent a friend order",
+                "message" => "success create rentAfriend order",
                 "data" => $rentAfriend_order,
+                "client_secret" => $checkout_session['client_secret'],
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);

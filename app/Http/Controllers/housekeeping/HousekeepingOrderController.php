@@ -93,7 +93,7 @@ class HousekeepingOrderController extends Controller
                 ],
             ]);
 
-            //end of stripe
+        //end of stripe
 
             //save session id to DB
             HousekeepingOrder::where('id', $housekeeping_order->id)->update([
