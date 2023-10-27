@@ -27,6 +27,7 @@ class HousekeepingOrder extends Model
         'expected_hour',
         'rating',
         'user_id',
+        'session_id',
         'tax',
         'status'
     ];
