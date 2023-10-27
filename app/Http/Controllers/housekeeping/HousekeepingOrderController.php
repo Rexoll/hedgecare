@@ -102,6 +102,27 @@ class HousekeepingOrderController extends Controller
         }
     }
 
+    public function checkStripe($session_id)
+    {
+        try {
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            $session = $stripe->checkout->sessions->retrieve($session_id);
+
+            // if($session->status == 'complete'){
+            //     HousekeepingOrder::where('id', $id)->update([
+            //         'status' => 'active'
+            //     ]);
+            // }
+
+            return response()->json([
+                'message' => 'status payment',
+                'data' => $session
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
     public function payWithCard(Request $request, int $order_id)
     {
         try {
