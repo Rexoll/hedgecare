@@ -125,9 +125,9 @@ class HousekeepingOrderController extends Controller
             $session = Session::retrieve(['id' => $session_id]);
             $email = $session->customer_details->email;
 
+            dd($session->status);
             if ($session->status == 'completed') {
                 $variable = $session->metadata['product_name'];
-                dd($variable);
 
                 switch ($variable) {
                     case "Housekeeping":
