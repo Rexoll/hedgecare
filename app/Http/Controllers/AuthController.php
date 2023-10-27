@@ -324,7 +324,7 @@ class AuthController extends Controller
     public function getHistoryJobUser(Request $request)
     {
         $type_user = $request->query('type_user', 'user');
-
+        dd($type_user);
         if ($type_user == 'user') {
             $rent_a_friend_order = rentAfriendOrder::where(['user_id' => Auth()->user()->id, 'status' => 'done'])->with(['user', 'provider.user', 'services.skill'])->get();
             $housekeeping_order = HousekeepingOrder::where(['user_id' => Auth()->user()->id, 'status' => 'done'])->with(['user', 'provider.user', 'services.skill'])->get();
