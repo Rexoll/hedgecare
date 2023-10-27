@@ -96,6 +96,7 @@ class HousekeepingOrderController extends Controller
                 "message" => "success create housekeeping order",
                 "data" => $housekeeping_order,
                 "client_secret" => $checkout_session['client_secret'],
+                "session_id" => $checkout_session->id
             ], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 500);
