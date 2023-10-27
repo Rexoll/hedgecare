@@ -169,7 +169,7 @@ class HousekeepingOrderController extends Controller
                         break;
 
                     default:
-                        $response = (['message' => 'Oops, something might be wrong. please contact developer when see this messege']);
+                        $response = (['message' => 'Oops, service didnt found. please contact developer when see this messege']);
                         $status_code = 400;
                         break;
                 }
