@@ -167,7 +167,11 @@ class HousekeepingOrderController extends Controller
                 }
             }
 
-            return response()->json($response, 200);
+            if ($response != null) {
+                return response()->json($response, 200);
+            } else {
+                return response()->json(['message' => 'Oops, something might be wrong. please contact developer when see this messege'], 400);
+            }
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
