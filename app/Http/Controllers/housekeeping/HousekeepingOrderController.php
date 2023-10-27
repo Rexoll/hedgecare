@@ -112,7 +112,7 @@ class HousekeepingOrderController extends Controller
             $email = $session->customer_details->email;
 
             if ($session->status == 'open') {
-                $user = User::where('id', $email)->first();
+                $user = User::where('email', $email)->first();
                 HousekeepingOrder::where('id', $user->id)->update([
                     'status' => 'active',
                 ]);
