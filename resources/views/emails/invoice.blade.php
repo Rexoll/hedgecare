@@ -397,7 +397,7 @@
                                                                 <div
                                                                     style="color:#9f9f9f;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:15px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:18px;">
                                                                     <p style="margin: 0;">{{ $order_hours }}
-                                                                        hr/session</p>
+                                                                        /session</p>
                                                                 </div>
                                                             </td>
                                                         </tr>
