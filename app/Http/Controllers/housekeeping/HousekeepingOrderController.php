@@ -130,7 +130,7 @@ class HousekeepingOrderController extends Controller
             $session = Session::retrieve(['id' => $session_id]);
             $email = $session->customer_details->email;
 
-            if ($session->status == 'open') {
+            if ($session->status == 'complete') {
                 $variable = $session->metadata['product_name'];
 
                 switch ($variable) {
@@ -187,7 +187,7 @@ class HousekeepingOrderController extends Controller
                         $status_code = 400;
                         break;
                 }
-            } elseif ($session->status == 'complete') {
+            } elseif ($session->status == 'open') {
                 $response = (['message' => 'Please complete your payment']);
                 $status_code = 400;
             }
