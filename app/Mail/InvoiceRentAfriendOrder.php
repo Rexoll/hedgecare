@@ -19,7 +19,7 @@ class InvoiceRentAfriendOrder extends Mailable
      *
      * @return void
      */
-    public function __construct(public rentAfriendOrder $order, public $suffix_card_number)
+    public function __construct(public rentAfriendOrder $order)
     {
     }
 
@@ -48,13 +48,12 @@ class InvoiceRentAfriendOrder extends Mailable
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
                 "order_category" => 'Rent a friend',
-                "order_hours" => $this->order->to_hour - $this->order->from_hour,
+                "order_hours" => $this->order->expected_hour,
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
                 "order_buyer_address" => $this->order->street_address,
                 "order_seller_address" => "South San Francisco, 354 Oyster Point Blvd",
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
-                "suffix_card_number" => $this->suffix_card_number,
             ]
         );
     }

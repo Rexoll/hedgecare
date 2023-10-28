@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Housekeeping;
 
 use App\Http\Controllers\Controller;
 use App\Mail\HouseKeepingOrderNotification;
+use App\Mail\InvoiceCustomOrder;
+use App\Mail\InvoiceHousekeepingOrder;
+use App\Mail\invoiceJobBoardOrders;
+use App\Mail\InvoiceMaintenanceOrder;
+use App\Mail\InvoiceRentAfriendOrder;
 use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\HousekeepingOrderAdditionalService;
@@ -93,7 +98,7 @@ class HousekeepingOrderController extends Controller
                 ],
             ]);
 
-        //end of stripe
+            //end of stripe
 
             //save session id to DB
             HousekeepingOrder::where('id', $housekeeping_order->id)->update([
@@ -130,40 +135,49 @@ class HousekeepingOrderController extends Controller
 
                 switch ($variable) {
                     case "Housekeeping":
-                        HousekeepingOrder::where('session_id', $session_id)->update([
+                        $service = HousekeepingOrder::where('session_id', $session_id)->first();
+                        $service->update([
                             'status' => 'active',
                         ]);
+                        Mail::to($service["email"])->send(new InvoiceHousekeepingOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
 
                     case "Maintenance":
-                        MaintenanceOrder::where('session_id', $session_id)->update([
+                        $service = MaintenanceOrder::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
+                        Mail::to($service["email"])->send(new InvoiceMaintenanceOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
 
                     case "Rentafriend":
-                        rentAfriendOrder::where('session_id', $session_id)->update([
+                        $service = rentAfriendOrder::where('session_id', $session_id)->first();
+                        $service->update([
                             'status' => 'active',
                         ]);
+                        Mail::to($service["email"])->send(new InvoiceRentAfriendOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
 
                     case "Customorder":
-                        CustomOrder::where('session_id', $session_id)->update([
+                        $service = CustomOrder::where('session_id', $session_id)->first();
+                        $service->update([
                             'status' => 'active',
                         ]);
+                        Mail::to($service["email"])->send(new InvoiceCustomOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
                     case "Jobboard":
-                        jobBoardOrders::where('session_id', $session_id)->update([
+                        $service= jobBoardOrders::where('session_id', $session_id)->first();
+                        $service->update([
                             'status' => 'active',
                         ]);
+                        Mail::to($service["email"])->send(new invoiceJobBoardOrders($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
