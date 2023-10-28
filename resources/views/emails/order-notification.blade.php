@@ -219,7 +219,7 @@
                                                                     <p style="margin: 0;">Email : {{ $email }} </p>
                                                                     <p style="margin: 0;">Phone : {{ $phone }} </p>
                                                                     <p style="margin: 0;">Order date : {{ $order_date }} </p>
-                                                                    <p style="margin: 0;">Order hours : {{ $order_hours }} </p>
+                                                                    <p style="margin: 0;">Order hours : {{ $order_hours }} hour(s) </p>
                                                                 </div>
                                                             </td>
                                                         </tr>
