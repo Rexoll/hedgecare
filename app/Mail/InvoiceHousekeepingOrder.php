@@ -47,7 +47,7 @@ class InvoiceHousekeepingOrder extends Mailable
                 "order_id" => $this->order->id,
                 "order_buyer_name" => $this->order->first_name,
                 "order_category" => $this->order->category->name,
-                "order_hours" => $this->order->expected_hour,
+                "order_hours" => $this->order->expected_hour . ' hours(s)',
                 "order_sub_total" => $this->order->sub_total,
                 "order_tax" => $this->order->tax,
                 "order_buyer_address" => $this->order->street_address,
