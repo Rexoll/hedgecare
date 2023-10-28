@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\CustomOrder;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -49,10 +48,10 @@ class CustomOrderNotification extends Mailable
             with: [
                 "order_buyer_name" => Auth::user()->first_name . ' ' . Auth::user()->last_name,
                 "service" => 'Custom Order',
-                "order_hours" => $this->order->expected_hour,
+                "order_hours" => $this->order->expected_hour . ' hour(s)',
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
                 "email" => Auth::user()->email,
-                "phone" => Auth::user()->phone_number
+                "phone" => Auth::user()->phone_number,
             ]
         );
     }

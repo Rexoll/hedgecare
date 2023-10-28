@@ -49,7 +49,7 @@ class HousekeepingOrderNotification extends Mailable
             with: [
                 "order_buyer_name" => Auth::user()->first_name . ' ' . Auth::user()->last_name,
                 "service" => 'Housekeeping',
-                "order_hours" => $this->order->expected_hour . 'hour(s)',
+                "order_hours" => $this->order->expected_hour . ' hour(s)',
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
                 "email" => Auth::user()->email,
                 "phone" => Auth::user()->phone_number
