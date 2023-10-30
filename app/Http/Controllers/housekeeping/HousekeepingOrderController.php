@@ -73,7 +73,7 @@ class HousekeepingOrderController extends Controller
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
-                    'currency' => 'usd',
+                    'currency' => 'cad',
                     'product_data' => [
                         'name' => 'Housekeeping',
                     ],

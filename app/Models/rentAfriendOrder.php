@@ -24,6 +24,7 @@ class rentAfriendOrder extends Model
         'sub_total',
         'from_hour',
         'to_hour',
+        'session_id',
         'user_id',
         'rating',
         'tax',

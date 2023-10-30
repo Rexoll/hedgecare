@@ -26,6 +26,7 @@ class MaintenanceOrder extends Model
         'from_hour',
         'expected_hour',
         'user_id',
+        'session_id',
         'rating',
         'tax',
         'status'

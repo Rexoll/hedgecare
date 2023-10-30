@@ -25,6 +25,7 @@ class CustomOrder extends Model
         'expected_hour',
         'user_id',
         'rating',
+        'session_id',
         'tax',
         'status'
     ];

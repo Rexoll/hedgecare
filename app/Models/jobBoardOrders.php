@@ -26,6 +26,7 @@ class jobBoardOrders extends Model
         'sub_total',
         'tax',
         'first_name',
+        'session_id',
         'last_name',
         'phone_number',
         'email',
