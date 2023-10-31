@@ -17,11 +17,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            user::class,
+            adminSeeder::class,
             SkillSeeder::class,
             HousekeepingCategorySeeder::class,
             HousekeepingAdditionalServiceSeeder::class,
-            course::class,
             rentAfriendCategorySeeder::class,
             rentAfriendAdditionalServiceSeeder::class,
             maintenanceCategorySeeder::class,
