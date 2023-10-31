@@ -110,87 +110,6 @@ class SkillSeeder extends Seeder
                 "name" => "Raking leaves",
             ],
             [
-                "name" => "Floor cleaning",
-            ],
-            [
-                "name" => "Window cleaning",
-            ],
-            [
-                "name" => "Laundry",
-            ],
-            [
-                "name" => "Ironing",
-            ],
-            [
-                "name" => "Refrigerator cleaning",
-            ],
-            [
-                "name" => "Oven cleaning",
-            ],
-            [
-                "name" => "Cabinet cleaning",
-            ],
-            [
-                "name" => "Bed changing",
-            ],
-            [
-                "name" => "Carpet cleaning",
-            ],
-            [
-                "name" => "Dish washing",
-            ],
-            [
-                "name" => "Furniture cleaning",
-            ],
-            [
-                "name" => "Wall cleaning",
-            ],
-            [
-                "name" => "Plant watering",
-            ],
-            [
-                "name" => "Basement cleaning",
-            ],
-            [
-                "name" => "Grocery shopping",
-            ],
-            [
-                "name" => "Clean up after pets",
-            ],
-            [
-                "name" => "House sitting",
-            ],
-            [
-                "name" => "Attic cleaning",
-            ],
-            [
-                "name" => "Gutter cleaning",
-            ],
-            [
-                "name" => "Gardening",
-            ],
-            [
-                "name" => "Lawn mowing",
-            ],
-            [
-                "name" => "Hedging & Pruning",
-            ],
-            [
-                "name" => "Weeding",
-            ],
-            [
-                "name" => "Planting",
-            ],
-            [
-                "name" => "Snow removal",
-            ],
-            [
-                "name" => "Salting driveway and walkways",
-            ],
-            [
-                "name" => "Raking leaves",
-            ],
-            [
                 'name' => 'Plumbing',
             ],
             [
@@ -210,15 +129,6 @@ class SkillSeeder extends Seeder
             ],
             [
                 'name' => 'Smart Home Install',
-            ],
-            [
-                'name' => 'Window Cleaning',
-            ],
-            [
-                'name' => 'Junk Cleaning',
-            ],
-            [
-                'name' => 'Junk Cleaning',
             ],
             [
                 'name' => 'Junk Cleaning',
@@ -297,9 +207,6 @@ class SkillSeeder extends Seeder
             ],
             [
                 "name" => "Facetime/Vidiocall",
-            ],
-            [
-                "name" => "Social/emotional support",
             ],
         ]);
     }
