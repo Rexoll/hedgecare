@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('job_board_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->text('session_id')->nullable();
             $table->unsignedMediumInteger('from_hour')->default(1);
             $table->unsignedMediumInteger('expected_hour')->default(1);
             $table->enum('service_name', ['housekeeping', 'rentafriend', 'maintenance']);

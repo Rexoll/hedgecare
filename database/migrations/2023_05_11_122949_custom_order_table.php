@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('custom_orders', function (Blueprint $table) {
             $table->id();
             $table->string('street_address');
+            $table->text('session_id')->nullable();
             $table->string('detail_address')->nullable();
             $table->time('from_hour')->default(1);
             $table->unsignedMediumInteger('expected_hour')->default(1);
