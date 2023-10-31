@@ -20,6 +20,8 @@ class Provider extends Model
         'about',
         'price',
         'rating',
+        'start_time_available',
+        'end_time_available',
         'review',
         'address',
         'category',

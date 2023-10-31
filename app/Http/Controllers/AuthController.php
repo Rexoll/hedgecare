@@ -185,6 +185,8 @@ class AuthController extends Controller
                     'thumbnail' => null,
                     'about' => null,
                     'price' => 0,
+                    'start_time_available' => '00:00:00',
+                    'end_time_available' => '23:59:59',
                     'rating' => 0,
                     'review' => null,
                     'address' => null,
