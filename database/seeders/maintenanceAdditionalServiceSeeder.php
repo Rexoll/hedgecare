@@ -16,7 +16,7 @@ class maintenanceAdditionalServiceSeeder extends Seeder
     public function run()
     {
         $skill_id = [];
-        for ($i = 58; $i <= 78; $i++) {
+        for ($i = 31; $i <= 48; $i++) {
             array_push($skill_id, ['category_id' => 1, 'skill_id' => $i]);
         }
         DB::table('maintenance_additional_services')->insert($skill_id);

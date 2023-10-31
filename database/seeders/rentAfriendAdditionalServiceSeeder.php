@@ -15,10 +15,10 @@ class rentAfriendAdditionalServiceSeeder extends Seeder
     public function run()
     {
         $skill_id = [];
-        for ($i = 79; $i <= 90; $i++) {
+        for ($i = 49; $i <= 60; $i++) {
             array_push($skill_id, ['category_id' => 1, 'skill_id' => $i]);
         }
-        for ($i = 91; $i <= 94; $i++) {
+        for ($i = 61; $i <= 63; $i++) {
             array_push($skill_id, ['category_id' => 2, 'skill_id' => $i]);
         }
         DB::table('rentAfriend_additional_services')->insert($skill_id);
