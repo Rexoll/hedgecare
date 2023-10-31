@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('housekeeping_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('category_id');
-            $table->text('session_id')->nullable();
             $table->enum('order_type', ['individual', 'business']);
             $table->string('street_address');
             $table->string('detail_address')->nullable();
