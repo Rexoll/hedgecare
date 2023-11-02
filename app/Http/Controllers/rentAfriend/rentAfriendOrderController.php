@@ -78,8 +78,7 @@ class rentAfriendOrderController extends Controller
             );
 
             //stripe site
-            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
-            // Stripe::setApiKey(env("STRIPE_SECRET"));
+            Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($rentAfriend_order->sub_total + $rentAfriend_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
