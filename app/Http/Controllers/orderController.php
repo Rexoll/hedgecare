@@ -7,6 +7,8 @@ use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\jobBoardOrders;
 use App\Models\MaintenanceOrder;
+use App\Models\Provider;
+use App\Models\rating;
 use App\Models\rentAfriendOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -39,8 +41,20 @@ class orderController extends Controller
                     if (is_null($housekeepingOrder)) {
                         return response()->json(['message' => 'order_id not found'], 404);
                     }
-                    $housekeepingOrder->rating = $rating;
-                    $housekeepingOrder->save();
+                    rating::create([
+                        'provider_id' => $housekeepingOrder->provider_id,
+                        'ratings' => $rating,
+                    ]);
+                    $calculate = rating::where('provider_id', $housekeepingOrder->provider_id)->get();
+                    $average = $calculate->average('ratings');
+                    $sum = $calculate->count();
+                    $housekeepingOrder->update([
+                        'rating' => $rating,
+                    ]);
+                    Provider::where('id', $housekeepingOrder->provider_id)->update([
+                        'rating' => $average,
+                        'review' => $sum
+                    ]);
                     break;
 
                 case 'rentafriend':
@@ -48,8 +62,20 @@ class orderController extends Controller
                     if (is_null($rentAFriendOrder)) {
                         return response()->json(['message' => 'order_id not found'], 404);
                     }
-                    $rentAFriendOrder->rating = $rating;
-                    $rentAFriendOrder->save();
+                    rating::create([
+                        'provider_id' => $rentAFriendOrder->provider_id,
+                        'ratings' => $rating,
+                    ]);
+                    $calculate = rating::where('provider_id', $rentAFriendOrder->provider_id)->get();
+                    $average = $calculate->average('ratings');
+                    $sum = $calculate->count();
+                    $rentAFriendOrder->update([
+                        'rating' => $rating,
+                    ]);
+                    Provider::where('id', $rentAFriendOrder->provider_id)->update([
+                        'rating' => $average,
+                        'review' => $sum
+                    ]);
                     break;
 
                 case 'maintenance':
@@ -57,8 +83,20 @@ class orderController extends Controller
                     if (is_null($maintenanceOrder)) {
                         return response()->json(['message' => 'order_id not found'], 404);
                     }
-                    $maintenanceOrder->rating = $rating;
-                    $maintenanceOrder->save();
+                    rating::create([
+                        'provider_id' => $maintenanceOrder->provider_id,
+                        'ratings' => $rating,
+                    ]);
+                    $calculate = rating::where('provider_id', $maintenanceOrder->provider_id)->get();
+                    $average = $calculate->average('ratings');
+                    $sum = $calculate->count();
+                    $maintenanceOrder->update([
+                        'rating' => $rating,
+                    ]);
+                    Provider::where('id', $maintenanceOrder->provider_id)->update([
+                        'rating' => $average,
+                        'review' => $sum
+                    ]);
                     break;
 
                 case 'other':
@@ -66,8 +104,20 @@ class orderController extends Controller
                     if (is_null($customOrder)) {
                         return response()->json(['message' => 'order_id not found'], 404);
                     }
-                    $customOrder->rating = $rating;
-                    $customOrder->save();
+                    rating::create([
+                        'provider_id' => $customOrder->provider_id,
+                        'ratings' => $rating,
+                    ]);
+                    $calculate = rating::where('provider_id', $customOrder->provider_id)->get();
+                    $average = $calculate->average('ratings');
+                    $sum = $calculate->count();
+                    $customOrder->update([
+                        'rating' => $rating,
+                    ]);
+                    Provider::where('id', $customOrder->provider_id)->update([
+                        'rating' => $average,
+                        'review' => $sum
+                    ]);
                     break;
 
                 case 'job-board':
@@ -75,8 +125,20 @@ class orderController extends Controller
                     if (is_null($jobBoard)) {
                         return response()->json(['message' => 'order_id not found'], 404);
                     }
-                    $jobBoard->rating = $rating;
-                    $jobBoard->save();
+                    rating::create([
+                        'provider_id' => $jobBoard->provider_id,
+                        'ratings' => $rating,
+                    ]);
+                    $calculate = rating::where('provider_id', $jobBoard->provider_id)->get();
+                    $average = $calculate->average('ratings');
+                    $sum = $calculate->count();
+                    $jobBoard->update([
+                        'rating' => $rating,
+                    ]);
+                    Provider::where('id', $jobBoard->provider_id)->update([
+                        'rating' => $average,
+                        'review' => $sum
+                    ]);
                     break;
 
                 default:
@@ -244,7 +306,7 @@ class orderController extends Controller
             $validate = Validator::make($request->all(), [
                 'email' => 'email',
                 'message' => 'required',
-                'phone_number' => 'required'
+                'phone_number' => 'required',
             ]);
 
             if ($validate->fails()) {
