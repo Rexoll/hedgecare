@@ -129,6 +129,7 @@ class HousekeepingOrderController extends Controller
             // Stripe::setApiKey(env('STRIPE_SECRET'));
             Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
             $session = Session::retrieve(['id' => $session_id]);
+            dd($session->customer_details);
             $email = $session->customer_details->email;
 
             if ($session->status == 'complete') {
