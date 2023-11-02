@@ -62,8 +62,7 @@ class MaintenanceOrderController extends Controller
             }
 
             //stripe site
-            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
-            // Stripe::setApiKey(env("STRIPE_SECRET"));
+            Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($maintenance_order->sub_total + $maintenance_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
