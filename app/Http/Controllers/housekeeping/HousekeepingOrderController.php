@@ -130,7 +130,7 @@ class HousekeepingOrderController extends Controller
             $session = Session::retrieve(['id' => $session_id]);
             $email = $session->customer_details->email;
 
-            if ($session->status == 'complete') {
+            if ($session->status == 'open') {
                 $variable = $session->metadata['product_name'];
 
                 switch ($variable) {
@@ -139,7 +139,9 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service["email"])->send(new InvoiceHousekeepingOrder($service));
+                        Mail::to($service->email)
+                        ->cc('cs@hedgecare.ca')
+                        ->send(new InvoiceHousekeepingOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
@@ -148,7 +150,9 @@ class HousekeepingOrderController extends Controller
                         $service = MaintenanceOrder::where('session_id', $session_id)->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service["email"])->send(new InvoiceMaintenanceOrder($service));
+                        Mail::to($service->email)
+                        ->cc('cs@hedgecare.ca')
+                        ->send(new InvoiceMaintenanceOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
@@ -158,7 +162,9 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service["email"])->send(new InvoiceRentAfriendOrder($service));
+                        Mail::to($service->email)
+                        ->cc('cs@hedgecare.ca')
+                        ->send(new InvoiceRentAfriendOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
@@ -168,7 +174,9 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service["email"])->send(new InvoiceCustomOrder($service));
+                        Mail::to($service->email)
+                        ->cc('cs@hedgecare.ca')
+                        ->send(new InvoiceCustomOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
@@ -177,7 +185,9 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service["email"])->send(new invoiceJobBoardOrders($service));
+                        Mail::to($service->email)
+                        ->cc('cs@hedgecare.ca')
+                        ->send(new invoiceJobBoardOrders($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
                         $status_code = 200;
                         break;
@@ -187,7 +197,7 @@ class HousekeepingOrderController extends Controller
                         $status_code = 400;
                         break;
                 }
-            } elseif ($session->status == 'open') {
+            } elseif ($session->status == 'complete') {
                 $response = (['message' => 'Please complete your payment']);
                 $status_code = 400;
             }
