@@ -69,7 +69,8 @@ class HousekeepingOrderController extends Controller
             }
 
             //stripe site
-            Stripe::setApiKey(env("STRIPE_SECRET"));
+            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+            // Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
@@ -126,11 +127,12 @@ class HousekeepingOrderController extends Controller
     public function checkStripe($session_id)
     {
         try {
-            Stripe::setApiKey(env('STRIPE_SECRET'));
+            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+            // Stripe::setApiKey(env('STRIPE_SECRET'));
             $session = Session::retrieve(['id' => $session_id]);
             $email = $session->customer_details->email;
 
-            if ($session->status == 'open') {
+            if ($session->status == 'complete') {
                 $variable = $session->metadata['product_name'];
 
                 switch ($variable) {
@@ -197,7 +199,7 @@ class HousekeepingOrderController extends Controller
                         $status_code = 400;
                         break;
                 }
-            } elseif ($session->status == 'complete') {
+            } elseif ($session->status == 'open') {
                 $response = (['message' => 'Please complete your payment']);
                 $status_code = 400;
             }
