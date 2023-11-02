@@ -69,8 +69,7 @@ class HousekeepingOrderController extends Controller
             }
 
             //stripe site
-            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
-            // Stripe::setApiKey(env("STRIPE_SECRET"));
+            Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
                     'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
@@ -127,8 +126,8 @@ class HousekeepingOrderController extends Controller
     public function checkStripe($session_id)
     {
         try {
-            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
             // Stripe::setApiKey(env('STRIPE_SECRET'));
+            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
             $session = Session::retrieve(['id' => $session_id]);
             $email = $session->customer_details->email;
 
