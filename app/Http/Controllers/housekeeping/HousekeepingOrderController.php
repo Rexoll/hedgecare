@@ -125,93 +125,93 @@ class HousekeepingOrderController extends Controller
 
     public function checkStripe($session_id)
     {
-        try {
-            // Stripe::setApiKey(env('STRIPE_SECRET'));
-            Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
-            $session = Session::retrieve(['id' => $session_id]);
-            dd($session->customer_details);
-            $email = $session->customer_details->email;
+        // try {
+        // Stripe::setApiKey(env('STRIPE_SECRET'));
+        Stripe::setApiKey('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+        $session = Session::retrieve(['id' => $session_id]);
+        dd($session->customer_details);
+        $email = $session->customer_details->email;
 
-            if ($session->status == 'complete') {
-                $variable = $session->metadata['product_name'];
+        if ($session->status == 'complete') {
+            $variable = $session->metadata['product_name'];
 
-                switch ($variable) {
-                    case "Housekeeping":
-                        $service = HousekeepingOrder::where('session_id', $session_id)->first();
-                        $service->update([
-                            'status' => 'active',
-                        ]);
-                        Mail::to($service->email)
+            switch ($variable) {
+                case "Housekeeping":
+                    $service = HousekeepingOrder::where('session_id', $session_id)->first();
+                    $service->update([
+                        'status' => 'active',
+                    ]);
+                    Mail::to($service->email)
                         ->cc('cs@hedgecare.ca')
                         ->send(new InvoiceHousekeepingOrder($service));
-                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
-                        $status_code = 200;
-                        break;
+                    $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
+                    $status_code = 200;
+                    break;
 
-                    case "Maintenance":
-                        $service = MaintenanceOrder::where('session_id', $session_id)->update([
-                            'status' => 'active',
-                        ]);
-                        Mail::to($service->email)
+                case "Maintenance":
+                    $service = MaintenanceOrder::where('session_id', $session_id)->update([
+                        'status' => 'active',
+                    ]);
+                    Mail::to($service->email)
                         ->cc('cs@hedgecare.ca')
                         ->send(new InvoiceMaintenanceOrder($service));
-                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
-                        $status_code = 200;
-                        break;
+                    $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
+                    $status_code = 200;
+                    break;
 
-                    case "Rentafriend":
-                        $service = rentAfriendOrder::where('session_id', $session_id)->first();
-                        $service->update([
-                            'status' => 'active',
-                        ]);
-                        Mail::to($service->email)
+                case "Rentafriend":
+                    $service = rentAfriendOrder::where('session_id', $session_id)->first();
+                    $service->update([
+                        'status' => 'active',
+                    ]);
+                    Mail::to($service->email)
                         ->cc('cs@hedgecare.ca')
                         ->send(new InvoiceRentAfriendOrder($service));
-                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
-                        $status_code = 200;
-                        break;
+                    $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
+                    $status_code = 200;
+                    break;
 
-                    case "Customorder":
-                        $service = CustomOrder::where('session_id', $session_id)->first();
-                        $service->update([
-                            'status' => 'active',
-                        ]);
-                        Mail::to($service->email)
+                case "Customorder":
+                    $service = CustomOrder::where('session_id', $session_id)->first();
+                    $service->update([
+                        'status' => 'active',
+                    ]);
+                    Mail::to($service->email)
                         ->cc('cs@hedgecare.ca')
                         ->send(new InvoiceCustomOrder($service));
-                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
-                        $status_code = 200;
-                        break;
-                    case "Jobboard":
-                        $service= jobBoardOrders::where('session_id', $session_id)->first();
-                        $service->update([
-                            'status' => 'active',
-                        ]);
-                        Mail::to($service->email)
+                    $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
+                    $status_code = 200;
+                    break;
+                case "Jobboard":
+                    $service = jobBoardOrders::where('session_id', $session_id)->first();
+                    $service->update([
+                        'status' => 'active',
+                    ]);
+                    Mail::to($service->email)
                         ->cc('cs@hedgecare.ca')
                         ->send(new invoiceJobBoardOrders($service));
-                        $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
-                        $status_code = 200;
-                        break;
+                    $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
+                    $status_code = 200;
+                    break;
 
-                    default:
-                        $response = (['message' => 'Oops, service didnt found. please contact developer when see this messege']);
-                        $status_code = 400;
-                        break;
-                }
-            } elseif ($session->status == 'open') {
-                $response = (['message' => 'Please complete your payment']);
-                $status_code = 400;
+                default:
+                    $response = (['message' => 'Oops, service didnt found. please contact developer when see this messege']);
+                    $status_code = 400;
+                    break;
             }
-
-            if (isset($response)) {
-                return response()->json($response, $status_code);
-            } else {
-                return response()->json(['message' => 'Oops, something might be wrong. please contact developer when see this messege'], 400);
-            }
-        } catch (\Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+        } elseif ($session->status == 'open') {
+            $response = (['message' => 'Please complete your payment']);
+            $status_code = 400;
         }
+
+        if (isset($response)) {
+            return response()->json($response, $status_code);
+        } else {
+            return response()->json(['message' => 'Oops, something might be wrong. please contact developer when see this messege'], 400);
+        }
+        // } catch (\Exception $e) {
+        //     return response()->json(['message' => $e->getMessage()], 500);
+        // }
     }
 
     public function payWithCard(Request $request, int $order_id)
