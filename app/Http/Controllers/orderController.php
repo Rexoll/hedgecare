@@ -160,7 +160,7 @@ class orderController extends Controller
 
     public function update(Request $request)
     {
-        // try {
+        try {
             $validate = Validator::make($request->all(), [
                 'service' => 'required',
                 'order_id' => 'required',
@@ -229,9 +229,9 @@ class orderController extends Controller
             }
             // Berikan response yang sesuai
             return response()->json(['message' => 'detail service has been updated successfully'], 200);
-        // } catch (\Exception $e) {
-        //     return response()->json(['message' => $e->getMessage()], 500);
-        // }
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     public function setAsDone(Request $request)
