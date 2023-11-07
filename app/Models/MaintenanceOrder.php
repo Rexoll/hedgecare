@@ -51,6 +51,15 @@ class MaintenanceOrder extends Model
         'rating' => 'integer',
     ];
 
+    protected $appends = [
+        'service_type'
+    ];
+
+    public function getServiceTypeAttribute()
+    {
+        return 'maintenance';
+    }
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'user_id');
