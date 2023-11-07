@@ -48,7 +48,7 @@ class rentafriendCompleteOrder extends Mailable
             with: [
                 "service_name" => 'Rent A Friend',
                 "clients_name" => $this->order->first_name . ' ' . $this->order->last_name,
-                "Completion_date" => $this->order->updated_at->format('F j, Y \a\t g A'),
+                "completion_date" => $this->order->updated_at->format('F j, Y \a\t g A'),
             ]
         );
     }
