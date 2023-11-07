@@ -213,21 +213,20 @@
                                                                 style="padding-bottom:25px;padding-top:10px;">
                                                                 <div
                                                                     style="color:#000000;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:15px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:18px;">
-                                                                    <p style="margin: 0;">We hope this message finds you
-                                                                        well. we wanted to inform you that the job has
-                                                                        been successfully completed as per the client's
-                                                                        requirements.<br />They have confirmed their
-                                                                        satisfaction with the delivered work.<br />
-                                                                        Here are the details:<br />
+                                                                    <p style="margin: 0;">We are pleased to inform you
+                                                                        that the requested service has been successfully
+                                                                        completed.<br />We hope you are satisfied with
+                                                                        the result. Here are some details of the
+                                                                        service:<br />
                                                                     <ul>
                                                                         <li>Service Name : {{ $service_name }}</li>
                                                                         <li>Client's Name : {{ $clients_name }}</li>
                                                                         <li>Completion Date : {{ $completion_date }}
                                                                         </li>
                                                                     </ul>
-                                                                    We appreciate your efforts in delivering quality
-                                                                    work and meeting the client's expectations. Thank
-                                                                    you for your contribution to this job.
+                                                                    If there's anything that needs adjustment or if you
+                                                                    have any questions, please feel free to reach out to
+                                                                    us. We are here to assist you.
                                                                     </p>
                                                                 </div>
                                                             </td>
