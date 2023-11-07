@@ -43,6 +43,7 @@ class rentafriendCompleteOrder extends Mailable
      */
     public function content()
     {
+        dd($this->order);
         return new Content(
             view: 'emails.complete-order',
             with: [
