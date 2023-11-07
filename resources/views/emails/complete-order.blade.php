@@ -213,7 +213,7 @@
                                                                 style="padding-bottom:25px;padding-top:10px;">
                                                                 <div
                                                                     style="color:#000000;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:15px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:18px;">
-                                                                    <p style="margin: 0;">we hope this message finds you
+                                                                    <p style="margin: 0;">We hope this message finds you
                                                                         well. we wanted to inform you that the job has
                                                                         been successfully completed as per the client's
                                                                         requirements.<br />They have confirmed their
