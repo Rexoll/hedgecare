@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\customOrderCompleteOrder;
+use App\Mail\houseKeepingCompleteOrder;
+use App\Mail\jobBoardCompleteOrder;
+use App\Mail\maintenanceCompleteOrder;
+use App\Mail\rentafriendCompleteOrder;
 use App\Mail\requestAquot;
 use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
@@ -11,6 +16,7 @@ use App\Models\Provider;
 use App\Models\rating;
 use App\Models\rentAfriendOrder;
 use App\Models\Skill;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -254,6 +260,17 @@ class orderController extends Controller
                     }
                     $housekeepingOrder->status = 'done';
                     $housekeepingOrder->save();
+                    $user_provider = Provider::where('id',$housekeepingOrder->provider_id)->first();
+                    $provider_email = User::where('id', $user_provider->user_id)->first()->email;
+                    $email = [
+                        $provider_email,
+                        $housekeepingOrder->email,
+                        'cs@hedgecare.ca'
+
+                    ];
+                    Mail::to($email)
+                            ->cc('cs@hedgecare.ca')
+                            ->send(new houseKeepingCompleteOrder($housekeepingOrder));
                     break;
 
                 case 'rentafriend':
@@ -263,6 +280,17 @@ class orderController extends Controller
                     }
                     $rentAFriendOrder->status = 'done';
                     $rentAFriendOrder->save();
+                    $user_provider = Provider::where('id',$rentAFriendOrder->provider_id)->first();
+                    $provider_email = User::where('id', $user_provider->user_id)->first()->email;
+                    $email = [
+                        $provider_email,
+                        $rentAFriendOrder->email,
+                        'cs@hedgecare.ca'
+
+                    ];
+                    Mail::to($email)
+                            ->cc('cs@hedgecare.ca')
+                            ->send(new rentafriendCompleteOrder($rentAFriendOrder));
                     break;
 
                 case 'maintenance':
@@ -272,6 +300,17 @@ class orderController extends Controller
                     }
                     $maintenanceOrder->status = 'done';
                     $maintenanceOrder->save();
+                    $user_provider = Provider::where('id',$maintenanceOrder->provider_id)->first();
+                    $provider_email = User::where('id', $user_provider->user_id)->first()->email;
+                    $email = [
+                        $provider_email,
+                        $maintenanceOrder->email,
+                        'cs@hedgecare.ca'
+
+                    ];
+                    Mail::to($email)
+                            ->cc('cs@hedgecare.ca')
+                            ->send(new maintenanceCompleteOrder($maintenanceOrder));
                     break;
 
                 case 'other':
@@ -281,6 +320,17 @@ class orderController extends Controller
                     }
                     $customOrder->status = 'done';
                     $customOrder->save();
+                    $user_provider = Provider::where('id',$customOrder->provider_id)->first();
+                    $provider_email = User::where('id', $user_provider->user_id)->first()->email;
+                    $email = [
+                        $provider_email,
+                        $customOrder->email,
+                        'cs@hedgecare.ca'
+
+                    ];
+                    Mail::to($email)
+                            ->cc('cs@hedgecare.ca')
+                            ->send(new customOrderCompleteOrder($customOrder));
                     break;
 
                 case 'job-board':
@@ -290,6 +340,17 @@ class orderController extends Controller
                     }
                     $jobBoard->status = 'done';
                     $jobBoard->save();
+                    $user_provider = Provider::where('id',$jobBoard->provider_id)->first();
+                    $provider_email = User::where('id', $user_provider->user_id)->first()->email;
+                    $email = [
+                        $provider_email,
+                        $jobBoard->email,
+                        'cs@hedgecare.ca'
+
+                    ];
+                    Mail::to($email)
+                            ->cc('cs@hedgecare.ca')
+                            ->send(new jobBoardCompleteOrder($jobBoard));
                     break;
 
                 default:
