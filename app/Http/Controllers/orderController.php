@@ -10,6 +10,7 @@ use App\Models\MaintenanceOrder;
 use App\Models\Provider;
 use App\Models\rating;
 use App\Models\rentAfriendOrder;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -242,6 +243,7 @@ class orderController extends Controller
             //ambil data yang diperlukan dari body
             $service = $request->service;
             $order_id = $request->order_id;
+
 
             //berikan rating sesuai service yang dipilih
             switch ($service) {
