@@ -47,7 +47,7 @@ class maintenanceCompleteOrder extends Mailable
             with: [
                 "service_name" => 'Maintenance',
                 "clients_name" => $this->order->first_name . ' ' . $this->order->last_name,
-                "Completion_date" => $this->order->update_at->format('F j, Y \a\t g A'),
+                "Completion_date" => $this->order->updated_at->format('F j, Y \a\t g A'),
             ]
         );
     }
