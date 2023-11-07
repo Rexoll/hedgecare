@@ -49,6 +49,15 @@ class jobBoardOrders extends Model
         'rating' => 'integer',
     ];
 
+    protected $appends = [
+        'service_type'
+    ];
+
+    public function getServiceTypeAttribute()
+    {
+        return 'job-board';
+    }
+
     /**
      * Get the user associated with the jobBoardOrderAdditionalService
      *
