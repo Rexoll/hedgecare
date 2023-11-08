@@ -314,6 +314,7 @@ class orderController extends Controller
                     break;
 
                 case 'other':
+                    dd('masuk');
                     $customOrder = CustomOrder::find($order_id);
                     if (is_null($customOrder)) {
                         return response()->json(['message' => 'order_id not found'], 404);
