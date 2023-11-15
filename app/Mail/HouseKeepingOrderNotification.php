@@ -51,6 +51,8 @@ class HousekeepingOrderNotification extends Mailable
                 "service" => 'Housekeeping',
                 "order_hours" => $this->order->expected_hour,
                 "order_date" => $this->order->created_at->format('F j, Y \a\t g A'),
+                "note" => $this->order->detail_service,
+                "address" => $this->order->street_address,
                 "email" => Auth::user()->email,
                 "phone" => Auth::user()->phone_number
             ]
