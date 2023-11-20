@@ -12,10 +12,10 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Stripe\StripeClient;
+use Stripe\Checkout\Session;
 use Stripe\Price;
 use Stripe\Stripe;
-use Stripe\Checkout\Session;
+use Stripe\StripeClient;
 
 class CustomOrderController extends Controller
 {
@@ -35,7 +35,7 @@ class CustomOrderController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     "message" => "Bad send body data",
-                    "errors" => $validator->errors()
+                    "errors" => $validator->errors(),
                 ], 400);
             };
 
@@ -43,8 +43,8 @@ class CustomOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $sub_total = ($provider->price * $request->expected_hour) + 4.99;
-            $custom_order = CustomOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
+            $sub_total = ($provider->price * $request->expected_hour);
+            $custom_order = CustomOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => $sub_total + 4.99, 'tax' => $sub_total * 0.13]);
             $custom_order->status = "not_paid";
             $custom_order->user_id = Auth::user()->id;
             $custom_order->save();
@@ -192,11 +192,11 @@ class CustomOrderController extends Controller
             $findOrder = CustomOrder::findOrFail($id);
             $findOrder->update([
                 'review' => $request->review,
-                'status' => 'done'
+                'status' => 'done',
             ]);
             return response()->json([
                 'message' => 'successfully submited review',
-                'review' => $findOrder->review
+                'review' => $findOrder->review,
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
@@ -207,11 +207,11 @@ class CustomOrderController extends Controller
     {
         try {
             $validate = Validator::make($request->all(), [
-                'detail_service' => 'required'
+                'detail_service' => 'required',
             ]);
             if ($validate->fails()) {
                 return response()->json([
-                    'message' => $validate->errors()
+                    'message' => $validate->errors(),
                 ], 400);
             }
             $findOrder = CustomOrder::findOrFail($id);

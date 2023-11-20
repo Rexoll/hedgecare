@@ -55,7 +55,7 @@ class HousekeepingOrderController extends Controller
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
             $sub_total = ($provider->price * $request->expected_hour) + 4.99;
-            $housekeeping_order = HousekeepingOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
+            $housekeeping_order = HousekeepingOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => $sub_total + 4.99, 'tax' => $sub_total * 0.13]);
             $housekeeping_order->save();
             if ($validate["services"] ?? null != null) {
                 HousekeepingOrderAdditionalService::insert(
