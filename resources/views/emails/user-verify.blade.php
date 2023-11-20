@@ -339,8 +339,9 @@
                                                                 style="padding-bottom:5px;padding-top:5px;">
                                                                 <div
                                                                     style="color:#404040;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:15px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:18px;">
-                                                                    <p style="margin: 0;">100 IDKStreet, Jakarta,
-                                                                        54112,</p>
+                                                                    <p style="margin: 0;">Email :
+                                                                        hedgecareservices@outlook.com <br>
+                                                                        Phone : 905-208-6987 ,</p>
                                                                 </div>
                                                             </td>
                                                         </tr>
