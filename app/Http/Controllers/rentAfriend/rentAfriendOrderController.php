@@ -53,7 +53,7 @@ class rentAfriendOrderController extends Controller
             $validate = $validator->validate();
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $sub_total = ($provider->price * $request->expected_hour) + 4.99;
+            $sub_total = ($provider->price * $request->expected_hour);
             $rentAfriend_order = rentAfriendOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total + 4.99, 'tax' => $sub_total * 0.13]);
             $rentAfriend_order->save();
             if ($validate["services"] ?? null != null) {
