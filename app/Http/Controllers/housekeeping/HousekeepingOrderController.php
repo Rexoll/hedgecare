@@ -54,7 +54,7 @@ class HousekeepingOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $sub_total = $provider->price * $request->expected_hour;
+            $sub_total = ($provider->price * $request->expected_hour) + 499;
             $housekeeping_order = HousekeepingOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $housekeeping_order->save();
             if ($validate["services"] ?? null != null) {
@@ -72,7 +72,7 @@ class HousekeepingOrderController extends Controller
             Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
-                    'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'unit_amount' => (int) (($housekeeping_order->sub_total + $housekeeping_order->tax + 499) * 100), // Harga dalam sen, misalnya $10 dalam sen
                     'currency' => 'cad',
                     'product_data' => [
                         'name' => 'Housekeeping',
@@ -139,7 +139,11 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service->email)
+                        $email_send = [
+                            $service->email,
+                            'cs@hedgecare.ca'
+                        ];
+                        Mail::to($email_send)
                             ->cc('cs@hedgecare.ca')
                             ->send(new InvoiceHousekeepingOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
@@ -151,7 +155,11 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service->email)
+                        $email_send = [
+                            $service->email,
+                            'cs@hedgecare.ca'
+                        ];
+                        Mail::to($email_send)
                             ->cc('cs@hedgecare.ca')
                             ->send(new InvoiceMaintenanceOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
@@ -163,7 +171,11 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service->email)
+                        $email_send = [
+                            $service->email,
+                            'cs@hedgecare.ca'
+                        ];
+                        Mail::to($email_send)
                             ->cc('cs@hedgecare.ca')
                             ->send(new InvoiceRentAfriendOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
@@ -175,7 +187,11 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service->email)
+                        $email_send = [
+                            $service->email,
+                            'cs@hedgecare.ca'
+                        ];
+                        Mail::to($email_send)
                             ->cc('cs@hedgecare.ca')
                             ->send(new InvoiceCustomOrder($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);
@@ -186,7 +202,11 @@ class HousekeepingOrderController extends Controller
                         $service->update([
                             'status' => 'active',
                         ]);
-                        Mail::to($service->email)
+                        $email_send = [
+                            $service->email,
+                            'cs@hedgecare.ca'
+                        ];
+                        Mail::to($email_send)
                             ->cc('cs@hedgecare.ca')
                             ->send(new invoiceJobBoardOrders($service));
                         $response = (['message' => 'status payment ' . $variable, 'status' => $session->status, 'customer_email' => $email]);

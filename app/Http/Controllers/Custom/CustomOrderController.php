@@ -43,7 +43,7 @@ class CustomOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $sub_total = $provider->price * $request->expected_hour;
+            $sub_total = ($provider->price * $request->expected_hour) + 499;
             $custom_order = CustomOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $custom_order->status = "not_paid";
             $custom_order->user_id = Auth::user()->id;
@@ -53,7 +53,7 @@ class CustomOrderController extends Controller
             Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
-                    'unit_amount' => (int) (($custom_order->sub_total + $custom_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'unit_amount' => (int) (($custom_order->sub_total + $custom_order->tax + 499) * 100), // Harga dalam sen, misalnya $10 dalam sen
                     'currency' => 'cad',
                     'product_data' => [
                         'name' => 'Customorder',

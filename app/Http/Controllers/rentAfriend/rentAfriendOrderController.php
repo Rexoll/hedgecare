@@ -53,7 +53,7 @@ class rentAfriendOrderController extends Controller
             $validate = $validator->validate();
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $sub_total = $provider->price * $request->expected_hour;
+            $sub_total = ($provider->price * $request->expected_hour) + 499;
             $rentAfriend_order = rentAfriendOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id,  "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $rentAfriend_order->save();
             if ($validate["services"] ?? null != null) {
@@ -81,7 +81,7 @@ class rentAfriendOrderController extends Controller
             Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
-                    'unit_amount' => (int) (($rentAfriend_order->sub_total + $rentAfriend_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'unit_amount' => (int) (($rentAfriend_order->sub_total + $rentAfriend_order->tax + 499) * 100), // Harga dalam sen, misalnya $10 dalam sen
                     'currency' => 'cad',
                     'product_data' => [
                         'name' => 'Rentafriend',
@@ -179,7 +179,7 @@ class rentAfriendOrderController extends Controller
             $charge = $stripe->charges->create([
                 "card" => $token["id"],
                 'currency' => 'cad',
-                "amount" => (int) (($rentAfriend_order->sub_total + $rentAfriend_order->tax) * 100),
+                "amount" => (int) (($rentAfriend_order->sub_total + $rentAfriend_order->tax + 499) * 100),
                 "description" => "Pay rent a friend Order",
             ]);
 

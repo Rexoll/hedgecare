@@ -47,7 +47,7 @@ class MaintenanceOrderController extends Controller
 
             $provider = Provider::where("id", $validate["provider_id"])->first();
 
-            $sub_total = $provider->price * $request->expected_hour;
+            $sub_total = ($provider->price * $request->expected_hour) + 499;
             $maintenance_order = MaintenanceOrder::create([...$validate, 'status' => 'not_paid', 'user_id' => Auth::user()->id, "sub_total" => $sub_total, 'tax' => $sub_total * 0.13]);
             $maintenance_order->save();
             if ($validate["services"] ?? null != null) {
@@ -65,7 +65,7 @@ class MaintenanceOrderController extends Controller
             Stripe::setApiKey(env("STRIPE_SECRET"));
             try {
                 $productPrice = Price::create([
-                    'unit_amount' => (int) (($maintenance_order->sub_total + $maintenance_order->tax) * 100), // Harga dalam sen, misalnya $10 dalam sen
+                    'unit_amount' => (int) (($maintenance_order->sub_total + $maintenance_order->tax + 499) * 100), // Harga dalam sen, misalnya $10 dalam sen
                     'currency' => 'cad',
                     'product_data' => [
                         'name' => 'Maintenance',
@@ -163,7 +163,7 @@ class MaintenanceOrderController extends Controller
             $charge = $stripe->charges->create([
                 "card" => $token["id"],
                 "currency" => "USD",
-                "amount" => (int) (($maintenance_order->sub_total + $maintenance_order->tax) * 100),
+                "amount" => (int) (($maintenance_order->sub_total + $maintenance_order->tax + 499) * 100),
                 "description" => "Pay Maintenance Order",
             ]);
 
