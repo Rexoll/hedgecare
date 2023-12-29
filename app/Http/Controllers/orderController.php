@@ -378,10 +378,11 @@ class orderController extends Controller
 
             $validate = $validate->validate();
 
-            Mail::to($validate["email"])->send(new requestAquot($validate));
+            $mail = 'hedgecareca@gmail.com';
+            Mail::to($mail)->send(new requestAquot($validate));
 
             return response()->json([
-                'message' => 'email sended',
+                'message' => 'Request sent, we should be in touch soon!',
             ], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
