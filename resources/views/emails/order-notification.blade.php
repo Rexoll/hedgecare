@@ -200,7 +200,7 @@
                                                                 style="padding-bottom:40px;padding-top:10px;text-align:center;width:100%;">
                                                                 <h1
                                                                     style="margin: 0; color: #101010; direction: ltr; font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif; font-size: 46px; font-weight: 700; letter-spacing: normal; line-height: 150%; text-align: left; margin-top: 0; margin-bottom: 0;">
-                                                                    Helo! Somone Just Requested Your Services</h1>
+                                                                    Hello! Somone Just Requested Your Services</h1>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -213,7 +213,7 @@
                                                                 style="padding-bottom:25px;padding-top:10px;">
                                                                 <div
                                                                     style="color:#000000;direction:ltr;font-family:Arial, 'Helvetica Neue', Helvetica, sans-serif;font-size:15px;font-weight:400;letter-spacing:0px;line-height:120%;text-align:left;mso-line-height-alt:18px;">
-                                                                    <p style="margin: 0;">Below is customers informations: </p>
+                                                                    <p style="margin: 0;">Below is customers information: </p>
                                                                     <p style="margin: 0;">Name : {{ $order_buyer_name }}</p>
                                                                     <p style="margin: 0;">Email : {{ $email }} </p>
                                                                     <p style="margin: 0;">Adress : {{ $address }} </p>
