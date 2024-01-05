@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\forgotPassword;
 use App\Mail\RegisterProvider;
+use App\Mail\userRegisterNotification;
 use App\Models\CustomOrder;
 use App\Models\HousekeepingOrder;
 use App\Models\jobBoardOrders;
@@ -58,6 +59,8 @@ class AuthController extends Controller
                 $token = $register->createToken('register_token')->plainTextToken;
 
                 $register->notify(new UserVerifyNotification($token));
+
+                Mail::to(['hedgecareca@gmail.com','cs@hedgecare.ca'])->send(new userRegisterNotification($register));
 
                 return response()->json([
                     'message' => 'register successfull',

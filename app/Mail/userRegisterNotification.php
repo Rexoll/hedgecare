@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterProvider extends Mailable
+class userRegisterNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,7 +18,7 @@ class RegisterProvider extends Mailable
      *
      * @return void
      */
-    public function __construct(public User $user)
+    public function __construct(public User $user_data)
     {
         //
     }
@@ -31,8 +31,7 @@ class RegisterProvider extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Register Provider',
-            to: ["address" => ["cs@hedgecare.ca", "hedgecareca@gmail.com"]],
+            subject: 'Regular User Register Notification',
         );
     }
 
@@ -44,12 +43,11 @@ class RegisterProvider extends Mailable
     public function content()
     {
         return new Content(
-            text: 'emails.register-provider',
+            view: 'emails.user-register-notify',
             with: [
-                'first_name' => $this->user->first_name,
-                'last_name' => $this->user->last_name,
-                'email' => $this->user->email,
-                'phone_number' => $this->user->phone_number,
+                'name' => $this->user_data->first_name . ' ' . $this->user_data->last_name,
+                'phone_number' => $this->user_data->phone_number,
+                'email' => $this->user_data->email,
             ]
         );
     }
