@@ -60,7 +60,7 @@ class AuthController extends Controller
 
                 $register->notify(new UserVerifyNotification($token));
 
-                Mail::to(['hedgecareca@gmail.com','cs@hedgecare.ca','kevin.azela227@gmail.com'])->send(new userRegisterNotification($register));
+                Mail::to(['hedgecareca@gmail.com', 'cs@hedgecare.ca'])->send(new userRegisterNotification($register));
 
                 return response()->json([
                     'message' => 'register successfull',
